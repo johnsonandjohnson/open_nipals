@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>scan_dimreduction.utils &#8212; scan_dimreduction 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">scan_dimreduction 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">scan_dimreduction.utils</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for scan_dimreduction.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Code for Pipelining a data arrangement in sklearn. Allows for standarscaler()</span>
+<span class="sd">followed by other methods</span>
+
+<span class="sd">(c) 2020: Ryan Wall</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">TransformerMixin</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<span class="k">def</span> <span class="nf">_nanMult</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+    <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+    <span class="n">nanMask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">useDenom</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Matrix multiplication for when the left matrix (X) contains NaNs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X (np.array): The left matrix in the multiplication.</span>
+<span class="sd">        Y (np.array): The right matrix in the multiplication.</span>
+<span class="sd">        nanMask (np.array, optional): The NaNmask for the left matrix.</span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">        useDenom (bool, optional): Flag for using a normalization method.</span>
+<span class="sd">            Defaults to True. Scales the resultant vector by 1/(Y.T @ Y)</span>
+<span class="sd">                with appropriate nulls</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If nanMask is passed but has the wrong shape.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.array: The product of the matrix multiplication.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rowsX</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">colsY</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="n">outVals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">rowsX</span><span class="p">,</span> <span class="n">colsY</span><span class="p">))</span>  <span class="c1"># Preallocate output</span>
+
+    <span class="k">if</span> <span class="n">nanMask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nanMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Catch error for if nanMask isn&#39;t rotated correctly</span>
+        <span class="n">rowsNan</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">nanMask</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">rowsX</span> <span class="o">==</span> <span class="n">rowsNan</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;nanMask not rotated correctly&quot;</span><span class="p">)</span>
+
+    <span class="c1"># should be a single loop...</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rowsX</span><span class="p">):</span>
+        <span class="c1"># Calculate notNull for readability</span>
+        <span class="n">notNull</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">nanMask</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="c1"># If there is ANYTHING in the row, calculate a value</span>
+        <span class="c1"># (default is zero)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">notNull</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">useDenom</span><span class="p">:</span>
+                <span class="n">denom</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">notNull</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Y</span><span class="p">[</span><span class="n">notNull</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">denom</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">outVals</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">notNull</span><span class="p">]</span> <span class="o">@</span> <span class="n">Y</span><span class="p">[</span><span class="n">notNull</span><span class="p">])</span> <span class="o">/</span> <span class="n">denom</span>
+    <span class="c1"># End for loop</span>
+
+    <span class="k">return</span> <span class="n">outVals</span>
+
+
+<div class="viewcode-block" id="arrangeData"><a class="viewcode-back" href="../../api/scan_dimreduction.html#scan_dimreduction.utils.arrangeData">[docs]</a><span class="k">class</span> <span class="nc">arrangeData</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    varDict : dict</span>
+<span class="sd">        A dictionary indicating which column should be in which position.</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    varDictFromDF</span>
+<span class="sd">        Infer varDict from template dataframe.</span>
+<span class="sd">    fit_transform</span>
+<span class="sd">    fit</span>
+<span class="sd">        Applies varDictFromDF in a manner consistent w/ sklearn nomenclature</span>
+<span class="sd">    transform</span>
+<span class="sd">        Takes a new dataframe or np.array + variable dictionary and arranges</span>
+<span class="sd">        to be consistent with stored varDict</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varDict</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The constructor for the arrangeData object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            varDict (Union[dict, pd.DataFrame], optional): The variable</span>
+<span class="sd">                dictionary to use. Can be inferred from a template</span>
+<span class="sd">                dataframe on construction or by  Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">varDict</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDictFromDF</span><span class="p">(</span><span class="n">varDict</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span> <span class="o">=</span> <span class="n">varDict</span>
+
+<div class="viewcode-block" id="arrangeData.varDictFromDF"><a class="viewcode-back" href="../../api/scan_dimreduction.html#scan_dimreduction.utils.arrangeData.varDictFromDF">[docs]</a>    <span class="k">def</span> <span class="nf">varDictFromDF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputDF</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Infer the varDict from a template dataframe.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputDF (pd.DataFrame): A dataframe that has the desired</span>
+<span class="sd">                order of columns.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The corresponding varDict. {column Name: column index}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Takes an input dataframe and turns column headers into a</span>
+        <span class="c1"># variable dictionary</span>
+        <span class="n">varDict</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputDF</span><span class="o">.</span><span class="n">columns</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">varDict</span></div>
+
+<div class="viewcode-block" id="arrangeData.fit_transform"><a class="viewcode-back" href="../../api/scan_dimreduction.html#scan_dimreduction.utils.arrangeData.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inputData</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">inputVarDict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Fit a data/column model and then transform data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputData (Union[pd.DataFrame, np.ndarray]): The input data</span>
+<span class="sd">                to transform. Note that if this is a dataframe it _will_</span>
+<span class="sd">                be used to fit varDict. This might not be what you want.</span>
+<span class="sd">            inputVarDict (Optional[dict], optional): The varDict to be used</span>
+<span class="sd">                to fit. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">inputData</span><span class="o">=</span><span class="n">inputData</span><span class="p">,</span> <span class="n">inputVarDict</span><span class="o">=</span><span class="n">inputVarDict</span><span class="p">)</span>
+        <span class="n">outData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">inputVarDict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">varDict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outData</span></div>
+
+<div class="viewcode-block" id="arrangeData.fit"><a class="viewcode-back" href="../../api/scan_dimreduction.html#scan_dimreduction.utils.arrangeData.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inputData</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">inputVarDict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The function which will fit the varDict object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputData (Union[pd.DataFrame, np.ndarray]): The input data to</span>
+<span class="sd">                use for fitting.</span>
+<span class="sd">            inputVarDict (Optional[dict], optional): Required if inputData</span>
+<span class="sd">                is an array, this dictionary contains the headers as</span>
+<span class="sd">                {column Name: column index}.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: inputData is a numpy array and inputVarDict is missing.</span>
+<span class="sd">            ValueError: inputData is a numpy array and its shape does not</span>
+<span class="sd">                match inputVarDict.</span>
+<span class="sd">            ValueError: An unknown error occurred.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Variable Dictionary in Dataframe is overwriting&quot;</span>
+                    <span class="o">+</span> <span class="s2">&quot; that specified in constructor.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Returns the Variable Dictionary from a Dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDictFromDF</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">inputVarDict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Input dataframe is an array but no variable Dictionary has&quot;</span>
+                <span class="s2">&quot; been provided&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">inputVarDict</span><span class="p">,</span> <span class="nb">dict</span>
+        <span class="p">):</span>
+            <span class="c1"># inputData is an array and inputVarDict has been provided.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputVarDict</span><span class="p">)</span> <span class="o">!=</span> <span class="n">inputData</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;inputVarDict incorrect size for Data Array.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># simply override with inputVarDict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span> <span class="o">=</span> <span class="n">inputVarDict</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># catch if, e.g., inputData is None or wrong type.</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;An error has occurred in fit() of arrangeData&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="arrangeData.transform"><a class="viewcode-back" href="../../api/scan_dimreduction.html#scan_dimreduction.utils.arrangeData.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inputData</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">inputVarDict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Transform input data based on stored data model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputData (Union[pd.DataFrame, np.ndarray]): The inputData to</span>
+<span class="sd">                transform.</span>
+<span class="sd">            inputVarDict (Optional[dict], optional): Required if inputData</span>
+<span class="sd">                is an array, this dictionary contains the headers as</span>
+<span class="sd">                {column Name: column index}.. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: arrangeData object has not yet been fit.</span>
+<span class="sd">            ValueError: inputData is a numpy array and no inputVarDict has</span>
+<span class="sd">                been provided.</span>
+<span class="sd">            ValueError: inputData is a numpy array and its shape does not</span>
+<span class="sd">                match inputVarDict</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: The transformed (column-rearranged) data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check for fit having been done.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;arrangeData() has not been fit&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If dataframe input, convert to Numpy Array and get varDict from</span>
+        <span class="c1"># col headers</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">inputVarDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDictFromDF</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+            <span class="n">inputData</span> <span class="o">=</span> <span class="n">inputData</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">inputVarDict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;inputData is a numpy array and no inputVarDict given.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">inputData</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputVarDict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Given Variable Dictionary not the same length as number&quot;</span>
+                    <span class="o">+</span> <span class="s2">&quot; of variables&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Extract shape of inputData</span>
+        <span class="c1"># n is the number of observations, m the number of variables/features</span>
+        <span class="p">(</span>
+            <span class="n">n</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">inputData</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Extract m of fit variables</span>
+        <span class="n">fitM</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varDict</span><span class="p">)</span>
+
+        <span class="n">diffSet</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inputVarDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffSet</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Given Variable Dictionary contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">diffSet</span><span class="p">)</span><span class="si">}</span><span class="s2"> variable&quot;</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; names that are not known to the model: </span><span class="si">{</span><span class="n">diffSet</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Preallocate outData filled w/ NaNs</span>
+        <span class="n">outData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">fitM</span><span class="p">))</span>
+        <span class="n">outData</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="c1"># Loop over each inputData Column and put it in outData Array</span>
+        <span class="k">for</span> <span class="n">varName</span><span class="p">,</span> <span class="n">varIndex</span> <span class="ow">in</span> <span class="n">inputVarDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># If variable is in the stored dictionary</span>
+            <span class="k">if</span> <span class="n">varName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span><span class="p">:</span>
+                <span class="n">colIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">varDict</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>  <span class="c1"># Slightly easier to read</span>
+                <span class="n">outData</span><span class="p">[:,</span> <span class="n">colIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputData</span><span class="p">[:,</span> <span class="n">varIndex</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">outData</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">scan_dimreduction 0.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">scan_dimreduction.utils</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, David Ochsenbein.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

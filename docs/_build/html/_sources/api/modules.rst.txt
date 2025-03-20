@@ -1,0 +1,7 @@
+scan_dimreduction
+=================
+
+.. toctree::
+   :maxdepth: 4
+
+   scan_dimreduction

@@ -1,0 +1,29 @@
+scan\_dimreduction package
+==========================
+
+Submodules
+----------
+
+scan\_dimreduction.nipalsPCA module
+-----------------------------------
+
+.. automodule:: scan_dimreduction.nipalsPCA
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+scan\_dimreduction.utils module
+-------------------------------
+
+.. automodule:: scan_dimreduction.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: scan_dimreduction
+   :members:
+   :undoc-members:
+   :show-inheritance:
