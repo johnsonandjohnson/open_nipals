@@ -49,7 +49,7 @@ NOTE: if you plan on working on the package please see [CONTRIBUTING.md](./CONTR
 ## Preprocessing
 Both the `NipalsPCA` and `NipalsPLS` classes expect a numpy array as an input with rows as samples and columns as features. Additionally, these array columns should have zero mean for best performance; typically this is done with a sklearn `StandardScaler` object. 
 
-Note: If the input data is a `pandas` dataframe, you can train an `arrangeData` object which will ensure all future datasets come to the appropriate shape and column order.
+Note: If the input data is a `pandas` dataframe, you can train an `ArrangeData` object which will ensure all future datasets come to the appropriate shape and column order.
 
 ```python
 from open_nipals.utils import arrangeData
@@ -60,7 +60,7 @@ from sklearn.preprocessing import StandardScaler
 df = pd.read_csv('my_data.csv')
 
 # Invoke preprocessing pipeline
-arrdat = arrangeData()
+arrdat = ArrangeData()
 scaler = StandardScaler()
 
 # Both scaler and arrdat should be saved for future use
@@ -88,24 +88,24 @@ from open_nipals.nipalsPLS import NipalsPLS
 # note the X/Y data blocks would need to have
 # separate arrangeData and StandardScaler objects
 model = NipalsPLS()
-transformed_X_data, transformed_Y_data = model.fit_transform(dataX, dataY)
+transformed_x_data, transformed_y_data = model.fit_transform(data_x, data_y)
 ```
 
 ## Distances
 In-model distances (IMD) and out-of-model distances (OOMD) can be calculated for both PCA and PLS models
 ```python
 # Must be scaled data
-hotelling_t2 = model.calc_IMD(inputArray = data)
+hotelling_t2 = model.calc_imd(input_array = data)
 
 # also must be scaled, default metric is QResiduals or 'QRes'
-dmodx = model.calc_OOMD(inputArray = data, metric = "DModX")
+dmodx = model.calc_oomd(input_array = data, metric = "DModX")
 ```
 
 ## PLS prediction
-One particular feature of PLS models is that they can predict dependent variables. To this end, run `model.predict()`, where either a matrix of X data `inputX`, 
-or a matrix of X scores `scoresX` need to be given as arguments, e.g. 
+One particular feature of PLS models is that they can predict dependent variables. To this end, run `model.predict()`, where either a matrix of X data `input_x`, 
+or a matrix of X scores `scores_x` need to be given as arguments, e.g. 
 ```python
-predicted_Y_data = model.predict(inputX=dataX)
+predicted_y_data = model.predict(input_x=data_x)
 ```
 
 
