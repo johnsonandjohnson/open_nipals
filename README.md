@@ -52,7 +52,7 @@ Both the `NipalsPCA` and `NipalsPLS` classes expect a numpy array as an input wi
 Note: If the input data is a `pandas` dataframe, you can train an `ArrangeData` object which will ensure all future datasets come to the appropriate shape and column order.
 
 ```python
-from open_nipals.utils import arrangeData
+from open_nipals.utils import ArrangeData
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
