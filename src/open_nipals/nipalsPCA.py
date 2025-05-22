@@ -289,7 +289,7 @@ class NipalsPCA(_BasePCA):
             np.ndarray: The corresponding scores.
         """
         # Check for fit having been done.
-        if self.fitted_components == 0:
+        if not self.__sklearn_is_fitted__():
             raise ValueError(
                 "Model has not yet been fit. Consider using fit_transform."
             )
@@ -431,7 +431,7 @@ class NipalsPCA(_BasePCA):
         Returns:
             np.ndarray: The corresponding scores.
         """
-        if self.fitted_components == 0:
+        if not self.__sklearn_is_fitted__():
             self.fit(input_array, verbose=verbose)
             scores = self.fit_scores.copy()
 
@@ -455,7 +455,7 @@ class NipalsPCA(_BasePCA):
         Returns:
             np.ndarray: The approximation of the original data.
         """
-        if self.fitted_components == 0:
+        if not self.__sklearn_is_fitted__():
             raise ValueError(
                 "Model has not yet been fit. "
                 + "Try fit() or fit_transform() instead."
@@ -508,7 +508,7 @@ class NipalsPCA(_BasePCA):
                 observation (row).
         """
         # Warnings if not fit
-        if self.fitted_components == 0:
+        if not self.__sklearn_is_fitted__():
             raise ValueError(
                 "Model has not yet been fit. Try fit() or fit_transform()"
                 + " instead."
@@ -717,3 +717,12 @@ class NipalsPCA(_BasePCA):
             d_crit = np.sqrt(F_dist.ppf(alpha, dof_obs, dof_mod))
 
             return d_crit
+
+    def __sklearn_is_fitted__(self) -> bool:
+        """Determine if this is fitted or not
+
+        Returns:
+            bool: is fitted or not
+        """
+        return not (self.fitted_components == 0)
+    
