@@ -19,14 +19,13 @@ from __future__ import (
     annotations,
 )  # needed so we can return NipalsPCA class in our type hints
 import numpy as np
-from sklearn.decomposition._base import _BasePCA
 import warnings
 from scipy.stats import f as F_dist
 from open_nipals.utils import _nan_mult
 from typing import Optional
 
 
-class NipalsPCA(_BasePCA):
+class NipalsPCA:
     """The custom-built class to use PCA using the NIPALS algorithm, i.e.,
     the same algorithm used in SIMCA.
 
