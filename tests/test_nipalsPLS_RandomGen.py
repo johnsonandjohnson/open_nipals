@@ -116,6 +116,41 @@ def class_name(cls, num, params_dict: dict) -> str:
     return f"{params_dict['name']}"
 
 
+
+class TestSubFuncs(unittest.TestCase):
+    """This is a wrap of the quicker to test things that should check for
+    bad behavior or improper use cases"""
+
+    def setUp(self) -> None:
+        mod, scaler_x, scaler_y = fitted_model_pass_dat(spec_dat,data_Y)
+        self.model = mod
+        self.scaler_x = scaler_x
+        self.scaler_y = scaler_y
+        self.data_x = spec_dat
+        self.data_y = data_Y
+        return super().setUp()
+
+    def test_multiFit(self):
+        """Test fitting a second time, should throw an error"""
+        with self.assertRaises(BaseException) as e:
+            self.model.fit(self.data_x,self.data_y)
+
+            with self.subTest():
+                self.assertIn(
+                    "Model Object has already been fit.", str(e.exception)
+                )
+            with self.subTest():
+                self.assertEqual(self.model.n_components, 2)
+    
+    def test_is_fitted(self):
+        """Test the __sklearn_is_fitted__() method"""
+        model = NipalsPLS()
+        with self.subTest():
+            self.assertFalse(model.__sklearn_is_fitted__())
+
+        with self.subTest():
+            self.assertTrue(self.model.__sklearn_is_fitted__())
+
 @parameterized_class(
     [
         {

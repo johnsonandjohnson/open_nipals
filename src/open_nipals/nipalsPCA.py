@@ -20,6 +20,7 @@ from __future__ import (
 )  # needed so we can return NipalsPCA class in our type hints
 import numpy as np
 from sklearn.decomposition._base import _BasePCA
+from sklearn.exceptions import NotFittedError
 import warnings
 from scipy.stats import f as F_dist
 from open_nipals.utils import _nan_mult
@@ -281,7 +282,7 @@ class NipalsPCA(_BasePCA):
                 Defaults to 'naive'.
 
         Raises:
-            ValueError: If model has not been fit yet (no loadings).
+            NotFittedError: If model has not been fit yet (no loadings).
             ValueError: Method 'conditionalMean' is selected but fit_data is
                 not available.
 
@@ -290,7 +291,7 @@ class NipalsPCA(_BasePCA):
         """
         # Check for fit having been done.
         if not self.__sklearn_is_fitted__():
-            raise ValueError(
+            raise NotFittedError(
                 "Model has not yet been fit. Consider using fit_transform."
             )
 
@@ -448,7 +449,7 @@ class NipalsPCA(_BasePCA):
             input_scores (np.ndarray): An array containing the scores.
 
         Raises:
-            ValueError: PCA model has not been fit yet.
+            NotFittedError: PCA model has not been fit yet.
             ValueError: Shape of provided scores does not match n_components
                 in model.
 
@@ -456,7 +457,7 @@ class NipalsPCA(_BasePCA):
             np.ndarray: The approximation of the original data.
         """
         if not self.__sklearn_is_fitted__():
-            raise ValueError(
+            raise NotFittedError(
                 "Model has not yet been fit. "
                 + "Try fit() or fit_transform() instead."
             )
@@ -496,7 +497,7 @@ class NipalsPCA(_BasePCA):
                 {'HotellingT2'}. Defaults to 'HotellingT2'.
 
         Raises:
-            ValueError: Model has not been fit yet.
+            NotFittedError: Model has not been fit yet.
             ValueError: Neither scores nor input data provided.
             ValueError: Input scores are inconsistent with n_components of
                 model.
@@ -509,7 +510,7 @@ class NipalsPCA(_BasePCA):
         """
         # Warnings if not fit
         if not self.__sklearn_is_fitted__():
-            raise ValueError(
+            raise NotFittedError(
                 "Model has not yet been fit. Try fit() or fit_transform()"
                 + " instead."
             )
