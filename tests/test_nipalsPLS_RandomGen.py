@@ -116,13 +116,12 @@ def class_name(cls, num, params_dict: dict) -> str:
     return f"{params_dict['name']}"
 
 
-
 class TestSubFuncs(unittest.TestCase):
     """This is a wrap of the quicker to test things that should check for
     bad behavior or improper use cases"""
 
     def setUp(self) -> None:
-        mod, scaler_x, scaler_y = fitted_model_pass_dat(spec_dat,data_Y)
+        mod, scaler_x, scaler_y = fitted_model_pass_dat(spec_dat, data_Y)
         self.model = mod
         self.scaler_x = scaler_x
         self.scaler_y = scaler_y
@@ -133,7 +132,7 @@ class TestSubFuncs(unittest.TestCase):
     def test_multiFit(self):
         """Test fitting a second time, should throw an error"""
         with self.assertRaises(BaseException) as e:
-            self.model.fit(self.data_x,self.data_y)
+            self.model.fit(self.data_x, self.data_y)
 
             with self.subTest():
                 self.assertIn(
@@ -141,7 +140,7 @@ class TestSubFuncs(unittest.TestCase):
                 )
             with self.subTest():
                 self.assertEqual(self.model.n_components, 2)
-    
+
     def test_is_fitted(self):
         """Test the __sklearn_is_fitted__() method"""
         model = NipalsPLS()
@@ -150,6 +149,7 @@ class TestSubFuncs(unittest.TestCase):
 
         with self.subTest():
             self.assertTrue(self.model.__sklearn_is_fitted__())
+
 
 @parameterized_class(
     [
@@ -273,8 +273,8 @@ class TestFit(unittest.TestCase):
 
     def test_fit_loadings(self):
         """Compare loadings to loadings from package (P)"""
-        test_val = rmse(self.P, self.model[0].loadings_X)
-        lin_val = nan_conc_coeff(self.P, self.model[0].loadings_X)
+        test_val = rmse(self.P, self.model[0].loadings_x)
+        lin_val = nan_conc_coeff(self.P, self.model[0].loadings_x)
         with self.subTest():
             # overall rmse is low
             self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
@@ -406,8 +406,8 @@ class TestFit(unittest.TestCase):
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
 
         # compare X loadings
-        test_val = rmse(model.loadings_X, model_low.loadings_X)
-        lin_val = nan_conc_coeff(model.loadings_X, model_low.loadings_X)
+        test_val = rmse(model.loadings_x, model_low.loadings_x)
+        lin_val = nan_conc_coeff(model.loadings_x, model_low.loadings_x)
         with self.subTest():
             # overall rmse is low
             self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
@@ -467,8 +467,8 @@ class TestFit(unittest.TestCase):
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
 
         # compare X loadings
-        test_val = rmse(self.P, model_low.loadings_X[:, :num_lvs])
-        lin_val = nan_conc_coeff(self.P, model_low.loadings_X[:, :num_lvs])
+        test_val = rmse(self.P, model_low.loadings_x[:, :num_lvs])
+        lin_val = nan_conc_coeff(self.P, model_low.loadings_x[:, :num_lvs])
         with self.subTest():
             # overall rmse is low
             self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")

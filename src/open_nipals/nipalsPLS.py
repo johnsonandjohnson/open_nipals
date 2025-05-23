@@ -64,11 +64,11 @@ class NipalsPLS(_PLS):
         self.fit_data_x = None  # n_rows_x x n_cols_x
         self.fit_data_y = None  # n_rows_y x n_cols_y
 
-        self.loadings_X = None  # n_cols_x x n_components
+        self.loadings_x = None  # n_cols_x x n_components
         self.fit_scores_x = None  # n_rows_x x n_components
-        self.weights_X = None  # n_cols_x x n_components
+        self.weights_x = None  # n_cols_x x n_components
 
-        self.loadings_Y = None  # n_cols_y x n_components
+        self.loadings_y = None  # n_cols_y x n_components
         self.fit_scores_y = None  # n_rows_y x n_components
 
         self.regression_matrix = None  # n_components x n_predictors
@@ -86,8 +86,8 @@ class NipalsPLS(_PLS):
         Returns:
             int
         """
-        if self.loadings_X is not None:
-            return self.loadings_X.shape[1]
+        if self.loadings_x is not None:
+            return self.loadings_x.shape[1]
         else:
             return 0
 
@@ -164,7 +164,7 @@ class NipalsPLS(_PLS):
             input_y = input_y - sim_data_y
 
             p = np.append(
-                self.loadings_X, np.zeros((n_cols_x, n_add)), axis=1
+                self.loadings_x, np.zeros((n_cols_x, n_add)), axis=1
             )  # x loadings
             t = np.append(
                 self.fit_scores_x, np.zeros((n_rows_x, n_add)), axis=1
@@ -173,10 +173,10 @@ class NipalsPLS(_PLS):
                 self.fit_scores_y, np.zeros((n_rows_x, n_add)), axis=1
             )  # y scores
             w = np.append(
-                self.weights_X, np.zeros((n_cols_x, n_add)), axis=1
+                self.weights_x, np.zeros((n_cols_x, n_add)), axis=1
             )  # weights
             q = np.append(
-                self.loadings_Y, np.zeros((n_cols_y, n_add)), axis=1
+                self.loadings_y, np.zeros((n_cols_y, n_add)), axis=1
             )  # y loading
             b = np.zeros(
                 (fitted_components + n_add, fitted_components + n_add)
@@ -290,10 +290,10 @@ class NipalsPLS(_PLS):
             # End of for loop
 
         self.fit_scores_x = t
-        self.loadings_X = p
-        self.weights_X = w
+        self.loadings_x = p
+        self.weights_x = w
         self.fit_scores_y = u
-        self.loadings_Y = q
+        self.loadings_y = q
         self.regression_matrix = b
 
     def set_components(self, n_component: int, verbose: bool = False):
@@ -399,14 +399,14 @@ class NipalsPLS(_PLS):
 
         if input_y is None:
             scores_x = self._transform_XY(
-                input_x, self.loadings_X, weights=self.weights_X
+                input_x, self.loadings_x, weights=self.weights_x
             )
             return scores_x
         else:
             scores_x = self._transform_XY(
-                input_x, self.loadings_X, weights=self.weights_X
+                input_x, self.loadings_x, weights=self.weights_x
             )
-            scores_y = self._transform_XY(input_y, self.loadings_Y)
+            scores_y = self._transform_XY(input_y, self.loadings_y)
             return scores_x, scores_y
 
     def _transform_XY(
@@ -619,7 +619,7 @@ class NipalsPLS(_PLS):
 
         # self.n_components as we may have built loadings to a larger n than
         # the current number of components
-        out_data_x = input_scores_x @ self.loadings_X[:, : self.n_components].T
+        out_data_x = input_scores_x @ self.loadings_x[:, : self.n_components].T
 
         return out_data_x
 
@@ -718,7 +718,7 @@ class NipalsPLS(_PLS):
             pred_y = (
                 scores_x[:, :num_lvs]
                 @ self.regression_matrix[:num_lvs, :num_lvs]
-                @ self.loadings_Y[:, :num_lvs].T
+                @ self.loadings_y[:, :num_lvs].T
             )
         else:
             # if no scores, but input_x, calculate scores and re-call func
@@ -741,8 +741,8 @@ class NipalsPLS(_PLS):
         if not self.__sklearn_is_fitted__():
             raise NotFittedError("Model has not yet been fit")
 
-        reg_vects = self.weights_X @ (
-            self.regression_matrix @ self.loadings_Y.T
+        reg_vects = self.weights_x @ (
+            self.regression_matrix @ self.loadings_y.T
         )
 
         return reg_vects
