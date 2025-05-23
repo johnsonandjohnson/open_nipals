@@ -108,7 +108,7 @@ def fitted_model_pass_dat(
     scaler_x, dat_x_scaled = init_scaler(x)
     scaler_y, dat_y_scaled = init_scaler(y)
     pls_model = NipalsPLS(mean_centered=True)  # pylint: disable=not-callable
-    pls_model.fit(dat_x_scaled, dat_y_scaled)
+    pls_model.fit(X=dat_x_scaled, y=dat_y_scaled)
     return pls_model, scaler_x, scaler_y
 
 
@@ -257,9 +257,9 @@ class TestFit(unittest.TestCase):
         if "NaN" in self.name:
             with warnings.catch_warnings():
                 warnings.filterwarnings("ignore")
-                py_calc_scores = model.transform(scaler_x.transform(in_data))
+                py_calc_scores = model.transform(X=scaler_x.transform(in_data))
         else:
-            py_calc_scores = model.transform(scaler_x.transform(in_data))
+            py_calc_scores = model.transform(X=scaler_x.transform(in_data))
 
         test_val = rmse(model.fit_scores_x, py_calc_scores)
         lin_val = nan_conc_coeff(model.fit_scores_x, py_calc_scores)
@@ -289,7 +289,7 @@ class TestFit(unittest.TestCase):
         """
         py_y_vals = self.model[0].predict(scores_x=self.T)
         py_y_vals = self.model[2].inverse_transform(
-            py_y_vals
+            X=py_y_vals
         )  # reverse standardscaling
         test_val = rmse(self.yhat, py_y_vals)
         lin_val = nan_conc_coeff(self.yhat, py_y_vals)
@@ -353,7 +353,9 @@ class TestFit(unittest.TestCase):
         else:
             transformed_data = scaler_x.transform(in_data)
 
-        test_oomd = model.calc_oomd(transformed_data, metric=metric)
+        test_oomd = model.calc_oomd(
+            input_array=transformed_data, metric=metric
+        )
         test_val = rmse(test_oomd, known_oomd)
         lin_val = nan_conc_coeff(test_oomd, known_oomd)
 
@@ -385,11 +387,11 @@ class TestFit(unittest.TestCase):
             transformed_data_y = scaler_y.transform(self.Y)
 
         model_low = NipalsPLS(n_components=1)
-        model_low.fit(transformed_data_x, transformed_data_y)
+        model_low.fit(X=transformed_data_x, y=transformed_data_y)
 
         # Update to new amount of components
         num_lvs = model.n_components
-        model_low.set_components(num_lvs)
+        model_low.set_components(n_component=num_lvs)
 
         # compare X scores
         if self.name == "Yes NaN, PLST RandomGen":
@@ -449,8 +451,8 @@ class TestFit(unittest.TestCase):
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
 
         # Add an extra component, drop back down
-        model_low.set_components(num_lvs + 1)
-        model_low.set_components(num_lvs)
+        model_low.set_components(n_component=num_lvs + 1)
+        model_low.set_components(n_component=num_lvs)
 
         # compare X scores
         if self.name == "Yes NaN, PLST RandomGen":
@@ -528,7 +530,9 @@ class TestFit(unittest.TestCase):
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
 
         metric, known_oomd = self.oomd
-        test_oomd = model_low.calc_oomd(transformed_data_x, metric=metric)
+        test_oomd = model_low.calc_oomd(
+            input_array=transformed_data_x, metric=metric
+        )
         test_val = rmse(known_oomd, test_oomd)
         lin_val = nan_conc_coeff(test_oomd, known_oomd)
         if self.name == "Yes NaN, PLST RandomGen":
