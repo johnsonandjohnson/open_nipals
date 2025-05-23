@@ -19,13 +19,14 @@ from __future__ import (
     annotations,
 )  # needed so we can return NipalsPCA class in our type hints
 import numpy as np
+from sklearn.decomposition._base import _BasePCA
 import warnings
 from scipy.stats import f as F_dist
 from open_nipals.utils import _nan_mult
 from typing import Optional
 
 
-class NipalsPCA:
+class NipalsPCA(_BasePCA):
     """The custom-built class to use PCA using the NIPALS algorithm, i.e.,
     the same algorithm used in SIMCA.
 
@@ -265,14 +266,12 @@ class NipalsPCA:
 
         return self  # So methods can be chained
 
-    def transform(
-        self, input_array: np.ndarray, method: str = "naive"
-    ) -> np.ndarray:
+    def transform(self, X: np.ndarray, method: str = "naive") -> np.ndarray:
         """This function takes an input array and projects it based
         on a fitted model.
 
         Args:
-            input_array (np.ndarray): The nxm input array in the original
+            X (np.ndarray): The nxm input array in the original
                 feature space to be projected.
             method (str, optional): The method to use for the projection.
                 See reference listed in module docstring.
@@ -293,8 +292,8 @@ class NipalsPCA:
                 "Model has not yet been fit. Consider using fit_transform."
             )
 
-        # Extract shape of input_array
-        n, _ = input_array.shape
+        # Extract shape of X
+        n, _ = X.shape
 
         # Extract variables for simplicity
         num_lvs = self.n_components
@@ -302,7 +301,7 @@ class NipalsPCA:
 
         scores = np.zeros((n, num_lvs))
 
-        nan_mask = np.isnan(input_array)
+        nan_mask = np.isnan(X)
         nan_flag = np.any(nan_mask)
 
         if (not nan_flag) or (method == "naive"):
@@ -311,20 +310,18 @@ class NipalsPCA:
             for ind_lv in range(num_lvs):
                 if nan_flag:
                     scores[:, [ind_lv]] = _nan_mult(
-                        input_array,
+                        X,
                         loadings[:, [ind_lv]],
                         nan_mask,
                         use_denom=True,
                     )
                 else:
-                    scores[:, [ind_lv]] = input_array @ loadings[:, [ind_lv]]
+                    scores[:, [ind_lv]] = X @ loadings[:, [ind_lv]]
                     scores[:, [ind_lv]] = scores[:, [ind_lv]] / (
                         loadings[:, [ind_lv]].T @ loadings[:, [ind_lv]]
                     )
                 # deflate input data
-                input_array = (
-                    input_array - scores[:, [ind_lv]] @ loadings[:, [ind_lv]].T
-                )
+                X = X - scores[:, [ind_lv]] @ loadings[:, [ind_lv]].T
 
         elif nan_flag and (method == "projection"):
             # uses approach described in section 4 of McGregor paper
@@ -336,8 +333,7 @@ class NipalsPCA:
                     @ loadings[not_null, :num_lvs]
                 )  # denominator in eq. 9
                 nom = (
-                    loadings[not_null, :num_lvs].T
-                    @ input_array[row, not_null].T
+                    loadings[not_null, :num_lvs].T @ X[row, not_null].T
                 )  # nominator in eq. 9
                 scores[row, :] = (denom @ nom).T
 
@@ -372,23 +368,19 @@ class NipalsPCA:
                     S22 = P[not_null, :] @ theta @ P[not_null, :].T
 
                     # compute an estimate for the missing data
-                    z_hash = (
-                        S12 @ np.linalg.inv(S22) @ input_array[row, not_null].T
-                    )
-                    input_array[row, is_null] = z_hash
+                    z_hash = S12 @ np.linalg.inv(S22) @ X[row, not_null].T
+                    X[row, is_null] = z_hash
 
-                scores[row, :] = (P.T @ input_array[row, :].T)[
-                    0 : self.n_components
-                ]
+                scores[row, :] = (P.T @ X[row, :].T)[0 : self.n_components]
 
         # Give the people what they want!
         return scores
 
-    def fit(self, input_array: np.ndarray, verbose: bool = False) -> NipalsPCA:
+    def fit(self, X: np.ndarray, verbose: bool = False) -> NipalsPCA:
         """Fits PCA model to input data.
 
         Args:
-            input_array (np.ndarray): The input data to fit on.
+            X (np.ndarray): The input data to fit on.
             verbose (bool, optional): Whether or not to print out additional
                 convergence information. Defaults to False.
 
@@ -401,7 +393,7 @@ class NipalsPCA:
                 + " Try set_components() or build a new model object."
             )
         # n is the number of observations, m the number of variables/features
-        self.fit_data = np.copy(input_array)
+        self.fit_data = np.copy(X)
 
         self._add_components(n_add=self.n_components, verbose=verbose)
 
@@ -409,7 +401,7 @@ class NipalsPCA:
         return self
 
     def fit_transform(
-        self, input_array: np.ndarray, verbose: bool = False
+        self, X: np.ndarray, verbose: bool = False
     ) -> np.ndarray:
         """Fit, then transform input data.
 
@@ -419,7 +411,7 @@ class NipalsPCA:
         >>>> P.fit(X)
         >>>> T = P.transform(X)
         Args:
-            input_array (np.ndarray): The The input data to fit on and
+            X (np.ndarray): The The input data to fit on and
                 to transform.
             verbose (bool, optional): Whether or not to print out additional
                 convergence information. Defaults to False.
@@ -431,7 +423,7 @@ class NipalsPCA:
             np.ndarray: The corresponding scores.
         """
         if self.fitted_components == 0:
-            self.fit(input_array, verbose=verbose)
+            self.fit(X, verbose=verbose)
             scores = self.fit_scores.copy()
 
             return scores
@@ -440,11 +432,11 @@ class NipalsPCA:
                 "Model has already been fit. Try transform instead."
             )
 
-    def inverse_transform(self, input_scores: np.ndarray) -> np.ndarray:
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         """Approximate original data from scores.
 
         Args:
-            input_scores (np.ndarray): An array containing the scores.
+            X (np.ndarray): An array containing the scores.
 
         Raises:
             ValueError: PCA model has not been fit yet.
@@ -460,18 +452,18 @@ class NipalsPCA:
                 + "Try fit() or fit_transform() instead."
             )
 
-        # Check size of input_scores:
-        _, m = input_scores.shape
+        # Check size of X:
+        _, m = X.shape
 
         if m != self.n_components:
             raise ValueError(
-                "input_scores has number of columns different than number"
+                "X has number of columns different than number"
                 + " of components in model"
             )
 
         # self.n_components as we may have built loadings to a larger n than
         # the current number of components.
-        out_data = input_scores @ self.loadings[:, : self.n_components].T
+        out_data = X @ self.loadings[:, : self.n_components].T
 
         return out_data
 

@@ -24,12 +24,13 @@ from __future__ import (
     annotations,
 )  # needed so we can return NipalsPLS class in our type hints
 import numpy as np
+from sklearn.cross_decomposition._pls import _PLS
 import warnings
 from open_nipals.utils import _nan_mult
 from typing import Optional, Tuple, Union
 
 
-class NipalsPLS:
+class NipalsPLS(_PLS):
     def __init__(
         self,
         n_components: int = 2,
@@ -89,12 +90,12 @@ class NipalsPLS:
         else:
             return 0
 
-    def _filter_nan_rows(self, input_x, input_y):
+    def _filter_nan_rows(self, X, y):
         """filter the nan rows and remove them,
         depending on force_include parameter
         """
         # Find rows in which all Y-values are NaN
-        y_nan_rows = np.all(np.isnan(input_y), axis=1)
+        y_nan_rows = np.all(np.isnan(y), axis=1)
         if np.any(y_nan_rows):
             # Warn the user
             warnings.warn("Some Y-rows have no data in them!")
@@ -106,11 +107,11 @@ class NipalsPLS:
                     "Rows with all NaNs in Y are dropped, see force_include."
                 )
                 rows_to_keep = np.invert(y_nan_rows)
-                input_y = input_y[rows_to_keep, :]
-                input_x = input_x[rows_to_keep, :]
+                y = y[rows_to_keep, :]
+                X = X[rows_to_keep, :]
 
         # Store the data used to fit
-        return input_x.copy(), input_y.copy()
+        return X.copy(), y.copy()
 
     def _add_components(self, n_add: int, verbose: bool = False):
         """Method for adding components to an already-constructed
@@ -121,13 +122,11 @@ class NipalsPLS:
             verbose (bool): Whether or not to print out additional
                 convergence information. Defaults to False.
         """
-        input_x = self.fit_data_x.copy()
-        input_y = self.fit_data_y.copy()
+        X = self.fit_data_x.copy()
+        y = self.fit_data_y.copy()
 
         # filter and store the data used to fit
-        self.fit_data_x, self.fit_data_y = self._filter_nan_rows(
-            input_x, input_y
-        )
+        self.fit_data_x, self.fit_data_y = self._filter_nan_rows(X, y)
 
         # Pull out shapes
         n_rows_x, n_cols_x = self.fit_data_x.shape
@@ -156,10 +155,10 @@ class NipalsPLS:
             num_lvs = range(fitted_components, fitted_components + n_add)
 
             # There are loadings, so must deflate
-            sim_data_x = self.inverse_transform(self.transform(input_x))
-            sim_data_y = self.predict(input_x, self.fit_scores_x)
-            input_x = input_x - sim_data_x
-            input_y = input_y - sim_data_y
+            sim_data_x = self.inverse_transform(self.transform(X))
+            sim_data_y = self.predict(X, self.fit_scores_x)
+            X = X - sim_data_x
+            y = y - sim_data_y
 
             p = np.append(
                 self.loadings_x, np.zeros((n_cols_x, n_add)), axis=1
@@ -185,13 +184,13 @@ class NipalsPLS:
 
         # residual matrices for first LV
         # x residuals, initiated as X (will be deflated in subsequent steps)
-        x_res = input_x
-        # y residuals, initiaed as Y (will be deflated in subsequent steps)
-        y_res = input_y
+        x_res = X
+        # y residuals, initiated as y (will be deflated in subsequent steps)
+        y_res = y
 
-        # nan_mask for X-block and Y-block
-        nan_mask_x = np.isnan(input_x)
-        nan_mask_y = np.isnan(input_y)
+        # nan_mask for X-block and y-block
+        nan_mask_x = np.isnan(X)
+        nan_mask_y = np.isnan(y)
         nan_flag = np.any(nan_mask_x) or np.any(nan_mask_y)
         # Loop over each LVs
         for ind_lv in num_lvs:
@@ -326,15 +325,15 @@ class NipalsPLS:
 
     def fit(
         self,
-        input_x: np.array,
-        input_y: np.array,
+        X: np.array,
+        y: np.array,
         verbose: bool = False,
     ) -> NipalsPLS:
         """Function to fit PLS model from X/Y Data.
 
         Args:
-            input_x (np.array): Input X data.
-            input_y (np.array): Input Y data.
+            X (np.array): Input X data.
+            y (np.array): Input Y data.
             verbose (bool, optional): Turn verbosity on and off.
                 Defaults to False.
 
@@ -351,13 +350,13 @@ class NipalsPLS:
             )
 
         # Check to see if the data is mean_centered; if not raise a warning
-        if (not self._check_mean_centered(input_x)) and (self.mean_centered):
+        if (not self._check_mean_centered(X)) and (self.mean_centered):
             warnings.warn(
                 "X-Block appears to not be mean centered. "
                 + "This will cause errors in prediction!"
             )
 
-        if (not self._check_mean_centered(input_y)) and (
+        if (not self._check_mean_centered(y)) and (
             self.mean_centered
         ):  # see above
             warnings.warn(
@@ -365,8 +364,8 @@ class NipalsPLS:
                 + "This will cause errors in prediction!"
             )
 
-        self.fit_data_x = np.copy(input_x)
-        self.fit_data_y = np.copy(input_y)
+        self.fit_data_x = np.copy(X)
+        self.fit_data_y = np.copy(y)
 
         self._add_components(n_add=self.n_components, verbose=verbose)
 
@@ -374,13 +373,13 @@ class NipalsPLS:
         return self
 
     def transform(
-        self, input_x: np.array, input_y: Optional[np.array] = None
+        self, X: np.array, y: Optional[np.array] = None
     ) -> Union[np.array, Tuple[np.array, np.array]]:
         """Compute scores using model.
 
         Args:
-            input_x (np.array): X-data.
-            input_y (np.array, optional): Y-data. Defaults to None.
+            X (np.array): X-data.
+            y (np.array, optional): Y-data. Defaults to None.
 
         Raises:
             ValueError: If model is not fit.
@@ -395,16 +394,16 @@ class NipalsPLS:
         if self.loadings_x is None:
             raise ValueError("Model has not yet been fit.")
 
-        if input_y is None:
+        if y is None:
             scores_x = self._transform_xy(
-                input_x, self.loadings_x, weights=self.weights_x
+                X, self.loadings_x, weights=self.weights_x
             )
             return scores_x
         else:
             scores_x = self._transform_xy(
-                input_x, self.loadings_x, weights=self.weights_x
+                X, self.loadings_x, weights=self.weights_x
             )
-            scores_y = self._transform_xy(input_y, self.loadings_y)
+            scores_y = self._transform_xy(y, self.loadings_y)
             return scores_x, scores_y
 
     def _transform_xy(
@@ -477,13 +476,13 @@ class NipalsPLS:
             return maxmean < 10**-10
 
     def fit_transform(
-        self, input_x: np.array, input_y: np.array
+        self, X: np.array, y: np.array
     ) -> Tuple[np.array, np.array]:
         """Combine fit and transform methods into one command, sklearn style.
 
         Args:
-            input_x (np.array): The X-data.
-            input_y (np.array): The Y-data.
+            X (np.array): The X-data.
+            y (np.array): The Y-data.
 
         Raises:
             ValueError: If attempt to use fit_transform on already fitted data.
@@ -496,7 +495,7 @@ class NipalsPLS:
         # Check whether the model is available or not
         if self.fitted_components == 0:
             # Fit
-            self.fit(input_x, input_y)
+            self.fit(X, y)
             # Return X/Y Scores
             scores_x = self.fit_scores_x
             scores_y = self.fit_scores_y
@@ -555,7 +554,7 @@ class NipalsPLS:
                     "Both Scores and Data are given. Operating on Data alone."
                 )
             # Get Scores
-            scores = self.transform(input_x=input_array)
+            scores = self.transform(X=input_array)
         elif input_scores is not None:  # If scores only, use those
             scores = input_scores
 
@@ -586,11 +585,11 @@ class NipalsPLS:
 
         return out_imd
 
-    def inverse_transform(self, input_scores_x: np.array) -> np.array:
+    def inverse_transform(self, X: np.array) -> np.array:
         """Given a set of scores, return the simulated data.
 
         Args:
-            input_scores_x (np.array): The scores to transform back.
+            X (np.array): The scores to transform back.
 
         Raises:
             ValueError: If model has not been fit.
@@ -607,7 +606,7 @@ class NipalsPLS:
             )
 
         # Check size of input_scores:
-        _, m = input_scores_x.shape
+        _, m = X.shape
 
         if m != self.n_components:
             raise ValueError(
@@ -617,7 +616,7 @@ class NipalsPLS:
 
         # self.n_components as we may have built loadings to a larger n than
         # the current number of components
-        out_data_x = input_scores_x @ self.loadings_x[:, : self.n_components].T
+        out_data_x = X @ self.loadings_x[:, : self.n_components].T
 
         return out_data_x
 
@@ -650,7 +649,7 @@ class NipalsPLS:
             scores = self.transform(input_array)
 
             # Calculate Fitted Data
-            modeled_data = self.inverse_transform(scores)
+            modeled_data = self.inverse_transform(X=scores)
 
             # Calculate Residuals
             residual = input_array - modeled_data
@@ -687,13 +686,13 @@ class NipalsPLS:
         return out_oomd
 
     def predict(
-        self, input_x: np.array = None, scores_x: np.array = None
+        self, X: np.array = None, scores_x: np.array = None
     ) -> np.array:
         """Predict y from data or scores.
 
         Args:
-            input_x (np.array, optional): [description]. Defaults to None.
-            scores_x (np.array, optional): [description]. Defaults to None.
+            X (np.array, optional): Input X data. Defaults to None.
+            scores_x (np.array, optional): Input scores. Defaults to None.
 
         Raises:
             ValueError: If model has not been fit.
@@ -708,7 +707,7 @@ class NipalsPLS:
             raise ValueError("Model has not yet been fit")
 
         # Handle different inputs, either scores or raw data
-        if (input_x is None) and (scores_x is None):
+        if (X is None) and (scores_x is None):
             raise ValueError("Provide either data or scores")
         elif scores_x is not None:
             # if scores are present, calculate the result
@@ -719,8 +718,8 @@ class NipalsPLS:
                 @ self.loadings_y[:, :num_lvs].T
             )
         else:
-            # if no scores, but input_x, calculate scores and re-call func
-            scores_x = self.transform(input_x)
+            # if no scores, but X, calculate scores and re-call func
+            scores_x = self.transform(X)
             pred_y = self.predict(scores_x=scores_x)
 
         return pred_y  # Give the people what they want

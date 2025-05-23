@@ -110,7 +110,7 @@ def fitted_model_pass_dat(x: np.ndarray) -> Tuple[NipalsPCA, StandardScaler]:
     scaler_x, dat_x_scaled = init_scaler(x)
 
     pca_model = NipalsPCA(mean_centered=True)  # pylint: disable=not-callable
-    pca_model.fit(input_array=dat_x_scaled)
+    pca_model.fit(X=dat_x_scaled)
     return pca_model, scaler_x
 
 
@@ -135,7 +135,7 @@ class TestSubFuncs(unittest.TestCase):
         model = NipalsPCA().fit(self.data_scaled)
 
         with self.assertRaises(BaseException) as e:
-            model.fit(input_array=self.data_scaled)
+            model.fit(X=self.data_scaled)
 
             with self.subTest():
                 self.assertIn(
@@ -192,9 +192,7 @@ class TestFit(unittest.TestCase):
         model = self.model[0]
         scaler_x = self.model[1]
         input_data = self.X
-        py_calc_scores = model.transform(
-            input_array=scaler_x.transform(input_data)
-        )
+        py_calc_scores = model.transform(X=scaler_x.transform(input_data))
         test_val = rmse(model.fit_scores, py_calc_scores)
         lin_val = nan_conc_coeff(model.fit_scores, py_calc_scores)
         with self.subTest():

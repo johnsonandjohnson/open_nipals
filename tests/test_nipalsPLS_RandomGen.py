@@ -108,7 +108,7 @@ def fitted_model_pass_dat(
     scaler_x, dat_x_scaled = init_scaler(x)
     scaler_y, dat_y_scaled = init_scaler(y)
     pls_model = NipalsPLS(mean_centered=True)  # pylint: disable=not-callable
-    pls_model.fit(input_x=dat_x_scaled, input_y=dat_y_scaled)
+    pls_model.fit(X=dat_x_scaled, y=dat_y_scaled)
     return pls_model, scaler_x, scaler_y
 
 
@@ -222,13 +222,9 @@ class TestFit(unittest.TestCase):
         if "NaN" in self.name:
             with warnings.catch_warnings():
                 warnings.filterwarnings("ignore")
-                py_calc_scores = model.transform(
-                    input_x=scaler_x.transform(in_data)
-                )
+                py_calc_scores = model.transform(X=scaler_x.transform(in_data))
         else:
-            py_calc_scores = model.transform(
-                input_x=scaler_x.transform(in_data)
-            )
+            py_calc_scores = model.transform(X=scaler_x.transform(in_data))
 
         test_val = rmse(model.fit_scores_x, py_calc_scores)
         lin_val = nan_conc_coeff(model.fit_scores_x, py_calc_scores)
@@ -258,7 +254,7 @@ class TestFit(unittest.TestCase):
         """
         py_y_vals = self.model[0].predict(scores_x=self.T)
         py_y_vals = self.model[2].inverse_transform(
-            py_y_vals
+            X=py_y_vals
         )  # reverse standardscaling
         test_val = rmse(self.yhat, py_y_vals)
         lin_val = nan_conc_coeff(self.yhat, py_y_vals)
@@ -356,7 +352,7 @@ class TestFit(unittest.TestCase):
             transformed_data_y = scaler_y.transform(self.Y)
 
         model_low = NipalsPLS(n_components=1)
-        model_low.fit(input_x=transformed_data_x, input_y=transformed_data_y)
+        model_low.fit(X=transformed_data_x, y=transformed_data_y)
 
         # Update to new amount of components
         num_lvs = model.n_components
