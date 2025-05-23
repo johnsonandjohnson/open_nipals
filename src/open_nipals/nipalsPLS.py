@@ -404,7 +404,7 @@ class NipalsPLS(_PLS):
             scores_x = self._transform_xy(
                 X, self.loadings_x, weights=self.weights_x
             )
-            scores_y = self._transform_XY(input_y, self.loadings_y)
+            scores_y = self._transform_xy(y, self.loadings_y)
             return scores_x, scores_y
 
     def _transform_xy(

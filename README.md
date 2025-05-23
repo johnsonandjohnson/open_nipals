@@ -78,7 +78,7 @@ from open_nipals.nipalsPCA import NipalsPCA
 
 # data is the numpy data matrix generated in the preprocessing
 model = NipalsPCA()
-transformed_data = model.fit_transform(data)
+transformed_data = model.fit_transform(X=data)
 ```
 
 ### PLS
@@ -88,7 +88,7 @@ from open_nipals.nipalsPLS import NipalsPLS
 # note the X/Y data blocks would need to have
 # separate arrangeData and StandardScaler objects
 model = NipalsPLS()
-transformed_x_data, transformed_y_data = model.fit_transform(data_x, data_y)
+transformed_x_data, transformed_y_data = model.fit_transform(X=data_x, y=data_y)
 ```
 
 ## Distances
@@ -105,7 +105,7 @@ dmodx = model.calc_oomd(input_array = data, metric = "DModX")
 One particular feature of PLS models is that they can predict dependent variables. To this end, run `model.predict()`, where either a matrix of X data `input_x`, 
 or a matrix of X scores `scores_x` need to be given as arguments, e.g. 
 ```python
-predicted_y_data = model.predict(input_x=data_x)
+predicted_y_data = model.predict(X=data_x)
 ```
 
 
