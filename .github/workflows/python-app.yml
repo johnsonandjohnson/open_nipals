@@ -25,7 +25,7 @@ jobs:
         python-version: "3.10"
     - name: Check data files
       if: ${{ hashFiles('data/') != '' }}
-      run: print ${{ hashFiles('data/') }}
+      run: hashFiles('data/')
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
