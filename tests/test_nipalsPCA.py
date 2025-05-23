@@ -143,6 +143,18 @@ class TestSubFuncs(unittest.TestCase):
                 )
             with self.subTest():
                 self.assertEqual(model.n_components, 2)
+    
+    def test_is_fitted(self):
+        """Test the __sklearn_is_fitted__() method"""
+        model = NipalsPCA()
+        with self.subTest():
+            self.assertFalse(model.__sklearn_is_fitted__())
+
+        model = NipalsPCA().fit(self.data_scaled)
+        with self.subTest():
+            self.assertTrue(model.__sklearn_is_fitted__())
+
+
 
 
 @parameterized_class(
