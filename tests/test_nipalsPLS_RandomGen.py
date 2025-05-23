@@ -23,12 +23,12 @@ from open_nipals.nipalsPLS import NipalsPLS
 path = Path(__file__).parents[1].joinpath("data")
 
 simca_test_data = pd.read_excel(
-    path.joinpath("randomGen_SIMCAResults.xlsx"),
+    path.joinpath("randomGenSIMCAResults.xlsx"),
     sheet_name=["YesNan_Var", "YesNan_Obs", "NoNan_Var", "NoNan_Obs"],
     header=None,
 )
 plst_test_data = pd.read_excel(
-    path.joinpath("randomGen_PLSTResults.xlsx"),
+    path.joinpath("randomGenPLSTResults.xlsx"),
     sheet_name=["YesNan_Var", "YesNan_Obs", "NoNan_Var", "NoNan_Obs"],
     header=None,
 )

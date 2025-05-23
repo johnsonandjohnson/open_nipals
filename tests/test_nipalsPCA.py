@@ -20,14 +20,14 @@ pca_dat = pd.read_excel(
 input_array = pca_dat.to_numpy()
 
 df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
+    path.joinpath("SIMCAScaledFullDatLoadings.xlsx"),
     engine="openpyxl",
     usecols=[1, 2],
 )  # First column is garbage index
 simca_loads = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
-    path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath("SIMCAScaledFullDatScoresT2RangeDMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores = df_simca_sample_dat.to_numpy()[
@@ -43,14 +43,14 @@ nan_dat = pd.read_excel(
 input_array_nan = nan_dat.to_numpy()
 
 df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
+    path.joinpath("SIMCAScaledNanDatLoadings.xlsx"),
     engine="openpyxl",
     usecols=[1, 2],
 )  # First column is garbage index
 simca_loads_nan = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath("SIMCAScaledNanDatScoresT2RangeDMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores_nan = df_simca_sample_dat.to_numpy()[
@@ -143,7 +143,7 @@ class TestSubFuncs(unittest.TestCase):
                 )
             with self.subTest():
                 self.assertEqual(model.n_components, 2)
-    
+
     def test_is_fitted(self):
         """Test the __sklearn_is_fitted__() method"""
         model = NipalsPCA()
@@ -153,8 +153,6 @@ class TestSubFuncs(unittest.TestCase):
         model = NipalsPCA().fit(self.data_scaled)
         with self.subTest():
             self.assertTrue(model.__sklearn_is_fitted__())
-
-
 
 
 @parameterized_class(
