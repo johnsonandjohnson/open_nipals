@@ -22,8 +22,8 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    # - name: XDTesting Print Directory Structure
-    #   uses: FiorelaCiroku/XDTesting-Print-Directory-Structure@v1.0.2
+    - name: XDTesting Print Directory Structure
+      uses: FiorelaCiroku/XDTesting-Print-Directory-Structure@v1.0.2
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -36,6 +36,8 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
     - name: Check test file is there
       run: |
-        if [ -f data/SIMCA_ScaledNanDat_Loadings.xlsx ]; then echo "file is there"; else echo "file absent"; fi
+        if [ -f data/SIMCA_ScaledNanDat_Loadings.xlsx ]; then echo "xlsx file is there"; else echo "xlsx file absent"; fi
+        if [ -f data/nanData.csv ]; then echo "csv file is there"; else echo "csv file absent"; fi
+        if [ -f tests/test_nipalsPCA.py ]; then echo "test is there"; else echo "test absent"; fi
     - name: Test with tox
       run: tox
