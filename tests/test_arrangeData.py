@@ -15,7 +15,7 @@ class TestArrDatObj(unittest.TestCase):
         # Load Data
         path = Path(__file__).parents[1].joinpath("data")
         pca_dat = pd.read_excel(
-            path.joinpath(r"PCATestData.xlsx"), header=None, engine="openpyxl"
+            path.joinpath("PCATestData.xlsx"), header=None, engine="openpyxl"
         )
         arr_dat_obj = ArrangeData()
         arr_dat_obj.fit(pca_dat)
