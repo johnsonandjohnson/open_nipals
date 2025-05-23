@@ -36,6 +36,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
     - name: Check test file is there
       run: |
-        if [ -f /home/runner/work/open_nipals/open_nipals/data/SIMCA_ScaledNanDat_Loadings.xlsx ]; then echo "file is there"; fi
+        if [ -f data/SIMCA_ScaledNanDat_Loadings.xlsx ]; then echo "file is there"; else echo "file absent"; fi
     - name: Test with tox
       run: tox
