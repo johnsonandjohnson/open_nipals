@@ -23,19 +23,19 @@ from open_nipals.nipalsPLS import NipalsPLS
 path = Path(__file__).parents[1].joinpath("data")
 
 simca_test_data = pd.read_excel(
-    path.joinpath("randomGenSIMCAResults.xlsx"),
+    path.joinpath(r"randomGen_SIMCAResults.xlsx"),
     sheet_name=["YesNan_Var", "YesNan_Obs", "NoNan_Var", "NoNan_Obs"],
     header=None,
 )
 plst_test_data = pd.read_excel(
-    path.joinpath("randomGenPLSTResults.xlsx"),
+    path.joinpath(r"randomGen_PLSTResults.xlsx"),
     sheet_name=["YesNan_Var", "YesNan_Obs", "NoNan_Var", "NoNan_Obs"],
     header=None,
 )
 
-spec_dat = pd.read_csv(path.joinpath("XData.csv")).iloc[:, 1:].to_numpy()
-nan_dat = pd.read_csv(path.joinpath("nanData.csv")).iloc[:, 1:].to_numpy()
-data_Y = pd.read_csv(path.joinpath("YData.csv")).iloc[:, [1]].to_numpy()
+spec_dat = pd.read_csv(path.joinpath(r"XData.csv")).iloc[:, 1:].to_numpy()
+nan_dat = pd.read_csv(path.joinpath(r"nanData.csv")).iloc[:, 1:].to_numpy()
+data_Y = pd.read_csv(path.joinpath(r"YData.csv")).iloc[:, [1]].to_numpy()
 
 
 def nan_conc_coeff(y: np.array, yhat: np.array) -> float:
