@@ -25,6 +25,7 @@ from __future__ import (
 )  # needed so we can return NipalsPLS class in our type hints
 import numpy as np
 from sklearn.cross_decomposition._pls import _PLS
+from sklearn.exceptions import NotFittedError
 import warnings
 from open_nipals.utils import _nan_mult
 from typing import Optional, Tuple, Union
@@ -63,11 +64,11 @@ class NipalsPLS(_PLS):
         self.fit_data_x = None  # n_rows_x x n_cols_x
         self.fit_data_y = None  # n_rows_y x n_cols_y
 
-        self.loadings_X = None  # n_cols_x x n_components
+        self.loadings_x = None  # n_cols_x x n_components
         self.fit_scores_x = None  # n_rows_x x n_components
-        self.weights_X = None  # n_cols_x x n_components
+        self.weights_x = None  # n_cols_x x n_components
 
-        self.loadings_Y = None  # n_cols_y x n_components
+        self.loadings_y = None  # n_cols_y x n_components
         self.fit_scores_y = None  # n_rows_y x n_components
 
         self.regression_matrix = None  # n_components x n_predictors
@@ -85,8 +86,8 @@ class NipalsPLS(_PLS):
         Returns:
             int
         """
-        if self.loadings_X is not None:
-            return self.loadings_X.shape[1]
+        if self.loadings_x is not None:
+            return self.loadings_x.shape[1]
         else:
             return 0
 
@@ -163,7 +164,7 @@ class NipalsPLS(_PLS):
             input_y = input_y - sim_data_y
 
             p = np.append(
-                self.loadings_X, np.zeros((n_cols_x, n_add)), axis=1
+                self.loadings_x, np.zeros((n_cols_x, n_add)), axis=1
             )  # x loadings
             t = np.append(
                 self.fit_scores_x, np.zeros((n_rows_x, n_add)), axis=1
@@ -172,10 +173,10 @@ class NipalsPLS(_PLS):
                 self.fit_scores_y, np.zeros((n_rows_x, n_add)), axis=1
             )  # y scores
             w = np.append(
-                self.weights_X, np.zeros((n_cols_x, n_add)), axis=1
+                self.weights_x, np.zeros((n_cols_x, n_add)), axis=1
             )  # weights
             q = np.append(
-                self.loadings_Y, np.zeros((n_cols_y, n_add)), axis=1
+                self.loadings_y, np.zeros((n_cols_y, n_add)), axis=1
             )  # y loading
             b = np.zeros(
                 (fitted_components + n_add, fitted_components + n_add)
@@ -289,10 +290,10 @@ class NipalsPLS(_PLS):
             # End of for loop
 
         self.fit_scores_x = t
-        self.loadings_X = p
-        self.weights_X = w
+        self.loadings_x = p
+        self.weights_x = w
         self.fit_scores_y = u
-        self.loadings_Y = q
+        self.loadings_y = q
         self.regression_matrix = b
 
     def set_components(self, n_component: int, verbose: bool = False):
@@ -340,13 +341,13 @@ class NipalsPLS(_PLS):
                 Defaults to False.
 
         Raises:
-            ValueError: [description]
+            NotFittedError: Model has not yet been fit
 
         Returns:
             NipalsPLS: A reference to the object.
         """
-        if self.fitted_components > 0:
-            raise ValueError(
+        if self.__sklearn_is_fitted__():
+            raise NotFittedError(
                 "Model Object has already been fit."
                 + " Try set_components() or build a new model object."
             )
@@ -384,7 +385,7 @@ class NipalsPLS(_PLS):
             input_y (np.array, optional): Y-data. Defaults to None.
 
         Raises:
-            ValueError: If model is not fit.
+            NotFittedError: If model is not fit.
 
         Returns:
             Union[np.array, Tuple[np.array, np.array]]: Either the
@@ -393,19 +394,19 @@ class NipalsPLS(_PLS):
         """
 
         # Check whether the model is available or not
-        if self.loadings_X is None:
-            raise ValueError("Model has not yet been fit.")
+        if not self.__sklearn_is_fitted__():
+            raise NotFittedError("Model has not yet been fit.")
 
         if input_y is None:
             scores_x = self._transform_XY(
-                input_x, self.loadings_X, weights=self.weights_X
+                input_x, self.loadings_x, weights=self.weights_x
             )
             return scores_x
         else:
             scores_x = self._transform_XY(
-                input_x, self.loadings_X, weights=self.weights_X
+                input_x, self.loadings_x, weights=self.weights_x
             )
-            scores_y = self._transform_XY(input_y, self.loadings_Y)
+            scores_y = self._transform_XY(input_y, self.loadings_y)
             return scores_x, scores_y
 
     def _transform_XY(
@@ -495,7 +496,7 @@ class NipalsPLS(_PLS):
         """
 
         # Check whether the model is available or not
-        if self.fitted_components == 0:
+        if not self.__sklearn_is_fitted__():
             # Fit
             self.fit(input_x, input_y)
             # Return X/Y Scores
@@ -527,7 +528,7 @@ class NipalsPLS(_PLS):
                 Must be one of set {'HotellingT2'}. Defaults to 'HotellingT2'.
 
         Raises:
-            ValueError: If model has not been fit.
+            NotFittedError: If model has not been fit.
             ValueError: If neither scores nor data are provided.
             ValueError: If input scores shapes does not match model.
             ValueError: If unknown metric was requested.
@@ -537,8 +538,8 @@ class NipalsPLS(_PLS):
         """
 
         # Warnings and errors
-        if self.fitted_components == 0:  # if not fit
-            raise ValueError(
+        if not self.__sklearn_is_fitted__():  # if not fit
+            raise NotFittedError(
                 "Model has not yet been fit. "
                 + "Try fit() or fit_transform() instead."
             )
@@ -594,15 +595,15 @@ class NipalsPLS(_PLS):
             input_scores_x (np.array): The scores to transform back.
 
         Raises:
-            ValueError: If model has not been fit.
+            NotFittedError: If model has not been fit.
             ValueError: If input scores shapes does not match model.
 
         Returns:
             np.array: The simulated data.
         """
 
-        if self.fitted_components == 0:
-            raise ValueError(
+        if not self.__sklearn_is_fitted__():
+            raise NotFittedError(
                 "Model has not yet been fit. "
                 + "Try fit() or fit_transform() instead."
             )
@@ -618,7 +619,7 @@ class NipalsPLS(_PLS):
 
         # self.n_components as we may have built loadings to a larger n than
         # the current number of components
-        out_data_x = input_scores_x @ self.loadings_X[:, : self.n_components].T
+        out_data_x = input_scores_x @ self.loadings_x[:, : self.n_components].T
 
         return out_data_x
 
@@ -697,7 +698,7 @@ class NipalsPLS(_PLS):
             scores_x (np.array, optional): [description]. Defaults to None.
 
         Raises:
-            ValueError: If model has not been fit.
+            NotFittedError: If model has not been fit.
             ValueError: If neither data nor scores are provided.
 
         Returns:
@@ -705,8 +706,8 @@ class NipalsPLS(_PLS):
         """
 
         # Check whether the model is available or not
-        if self.loadings_X is None:
-            raise ValueError("Model has not yet been fit")
+        if not self.__sklearn_is_fitted__():
+            raise NotFittedError("Model has not yet been fit")
 
         # Handle different inputs, either scores or raw data
         if (input_x is None) and (scores_x is None):
@@ -717,7 +718,7 @@ class NipalsPLS(_PLS):
             pred_y = (
                 scores_x[:, :num_lvs]
                 @ self.regression_matrix[:num_lvs, :num_lvs]
-                @ self.loadings_Y[:, :num_lvs].T
+                @ self.loadings_y[:, :num_lvs].T
             )
         else:
             # if no scores, but input_x, calculate scores and re-call func
@@ -730,18 +731,26 @@ class NipalsPLS(_PLS):
         """Give the user the regression vector for the model.
 
         Raises:
-            ValueError: If the model has not been fit.
+            NotFittedError: If the model has not been fit.
 
         Returns:
             np.array: The regression vector.
         """
 
         # Check whether the model is available or not
-        if self.loadings_X is None:
-            raise ValueError("Model has not yet been fit")
+        if not self.__sklearn_is_fitted__():
+            raise NotFittedError("Model has not yet been fit")
 
-        reg_vects = self.weights_X @ (
-            self.regression_matrix @ self.loadings_Y.T
+        reg_vects = self.weights_x @ (
+            self.regression_matrix @ self.loadings_y.T
         )
 
         return reg_vects
+
+    def __sklearn_is_fitted__(self) -> bool:
+        """Determine if this is fitted or not
+
+        Returns:
+            bool: is fitted or not
+        """
+        return not (self.fitted_components == 0)
