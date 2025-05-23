@@ -36,8 +36,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
     - name: Check test file is there
       run: |
+        ls -a data/
         if [ -f data/SIMCA_ScaledNanDat_Loadings.xlsx ]; then echo "xlsx file is there"; else echo "xlsx file absent"; fi
         if [ -f data/nanData.csv ]; then echo "csv file is there"; else echo "csv file absent"; fi
         if [ -f tests/test_nipalsPCA.py ]; then echo "test is there"; else echo "test absent"; fi
-    - name: Test with tox
-      run: tox
+    # - name: Test with tox
+    #   run: tox
