@@ -15,19 +15,19 @@ import sys
 path = Path(__file__).parents[1].joinpath("data")
 
 pca_dat = pd.read_excel(
-    path.joinpath("PCATestData.xlsx"), header=None, engine="openpyxl"
+    path.joinpath(r"PCATestData.xlsx"), header=None, engine="openpyxl"
 )
 input_array = pca_dat.to_numpy()
 
 df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
+    path.joinpath(r"SIMCA_ScaledFullDat_Loadings.xlsx"),
     engine="openpyxl",
     usecols=[1, 2],
 )  # First column is garbage index
 simca_loads = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
-    path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath(r"SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores = df_simca_sample_dat.to_numpy()[
@@ -38,19 +38,19 @@ simca_DmodX_abs = df_simca_sample_dat.to_numpy()[:, 4:5]
 
 # NAN data
 nan_dat = pd.read_excel(
-    path.joinpath("PCANanData.xlsx"), header=None, engine="openpyxl"
+    path.joinpath(r"PCANanData.xlsx"), header=None, engine="openpyxl"
 )
 input_array_nan = nan_dat.to_numpy()
 
 df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
+    path.joinpath(r"SIMCA_ScaledNanDat_Loadings.xlsx"),
     engine="openpyxl",
     usecols=[1, 2],
 )  # First column is garbage index
 simca_loads_nan = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath(r"SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores_nan = df_simca_sample_dat.to_numpy()[
@@ -143,7 +143,7 @@ class TestSubFuncs(unittest.TestCase):
                 )
             with self.subTest():
                 self.assertEqual(model.n_components, 2)
-    
+
     def test_is_fitted(self):
         """Test the __sklearn_is_fitted__() method"""
         model = NipalsPCA()
@@ -153,8 +153,6 @@ class TestSubFuncs(unittest.TestCase):
         model = NipalsPCA().fit(self.data_scaled)
         with self.subTest():
             self.assertTrue(model.__sklearn_is_fitted__())
-
-
 
 
 @parameterized_class(
