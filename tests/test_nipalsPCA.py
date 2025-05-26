@@ -15,19 +15,19 @@ import sys
 path = Path(__file__).parents[1].joinpath("data")
 
 pca_dat = pd.read_excel(
-    path.joinpath(r"PCATestData.xlsx"), header=None, engine="openpyxl"
+    path.joinpath("PCATestData.xlsx"), header=None, engine="openpyxl"
 )
 input_array = pca_dat.to_numpy()
 
-df_simca_loads = pd.read_excel(
-    path.joinpath(r"SIMCA_ScaledFullDat_Loadings.xlsx"),
-    engine="openpyxl",
-    usecols=[1, 2],
-)  # First column is garbage index
-simca_loads = df_simca_loads.to_numpy()
+# df_simca_loads = pd.read_excel(
+#     path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
+#     engine="openpyxl",
+#     usecols=[1, 2],
+# )  # First column is garbage index
+# simca_loads = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
-    path.joinpath(r"SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores = df_simca_sample_dat.to_numpy()[
@@ -38,19 +38,19 @@ simca_DmodX_abs = df_simca_sample_dat.to_numpy()[:, 4:5]
 
 # NAN data
 nan_dat = pd.read_excel(
-    path.joinpath(r"PCANanData.xlsx"), header=None, engine="openpyxl"
+    path.joinpath("PCANanData.xlsx"), header=None, engine="openpyxl"
 )
 input_array_nan = nan_dat.to_numpy()
 
 df_simca_loads = pd.read_excel(
-    path.joinpath(r"SIMCA_ScaledNanDat_Loadings.xlsx"),
+    path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
     engine="openpyxl",
     usecols=[1, 2],
 )  # First column is garbage index
 simca_loads_nan = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
-    path.joinpath(r"SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores_nan = df_simca_sample_dat.to_numpy()[
