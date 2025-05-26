@@ -23,9 +23,9 @@ df_simca_loads = pd.read_excel(
     path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
     engine="openpyxl",
 )
-simca_loads = df_simca_loads.to_numpy()[
-    :, 1:2
-]  # First column is garbage index
+simca_loads = df_simca_loads.to_numpy()[:, 1:3].astype(
+    float
+)  # First column is garbage index
 
 df_simca_sample_dat = pd.read_excel(
     path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
@@ -43,23 +43,23 @@ nan_dat = pd.read_excel(
 )
 input_array_nan = nan_dat.to_numpy()
 
-df_simca_loads = pd.read_excel(
+df_simca_loads_nan = pd.read_excel(
     path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
     engine="openpyxl",
 )
-simca_loads_nan = df_simca_loads.to_numpy()[
-    :, 1:2
-]  # First column is garbage index
+simca_loads_nan = df_simca_loads_nan.to_numpy()[:, 1:3].astype(
+    float
+)  # First column is garbage index
 
-df_simca_sample_dat = pd.read_excel(
+df_simca_sample_dat_nan = pd.read_excel(
     path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
     engine="openpyxl",
 )
-simca_scores_nan = df_simca_sample_dat.to_numpy()[
+simca_scores_nan = df_simca_sample_dat_nan.to_numpy()[
     :, 1:3
 ]  # First column is garbage index
-simca_T2_nan = df_simca_sample_dat.to_numpy()[:, 3:4]
-simca_DmodX_abs_nan = df_simca_sample_dat.to_numpy()[:, 4:5]
+simca_T2_nan = df_simca_sample_dat_nan.to_numpy()[:, 3:4]
+simca_DmodX_abs_nan = df_simca_sample_dat_nan.to_numpy()[:, 4:5]
 
 
 def nan_conc_coeff(y: np.ndarray, yhat: np.ndarray) -> float:
