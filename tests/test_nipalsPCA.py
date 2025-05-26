@@ -22,9 +22,10 @@ input_array = pca_dat.to_numpy()
 df_simca_loads = pd.read_excel(
     path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
     engine="openpyxl",
-    usecols=[1, 2],
+)
+simca_loads = df_simca_loads.to_numpy()[:, 1:3].astype(
+    float
 )  # First column is garbage index
-simca_loads = df_simca_loads.to_numpy()
 
 df_simca_sample_dat = pd.read_excel(
     path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
@@ -42,22 +43,23 @@ nan_dat = pd.read_excel(
 )
 input_array_nan = nan_dat.to_numpy()
 
-df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
-    engine="openpyxl",
-    usecols=[1, 2],
-)  # First column is garbage index
-simca_loads_nan = df_simca_loads.to_numpy()
-
-df_simca_sample_dat = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+df_simca_loads_nan = pd.read_excel(
+    path.joinpath("SIMCA_ScaledNaNDat_Loadings.xlsx"),
     engine="openpyxl",
 )
-simca_scores_nan = df_simca_sample_dat.to_numpy()[
+simca_loads_nan = df_simca_loads_nan.to_numpy()[:, 1:3].astype(
+    float
+)  # First column is garbage index
+
+df_simca_sample_dat_nan = pd.read_excel(
+    path.joinpath("SIMCA_ScaledNaNDat_Scores_T2Range_DMODXAbs.xlsx"),
+    engine="openpyxl",
+)
+simca_scores_nan = df_simca_sample_dat_nan.to_numpy()[
     :, 1:3
 ]  # First column is garbage index
-simca_T2_nan = df_simca_sample_dat.to_numpy()[:, 3:4]
-simca_DmodX_abs_nan = df_simca_sample_dat.to_numpy()[:, 4:5]
+simca_T2_nan = df_simca_sample_dat_nan.to_numpy()[:, 3:4]
+simca_DmodX_abs_nan = df_simca_sample_dat_nan.to_numpy()[:, 4:5]
 
 
 def nan_conc_coeff(y: np.ndarray, yhat: np.ndarray) -> float:
@@ -143,7 +145,7 @@ class TestSubFuncs(unittest.TestCase):
                 )
             with self.subTest():
                 self.assertEqual(model.n_components, 2)
-    
+
     def test_is_fitted(self):
         """Test the __sklearn_is_fitted__() method"""
         model = NipalsPCA()
@@ -153,8 +155,6 @@ class TestSubFuncs(unittest.TestCase):
         model = NipalsPCA().fit(self.data_scaled)
         with self.subTest():
             self.assertTrue(model.__sklearn_is_fitted__())
-
-
 
 
 @parameterized_class(
