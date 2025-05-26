@@ -44,7 +44,7 @@ nan_dat = pd.read_excel(
 input_array_nan = nan_dat.to_numpy()
 
 df_simca_loads_nan = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
+    path.joinpath("SIMCA_ScaledNaNDat_Loadings.xlsx"),
     engine="openpyxl",
 )
 simca_loads_nan = df_simca_loads_nan.to_numpy()[:, 1:3].astype(
@@ -52,7 +52,7 @@ simca_loads_nan = df_simca_loads_nan.to_numpy()[:, 1:3].astype(
 )  # First column is garbage index
 
 df_simca_sample_dat_nan = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+    path.joinpath("SIMCA_ScaledNaNDat_Scores_T2Range_DMODXAbs.xlsx"),
     engine="openpyxl",
 )
 simca_scores_nan = df_simca_sample_dat_nan.to_numpy()[
