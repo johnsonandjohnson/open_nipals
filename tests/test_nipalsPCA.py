@@ -43,10 +43,10 @@ nan_dat = pd.read_excel(
 )
 input_array_nan = nan_dat.to_numpy()
 
-df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
-    engine="openpyxl",
-)
+# df_simca_loads = pd.read_excel(
+#     path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
+#     engine="openpyxl",
+# )
 simca_loads_nan = df_simca_loads.to_numpy()[
     :, 1:2
 ]  # First column is garbage index
