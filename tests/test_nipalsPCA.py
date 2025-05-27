@@ -112,7 +112,7 @@ def fitted_model_pass_dat(x: np.ndarray) -> Tuple[NipalsPCA, StandardScaler]:
     scaler_x, dat_x_scaled = init_scaler(x)
 
     pca_model = NipalsPCA(mean_centered=True)  # pylint: disable=not-callable
-    pca_model.fit(dat_x_scaled)
+    pca_model.fit(X=dat_x_scaled)
     return pca_model, scaler_x
 
 
@@ -137,7 +137,7 @@ class TestSubFuncs(unittest.TestCase):
         model = NipalsPCA().fit(self.data_scaled)
 
         with self.assertRaises(BaseException) as e:
-            model.fit(self.data_scaled)
+            model.fit(X=self.data_scaled)
 
             with self.subTest():
                 self.assertIn(
@@ -204,7 +204,7 @@ class TestFit(unittest.TestCase):
         model = self.model[0]
         scaler_x = self.model[1]
         input_data = self.X
-        py_calc_scores = model.transform(scaler_x.transform(input_data))
+        py_calc_scores = model.transform(X=scaler_x.transform(input_data))
         test_val = rmse(model.fit_scores, py_calc_scores)
         lin_val = nan_conc_coeff(model.fit_scores, py_calc_scores)
         with self.subTest():
@@ -245,7 +245,9 @@ class TestFit(unittest.TestCase):
         input_data = self.X
         metric, known_oomd = self.oomd
         transformed_data = scaler_x.transform(input_data)
-        test_oomd = model.calc_oomd(transformed_data, metric=metric)
+        test_oomd = model.calc_oomd(
+            input_array=transformed_data, metric=metric
+        )
         test_val = rmse(test_oomd, known_oomd)
         lin_val = nan_conc_coeff(test_oomd, known_oomd)
 
@@ -264,7 +266,7 @@ class TestFit(unittest.TestCase):
         model_low.fit(transformed_data)
         # Update to new amount of components
         num_lvs = model.n_components
-        model_low.set_components(num_lvs)
+        model_low.set_components(n_component=num_lvs)
 
         # Demonstrate loadings/scores are the same
         max_score_diff = np.max(
@@ -286,8 +288,8 @@ class TestFit(unittest.TestCase):
             )
 
         # Add an extra component, drop back down
-        model_low.set_components(num_lvs + 1)
-        model_low.set_components(num_lvs)
+        model_low.set_components(n_component=num_lvs + 1)
+        model_low.set_components(n_component=num_lvs)
 
         # Same loadings/scores test to ensure they didn't change
         max_score_diff = np.max(
@@ -315,8 +317,8 @@ class TestFit(unittest.TestCase):
         test_imd = model_low.calc_imd(input_array=model_low.fit_data)
         max_imd_diff = np.max(np.abs(known_imd - test_imd))
 
-        known_oomd = model.calc_oomd(model.fit_data)
-        test_oomd = model_low.calc_oomd(model_low.fit_data)
+        known_oomd = model.calc_oomd(input_array=model.fit_data)
+        test_oomd = model_low.calc_oomd(input_array=model_low.fit_data)
         max_oomd_diff = np.max(np.abs(known_oomd - test_oomd))
 
         with self.subTest():
