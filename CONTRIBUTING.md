@@ -13,8 +13,9 @@ Code contributions should be made in a new feature branch. After a feature is co
 This will follow the [semantic versioning scheme](https://semver.org/). If the changes are not reflected in the version number, please use `git tag`. See [this page](https://pyscaffold.org/en/stable/faq.html#best-practices-and-common-errors-with-version-numbers) for more information.
 
 ### Reviewing Code contributions
+
 As a reviewer please ensure the following is true:
-* Tests are funtional
+* Tests are functional
 * New Pull Request features are documented (i.e. docstrings and type hints)
 * the code is formatted with `ruff` and a line length of 79 characters per [PEP 8](https://peps.python.org/pep-0008/)
 
@@ -102,7 +103,8 @@ conda activate open_nipals
    repository. Try `tox -av` to see a list of the available checks.
 
 ### Testing
-Testing should begin with `pytest`  and, eventually, end with `tox`.
+
+Testing should begin with `pytest` and, eventually, end with `tox`.
 `pytest` will illuminate any issues with the code itself while `tox` will
 highlight dependency conflicts. It's *much* more expensive to run.
 
@@ -110,6 +112,15 @@ Prior to executing `tox` the first time, you will need to have all of the
 python environments specified in the [tox.ini](./tox.ini) file loaded. No
 need to build each combination, just a flat python 3.9, 3.10, 3.11, etc 
 environment will suffice; `tox` should detect that and then build from there.
+
+All PRs attempting to merge into the `main` branch of the public repository 
+will trigger a github actions pipeline running `flake8`-linting and `tox`. 
+Therefore, running `tox` is not strictly necessary for these kind of commits.
+However, if in doubt, please run `tox` locally before pushing to the public 
+repo. The github actions pipeline lives in the 
+(./github/workflows/python-app.py)-file. If new python versions are included 
+into the `tox` run, please do not only include them into the `tox.ini`, but 
+also in the python matrix in the workflow file.
 
 If you hit errors with `tox`, first try deleting the .tox folder.
 
