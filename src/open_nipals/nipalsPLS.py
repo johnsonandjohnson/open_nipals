@@ -23,12 +23,12 @@ revised 2024: Niels Schlusser
 from __future__ import (
     annotations,
 )  # needed so we can return NipalsPLS class in our type hints
+from typing import Optional, Tuple, Union
+import warnings
 import numpy as np
 from sklearn.cross_decomposition._pls import _PLS
 from sklearn.exceptions import NotFittedError
-import warnings
 from open_nipals.utils import _nan_mult
-from typing import Optional, Tuple, Union
 
 
 class NipalsPLS(_PLS):
@@ -752,4 +752,52 @@ class NipalsPLS(_PLS):
         Returns:
             bool: is fitted or not
         """
-        return not (self.fitted_components == 0)
+        return self.fitted_components != 0
+
+    @property
+    def explained_variance_ratio_(
+        self,
+        in_x_data: np.array = None,
+        in_y_data: np.array = None,
+    ) -> (float, float):
+        """calculate the explained variance ratio
+
+        Args:
+            in_x_data (np.array, optional):
+                Alternative input X data. Defaults to None.
+            in_y_data (np.array, optional):
+                Alternative input y data. Defaults to None.
+
+        Raises:
+            ValueError: If in_x_data not mean centered.
+            ValueError: If in_y_data not mean centered.
+
+        Returns:
+            (float, float): variance ratios for X and y
+        """
+        if in_x_data is not None:
+            if self._check_mean_centered(in_x_data):
+                x_data = in_x_data
+            else:
+                raise ValueError("Variance input X data is not mean centered.")
+        else:
+            x_data = self.fit_data_x
+
+        if in_y_data is not None:
+            if self._check_mean_centered(in_y_data):
+                y_data = in_y_data
+            else:
+                raise ValueError("Variance input y data is not mean centered.")
+        else:
+            y_data = self.fit_data_y
+
+        # compute data as per model
+        sim_data_x = self.inverse_transform(self.transform(x_data))
+        sim_data_y = self.predict(x_data, self.fit_scores_x)
+
+        # compute residual variance
+        resid_x_var = np.nanvar(x_data - sim_data_x, axis=0)
+        resid_y_var = np.nanvar(y_data - sim_data_y, axis=0)
+
+        # variance of data scaled to 1,so
+        return np.nanmean(1 - resid_x_var), np.nanmean(1 - resid_y_var)
