@@ -739,8 +739,9 @@ class NipalsPLS(_PLS):
         if not self.__sklearn_is_fitted__():
             raise NotFittedError("Model has not yet been fit")
 
-        reg_vects = self.weights_x @ (
-            self.regression_matrix @ self.loadings_y.T
+        reg_vects = self.weights_x[:, : self.n_components] @ (
+            self.regression_matrix[: self.n_components, :]
+            @ self.loadings_y[:, : self.n_components].T
         )
 
         return reg_vects
