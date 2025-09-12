@@ -1,15 +1,13 @@
 # pylint: disable=no-member
+import sys
 import unittest
+from typing import Tuple
+from pathlib import Path
 from parameterized import parameterized_class
 import pandas as pd
 import numpy as np
-
-from open_nipals.nipalsPCA import NipalsPCA
 from sklearn.preprocessing import StandardScaler
-from typing import Tuple
-from pathlib import Path
-
-import sys
+from open_nipals.nipalsPCA import NipalsPCA
 
 # Load Data
 path = Path(__file__).parents[1].joinpath("data")
@@ -264,6 +262,7 @@ class TestFit(unittest.TestCase):
         transformed_data = scaler_x.transform(input_data)
         model_low = NipalsPCA(n_components=1)
         model_low.fit(transformed_data)
+
         # Update to new amount of components
         num_lvs = model.n_components
         model_low.set_components(n_component=num_lvs)
@@ -323,11 +322,46 @@ class TestFit(unittest.TestCase):
 
         with self.subTest():
             self.assertLess(
-                max_imd_diff, 1e-9, msg=f"Max imd Diff = {max_imd_diff}"
+                max_imd_diff, 1e-9, msg=f"Max IMD diff = {max_imd_diff}"
             )
         with self.subTest():
             self.assertLess(
-                max_oomd_diff, 1e-9, msg=f"Max oomd Diff = {max_oomd_diff}"
+                max_oomd_diff, 1e-9, msg=f"Max OOMD diff = {max_oomd_diff}"
+            )
+
+    def test_explained_variance_ratio(self):
+        """test the explained_variance_ratio_ method"""
+        model = self.model[0]
+
+        var_orig = model.explained_variance_ratio_
+
+        # check if in [0,1]
+        with self.subTest():
+            self.assertTrue(
+                0 <= var_orig <= 1,
+                msg=f"Explained variance ratio {var_orig} not in [0,1].",
+            )
+
+        # add one component
+        more_comp_model = NipalsPCA(
+            mean_centered=True, n_components=model.n_components + 1
+            ).fit(X=model.fit_data)
+
+        var_more = more_comp_model.explained_variance_ratio_
+
+        # check if in [0,1]
+        with self.subTest():
+            self.assertTrue(
+                0 <= var_more <= 1,
+                msg=f"Explained variance ratio {var_more} not in [0,1].",
+            )
+
+        # check if strictly ascending after increasing components
+        with self.subTest():
+            self.assertGreater(
+                var_more,
+                var_orig,
+                msg=f"Explained variance ratio {var_more} after set_components not monotonous.",
             )
 
 

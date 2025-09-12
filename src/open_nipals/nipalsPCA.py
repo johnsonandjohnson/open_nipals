@@ -18,13 +18,13 @@ revised 2024: Niels Schlusser
 from __future__ import (
     annotations,
 )  # needed so we can return NipalsPCA class in our type hints
+from typing import Optional
+import warnings
 import numpy as np
 from sklearn.decomposition._base import _BasePCA
 from sklearn.exceptions import NotFittedError
-import warnings
 from scipy.stats import f as F_dist
 from open_nipals.utils import _nan_mult
-from typing import Optional
 
 
 class NipalsPCA(_BasePCA):
@@ -132,6 +132,7 @@ class NipalsPCA(_BasePCA):
         n, m = data.shape
 
         fitted_components = self.fitted_components
+
         # if model is not fitted yet, this is the default
         if fitted_components == 0:
             # Range of components to add
@@ -166,6 +167,7 @@ class NipalsPCA(_BasePCA):
         for i in num_lvs:
             # choose a column of input_array
             t_new = data[:, [0]].copy()
+
             # Replace any nans w/ zero
             t_new[np.isnan(t_new)] = 0
             if verbose:
@@ -174,6 +176,7 @@ class NipalsPCA(_BasePCA):
             # Allocate variable for a convergence test
             converged = False
             conv_test = np.inf
+
             # Allocate the interation counter
             num_iter = 0
 
@@ -182,6 +185,7 @@ class NipalsPCA(_BasePCA):
                 if verbose:
                     print("LV {} Iteration {} Started".format(i, num_iter))
                     print("     Conv Test is {}".format(conv_test))
+
                 # Update t_old
                 t_old = t_new.copy()
 
@@ -228,10 +232,12 @@ class NipalsPCA(_BasePCA):
 
             if verbose:
                 print("Iteration finished on LV {}".format(i))
+
             # Deflate the input matrix
             data = data - t_new @ loadings_loc.T
             if verbose:
                 print("Deflation Complete")
+
         # Store the values in self
         # fit_scores necessary for Hotellings T2 calc
         self.fit_scores = scores
@@ -257,6 +263,7 @@ class NipalsPCA(_BasePCA):
             raise ValueError("n_component must be an int > 0")
 
         max_fit_lvs = self.fitted_components
+
         # If desired n <= max fit N, simply set the number
         if n_component <= max_fit_lvs:
             self.n_components = n_component
@@ -321,6 +328,7 @@ class NipalsPCA(_BasePCA):
                     scores[:, [ind_lv]] = scores[:, [ind_lv]] / (
                         loadings[:, [ind_lv]].T @ loadings[:, [ind_lv]]
                     )
+
                 # deflate input data
                 X = X - scores[:, [ind_lv]] @ loadings[:, [ind_lv]].T
 
@@ -717,5 +725,38 @@ class NipalsPCA(_BasePCA):
         Returns:
             bool: is fitted or not
         """
-        return not (self.fitted_components == 0)
-    
+        return self.fitted_components != 0
+
+    @property
+    def explained_variance_ratio_(
+        self,
+        in_data: np.array = None,
+    ) -> float:
+        """calculate the explained variance ratio
+
+        Args:
+            in_data (np.array, optional):
+                Alternative input data. Defaults to None.
+
+        Raises:
+            ValueError: if in_data not mean centered.
+
+        Returns:
+            float: variance ratio
+        """
+        if in_data is not None:
+            if self._check_mean_centered(in_data):
+                data = in_data
+            else:
+                raise ValueError("Variance input data is not mean centered.")
+        else:
+            data = self.fit_data
+
+        # compute data as per model
+        sim_data = self.inverse_transform(self.transform(data))
+
+        # compute resudiual variance
+        resid_var = np.nanvar(data - sim_data, axis=0)
+
+        # variance of data scaled to 1, so
+        return np.nanmean(1 - resid_var)
