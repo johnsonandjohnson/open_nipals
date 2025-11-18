@@ -1,6 +1,5 @@
 # NIPALS PCA and PLS package
 This package implements the nonlinear iterative partial least squares (NIPALS) algorithm for principal component analysis (PCA) and partial least squares (PLS) regression. 
-The perspective is to publish this joint package open source.
 
 ## Nipals PCA
 Implements the NIPALS algorithm for principal components analysis in python. 
