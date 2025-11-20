@@ -1,20 +1,20 @@
 """
 Algorithm implemented from Chapter 6 of
-    Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
-    Fault detection and diagnosis in industrial systems.
-    Springer Science & Business Media, 2000.
+Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
+Fault detection and diagnosis in industrial systems.
+Springer Science & Business Media, 2000.
 
 Alternative algorithm derivation from:
-    Geladi, P.; Kowalski, B. R.
-    Partial Least-Squares Regression: A Tutorial.
-    Analytica Chimica Acta 1986, 185, 1–17.
-    https://doi.org/10.1016/0003-2670(86)80028-9.
+Geladi, P.; Kowalski, B. R.
+Partial Least-Squares Regression: A Tutorial.
+Analytica Chimica Acta 1986, 185, 1–17.
+https://doi.org/10.1016/0003-2670(86)80028-9.
 
 For the transformation part also see:
-    Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
-    Missing data methods in PCA and PLS: Score calculations
-    with incomplete observations.
-    Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
+Missing data methods in PCA and PLS: Score calculations
+with incomplete observations.
+Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
 
 (C) 2020-2021: Ryan Wall (lead), David Ochsenbein, YBaranwal
 revised 2024: Niels Schlusser
@@ -47,12 +47,12 @@ class NipalsPLS(_PLS):
             max_iter (int): The maximum number of iterations to use when fitting
             tol_criteria (float): Tolerance limit to compare when fitting
             mean_centered (boolean): Whether the data is mean centered or not.
-                It is HIGHLY suggested to mean center your data.
+            It is HIGHLY suggested to mean center your data.
             force_include (bool, optional): True will force including the data
-                which has all nans in y-block. Defaults to False.
+            which has all nans in y-block. Defaults to False.
 
         Returns:
-            NipalsPLS object
+            NipalsPLS: NipalsPLS object
         """
 
         self.n_components = n_components
@@ -84,7 +84,7 @@ class NipalsPLS(_PLS):
         components used by the model.
 
         Returns:
-            int
+            int: number of fitted components
         """
         if self.loadings_x is not None:
             return self.loadings_x.shape[1]
@@ -121,7 +121,7 @@ class NipalsPLS(_PLS):
         Args:
             n_add (int): number of components to add
             verbose (bool): Whether or not to print out additional
-                convergence information. Defaults to False.
+            convergence information. Defaults to False.
         """
         X = self.fit_data_x.copy()
         y = self.fit_data_y.copy()
@@ -302,7 +302,7 @@ class NipalsPLS(_PLS):
         Args:
             n_component (int): the desired number of components.
             verbose (bool): Whether or not to print out additional
-                convergence information. Defaults to False.
+            convergence information. Defaults to False.
 
         Raises:
             TypeError: if n_component is not an int
@@ -336,7 +336,7 @@ class NipalsPLS(_PLS):
             X (np.array): Input X data.
             y (np.array): Input Y data.
             verbose (bool, optional): Turn verbosity on and off.
-                Defaults to False.
+            Defaults to False.
 
         Raises:
             NotFittedError: Model has not yet been fit
@@ -387,8 +387,8 @@ class NipalsPLS(_PLS):
 
         Returns:
             Union[np.array, Tuple[np.array, np.array]]: Either the
-                scores for X (when no Y-data is provided) or a tuple
-                of two scores-arrays.
+            scores for X (when no Y-data is provided) or a tuple
+            of two scores-arrays.
         """
 
         # Check whether the model is available or not
@@ -490,7 +490,7 @@ class NipalsPLS(_PLS):
 
         Returns:
             Tuple[np.array, np.array]: A tuple containing the fitted scores
-                for X and Y.
+            for X and Y.
         """
 
         # Check whether the model is available or not
@@ -519,11 +519,11 @@ class NipalsPLS(_PLS):
 
         Args:
             input_scores (Optional[np.array], optional): Scores array.
-                Defaults to None.
+            Defaults to None.
             input_array (Optional[np.array], optional): Data array.
-                Defaults to None.
+            Defaults to None.
             metric (str, optional): In-model-distance to compute.
-                Must be one of set {'HotellingT2'}. Defaults to 'HotellingT2'.
+            Must be one of set {'HotellingT2'}. Defaults to 'HotellingT2'.
 
         Raises:
             NotFittedError: If model has not been fit.

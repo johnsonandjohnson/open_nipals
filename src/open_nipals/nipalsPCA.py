@@ -1,15 +1,14 @@
-"""
-Code for calculating the PCA Loadings and Scores using NIPALS algorithm.
+"""Code for calculating the PCA Loadings and Scores using NIPALS algorithm.
 
 One of the most concise definitions can be found in this paper on page 7:
-    Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
-    Analytica Chimica Acta 1986, 185, 1–17.
-    https://doi.org/10.1016/0003-2670(86)80028-9.
+Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
+Analytica Chimica Acta 1986, 185, 1–17.
+https://doi.org/10.1016/0003-2670(86)80028-9.
 
 For the transformation part also see:
-    Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
-    in PCA and PLS: Score calculations with incomplete observations.
-    Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
+in PCA and PLS: Score calculations with incomplete observations.
+Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
 
 (c) 2020-2021: Ryan Wall (lead), David Ochsenbein
 revised 2024: Niels Schlusser
@@ -245,7 +244,7 @@ class NipalsPCA(_BasePCA):
         Args:
             n_component (int): the desired number of components.
             verbose (bool): Whether or not to print out additional
-                convergence information. Defaults to False.
+            convergence information. Defaults to False.
 
         Raises:
             TypeError: if n_component is not an int
@@ -273,16 +272,16 @@ class NipalsPCA(_BasePCA):
 
         Args:
             X (np.ndarray): The nxm input array in the original
-                feature space to be projected.
+            feature space to be projected.
             method (str, optional): The method to use for the projection.
-                See reference listed in module docstring.
-                Valid options are {'naive','projection','conditionalMean'}
-                Defaults to 'naive'.
+            See reference listed in module docstring.
+            Valid options are {'naive','projection','conditionalMean'}
+            Defaults to 'naive'.
 
         Raises:
             NotFittedError: If model has not been fit yet (no loadings).
             ValueError: Method 'conditionalMean' is selected but fit_data is
-                not available.
+            not available.
 
         Returns:
             np.ndarray: The corresponding scores.
@@ -383,7 +382,7 @@ class NipalsPCA(_BasePCA):
         Args:
             X (np.ndarray): The input data to fit on.
             verbose (bool, optional): Whether or not to print out additional
-                convergence information. Defaults to False.
+            convergence information. Defaults to False.
 
         Returns:
             NipalsPCA: A reference to the object.
@@ -413,9 +412,9 @@ class NipalsPCA(_BasePCA):
         >>>> T = P.transform(X)
         Args:
             X (np.ndarray): The The input data to fit on and
-                to transform.
+            to transform.
             verbose (bool, optional): Whether or not to print out additional
-                convergence information. Defaults to False.
+            convergence information. Defaults to False.
 
         Raises:
             ValueError: Model has already been fit.
@@ -443,7 +442,7 @@ class NipalsPCA(_BasePCA):
         Raises:
             NotFittedError: PCA model has not been fit yet.
             ValueError: Shape of provided scores does not match n_components
-                in model.
+            in model.
 
         Returns:
             np.ndarray: The approximation of the original data.
@@ -481,24 +480,24 @@ class NipalsPCA(_BasePCA):
         center of the hyperplane to the projected observation.
         Args:
             input_scores (Optional[np.ndarray], optional): The scores from
-                which to calculate the distance. Defaults to None.
+            which to calculate the distance. Defaults to None.
             input_array (Optional[np.ndarray], optional): The input data in
-                original space from which to calculate the distance.
-                Defaults to None.
+            original space from which to calculate the distance.
+            Defaults to None.
             metric (str, optional): The metric to use. Valid options are
-                {'HotellingT2'}. Defaults to 'HotellingT2'.
+            {'HotellingT2'}. Defaults to 'HotellingT2'.
 
         Raises:
             NotFittedError: Model has not been fit yet.
             ValueError: Neither scores nor input data provided.
             ValueError: Input scores are inconsistent with n_components of
-                model.
+            model.
             ValueError: Other, unknown error with calculation of metric.
             NotImplementedError: Any metric that has not yet been implemented.
 
         Returns:
             np.ndarray: The calculated within-model distance for each
-                observation (row).
+            observation (row).
         """
         # Warnings if not fit
         if not self.__sklearn_is_fitted__():
@@ -718,4 +717,3 @@ class NipalsPCA(_BasePCA):
             bool: is fitted or not
         """
         return not (self.fitted_components == 0)
-    

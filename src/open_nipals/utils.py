@@ -25,10 +25,10 @@ def _nan_mult(
         x (np.array): The left matrix in the multiplication.
         y (np.array): The right matrix in the multiplication.
         nan_mask (np.array, optional): The nan_mask for the left matrix.
-            Defaults to None.
+        Defaults to None.
         use_denom (bool, optional): Flag for using a normalization method.
-            Defaults to True. Scales the resultant vector by 1/(y.T @ y)
-                with appropriate nulls
+        Defaults to True. Scales the resultant vector by 1/(y.T @ y)
+        with appropriate nulls
 
     Raises:
         ValueError: If nan_mask is passed but has the wrong shape.
@@ -67,25 +67,22 @@ def _nan_mult(
 
 
 class ArrangeData(TransformerMixin):
-    """[summary]
+    """ArrangeData class
+    creates a sklearn-style transformer object that orders the columns
+    in dataframe correctly
 
     Attributes:
     ----------
-    var_dict : dict
-        A dictionary indicating which column should be in which position.
-
+    var_dict (dict): A dictionary indicating which column should be in which position.
 
     Methods:
     ----------
-    var_dict_from_df
-        Infer var_dict from template dataframe.
-    fit_transform
-    fit
-        Applies var_dict_from_df in a manner consistent w/ sklearn nomenclature
-    transform
-        Takes a new dataframe or np.array + variable dictionary and arranges
-        to be consistent with stored var_dict
-
+    var_dict_from_df: Infer var_dict from template dataframe.
+    fit_transform: concatenation of fit and transform
+    fit: Applies var_dict_from_df in a consistent manner with sklearn
+    nomenclature
+    transform: Takes a new dataframe or np.array + variable dictionary
+    and arranges to be consistent with stored var_dict
     """
 
     def __init__(self, var_dict: Union[dict, pd.DataFrame] = None):
@@ -93,8 +90,8 @@ class ArrangeData(TransformerMixin):
 
         Args:
             var_dict (Union[dict, pd.DataFrame], optional): The variable
-                dictionary to use. Can be inferred from a template
-                dataframe on construction or by  Defaults to None.
+            dictionary to use. Can be inferred from a template
+            dataframe on construction or by  Defaults to None.
         """
         if isinstance(var_dict, pd.DataFrame):
             self.var_dict = self.var_dict_from_df(var_dict)
@@ -106,7 +103,7 @@ class ArrangeData(TransformerMixin):
 
         Args:
             input_df (pd.DataFrame): A dataframe that has the desired
-                order of columns.
+            order of columns.
 
         Returns:
             dict: The corresponding var_dict. {column Name: column index}
@@ -125,13 +122,13 @@ class ArrangeData(TransformerMixin):
 
         Args:
             input_data (Union[pd.DataFrame, np.ndarray]): The input data
-                to transform. Note that if this is a dataframe it _will_
-                be used to fit var_dict. This might not be what you want.
+            to transform. Note that if this is a dataframe it _will_
+            be used to fit var_dict. This might not be what you want.
             input_var_dict (Optional[dict], optional): The var_dict to be used
-                to fit. Defaults to None.
+            to fit. Defaults to None.
 
         Returns:
-            pd.DataFrame: [description]
+            pd.DataFrame: transformed input frame
         """
         self.fit(input_data=input_data, input_var_dict=input_var_dict)
         out_data = self.transform(input_data, input_var_dict=self.var_dict)
@@ -146,15 +143,15 @@ class ArrangeData(TransformerMixin):
 
         Args:
             input_data (Union[pd.DataFrame, np.ndarray]): The input data to
-                use for fitting.
+            use for fitting.
             input_var_dict (Optional[dict], optional): Required if input_data
-                is an array, this dictionary contains the headers as
-                {column Name: column index}.
+            is an array, this dictionary contains the headers as
+            {column Name: column index}.
 
         Raises:
             ValueError: input_data is a numpy array and input_var_dict is missing.
             ValueError: input_data is a numpy array and its shape does not
-                match input_var_dict.
+            match input_var_dict.
             ValueError: An unknown error occurred.
         """
         if isinstance(input_data, pd.DataFrame):
@@ -198,17 +195,17 @@ class ArrangeData(TransformerMixin):
 
         Args:
             input_data (Union[pd.DataFrame, np.ndarray]): The input_data to
-                transform.
+            transform.
             input_var_dict (Optional[dict], optional): Required if input_data
-                is an array, this dictionary contains the headers as
-                {column Name: column index}.. Defaults to None.
+            is an array, this dictionary contains the headers as
+            {column Name: column index}.. Defaults to None.
 
         Raises:
             ValueError: ArrangeData object has not yet been fit.
             ValueError: input_data is a numpy array and no input_var_dict has
-                been provided.
+            been provided.
             ValueError: input_data is a numpy array and its shape does not
-                match input_var_dict
+            match input_var_dict
 
         Returns:
             np.ndarray: The transformed (column-rearranged) data.

@@ -127,16 +127,14 @@
 <section id="module-open_nipals.nipalsPCA">
 <span id="open-nipals-nipalspca-module"></span><h2>open_nipals.nipalsPCA module<a class="headerlink" href="#module-open_nipals.nipalsPCA" title="Link to this heading"></a></h2>
 <p>Code for calculating the PCA Loadings and Scores using NIPALS algorithm.</p>
-<dl class="simple">
-<dt>One of the most concise definitions can be found in this paper on page 7:</dt><dd><p>Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
+<p>One of the most concise definitions can be found in this paper on page 7:
+Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
 Analytica Chimica Acta 1986, 185, 1–17.
 <a class="reference external" href="https://doi.org/10.1016/0003-2670(86)80028-9">https://doi.org/10.1016/0003-2670(86)80028-9</a>.</p>
-</dd>
-<dt>For the transformation part also see:</dt><dd><p>Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
+<p>For the transformation part also see:
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
 in PCA and PLS: Score calculations with incomplete observations.
 Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
-</dd>
-</dl>
 <p>(c) 2020-2021: Ryan Wall (lead), David Ochsenbein
 revised 2024: Niels Schlusser</p>
 <dl class="py class">
@@ -192,30 +190,24 @@ the same algorithm used in SIMCA.</p>
 center of the hyperplane to the projected observation.
 Args:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>input_scores (Optional[np.ndarray], optional): The scores from</dt><dd><p>which to calculate the distance. Defaults to None.</p>
-</dd>
-<dt>input_array (Optional[np.ndarray], optional): The input data in</dt><dd><p>original space from which to calculate the distance.
-Defaults to None.</p>
-</dd>
-<dt>metric (str, optional): The metric to use. Valid options are</dt><dd><p>{‘HotellingT2’}. Defaults to ‘HotellingT2’.</p>
-</dd>
-</dl>
+<div><p>input_scores (Optional[np.ndarray], optional): The scores from
+which to calculate the distance. Defaults to None.
+input_array (Optional[np.ndarray], optional): The input data in
+original space from which to calculate the distance.
+Defaults to None.
+metric (str, optional): The metric to use. Valid options are
+{‘HotellingT2’}. Defaults to ‘HotellingT2’.</p>
 </div></blockquote>
-<dl>
+<dl class="simple">
 <dt>Raises:</dt><dd><p>NotFittedError: Model has not been fit yet.
 ValueError: Neither scores nor input data provided.
-ValueError: Input scores are inconsistent with n_components of</p>
-<blockquote>
-<div><p>model.</p>
-</div></blockquote>
-<p>ValueError: Other, unknown error with calculation of metric.
+ValueError: Input scores are inconsistent with n_components of
+model.
+ValueError: Other, unknown error with calculation of metric.
 NotImplementedError: Any metric that has not yet been implemented.</p>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray: The calculated within-model distance for each</dt><dd><p>observation (row).</p>
-</dd>
-</dl>
+<dt>Returns:</dt><dd><p>np.ndarray: The calculated within-model distance for each
+observation (row).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,12 +266,10 @@ the original data/fitted loadings to be used.</p>
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA" title="open_nipals.nipalsPCA.NipalsPCA"><span class="pre">NipalsPCA</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.fit" title="Link to this definition"></a></dt>
 <dd><p>Fits PCA model to input data.</p>
-<dl>
+<dl class="simple">
 <dt>Args:</dt><dd><p>X (np.ndarray): The input data to fit on.
-verbose (bool, optional): Whether or not to print out additional</p>
-<blockquote>
-<div><p>convergence information. Defaults to False.</p>
-</div></blockquote>
+verbose (bool, optional): Whether or not to print out additional
+convergence information. Defaults to False.</p>
 </dd>
 <dt>Returns:</dt><dd><p>NipalsPCA: A reference to the object.</p>
 </dd>
@@ -296,12 +286,10 @@ verbose (bool, optional): Whether or not to print out additional</p>
 &gt;&gt;&gt;&gt; T = P.transform(X)
 Args:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>X (np.ndarray): The The input data to fit on and</dt><dd><p>to transform.</p>
-</dd>
-<dt>verbose (bool, optional): Whether or not to print out additional</dt><dd><p>convergence information. Defaults to False.</p>
-</dd>
-</dl>
+<div><p>X (np.ndarray): The The input data to fit on and
+to transform.
+verbose (bool, optional): Whether or not to print out additional
+convergence information. Defaults to False.</p>
 </div></blockquote>
 <dl class="simple">
 <dt>Raises:</dt><dd><p>ValueError: Model has already been fit.</p>
@@ -327,14 +315,12 @@ components used by the model.</p>
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.inverse_transform">
 <span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.inverse_transform" title="Link to this definition"></a></dt>
 <dd><p>Approximate original data from scores.</p>
-<dl>
+<dl class="simple">
 <dt>Args:</dt><dd><p>X (np.ndarray): An array containing the scores.</p>
 </dd>
 <dt>Raises:</dt><dd><p>NotFittedError: PCA model has not been fit yet.
-ValueError: Shape of provided scores does not match n_components</p>
-<blockquote>
-<div><p>in model.</p>
-</div></blockquote>
+ValueError: Shape of provided scores does not match n_components
+in model.</p>
 </dd>
 <dt>Returns:</dt><dd><p>np.ndarray: The approximation of the original data.</p>
 </dd>
@@ -347,12 +333,10 @@ ValueError: Shape of provided scores does not match n_components</p>
 <dd><p>Method for setting the number of components in an
 already-constructed model. It checks to make sure that loadings
 exist for all of the set components and will fit extras if not.</p>
-<dl>
+<dl class="simple">
 <dt>Args:</dt><dd><p>n_component (int): the desired number of components.
-verbose (bool): Whether or not to print out additional</p>
-<blockquote>
-<div><p>convergence information. Defaults to False.</p>
-</div></blockquote>
+verbose (bool): Whether or not to print out additional
+convergence information. Defaults to False.</p>
 </dd>
 <dt>Raises:</dt><dd><p>TypeError: if n_component is not an int
 ValueError: if n_component &lt; 1</p>
@@ -451,21 +435,17 @@ sub-estimator of a meta-estimator, e.g. used inside a
 <span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'naive'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.transform" title="Link to this definition"></a></dt>
 <dd><p>This function takes an input array and projects it based
 on a fitted model.</p>
-<dl>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>X (np.ndarray): The nxm input array in the original</dt><dd><p>feature space to be projected.</p>
-</dd>
-<dt>method (str, optional): The method to use for the projection.</dt><dd><p>See reference listed in module docstring.
+<dl class="simple">
+<dt>Args:</dt><dd><p>X (np.ndarray): The nxm input array in the original
+feature space to be projected.
+method (str, optional): The method to use for the projection.
+See reference listed in module docstring.
 Valid options are {‘naive’,’projection’,’conditionalMean’}
 Defaults to ‘naive’.</p>
 </dd>
-</dl>
-</dd>
 <dt>Raises:</dt><dd><p>NotFittedError: If model has not been fit yet (no loadings).
-ValueError: Method ‘conditionalMean’ is selected but fit_data is</p>
-<blockquote>
-<div><p>not available.</p>
-</div></blockquote>
+ValueError: Method ‘conditionalMean’ is selected but fit_data is
+not available.</p>
 </dd>
 <dt>Returns:</dt><dd><p>np.ndarray: The corresponding scores.</p>
 </dd>
@@ -478,22 +458,20 @@ ValueError: Method ‘conditionalMean’ is selected but fit_data is</p>
 </section>
 <section id="module-open_nipals.nipalsPLS">
 <span id="open-nipals-nipalspls-module"></span><h2>open_nipals.nipalsPLS module<a class="headerlink" href="#module-open_nipals.nipalsPLS" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>Algorithm implemented from Chapter 6 of</dt><dd><p>Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
+<p>Algorithm implemented from Chapter 6 of
+Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
 Fault detection and diagnosis in industrial systems.
 Springer Science &amp; Business Media, 2000.</p>
-</dd>
-<dt>Alternative algorithm derivation from:</dt><dd><p>Geladi, P.; Kowalski, B. R.
+<p>Alternative algorithm derivation from:
+Geladi, P.; Kowalski, B. R.
 Partial Least-Squares Regression: A Tutorial.
 Analytica Chimica Acta 1986, 185, 1–17.
 <a class="reference external" href="https://doi.org/10.1016/0003-2670(86)80028-9">https://doi.org/10.1016/0003-2670(86)80028-9</a>.</p>
-</dd>
-<dt>For the transformation part also see:</dt><dd><p>Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
+<p>For the transformation part also see:
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
 Missing data methods in PCA and PLS: Score calculations
 with incomplete observations.
 Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
-</dd>
-</dl>
 <p>(C) 2020-2021: Ryan Wall (lead), David Ochsenbein, YBaranwal
 revised 2024: Niels Schlusser</p>
 <dl class="py class">
@@ -508,14 +486,12 @@ revised 2024: Niels Schlusser</p>
 In theory you could expand to include a Y-block in-model distance,
 but the value is limited for the typical use cases.</p>
 </dd>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>input_scores (Optional[np.array], optional): Scores array.</dt><dd><p>Defaults to None.</p>
-</dd>
-<dt>input_array (Optional[np.array], optional): Data array.</dt><dd><p>Defaults to None.</p>
-</dd>
-<dt>metric (str, optional): In-model-distance to compute.</dt><dd><p>Must be one of set {‘HotellingT2’}. Defaults to ‘HotellingT2’.</p>
-</dd>
-</dl>
+<dt>Args:</dt><dd><p>input_scores (Optional[np.array], optional): Scores array.
+Defaults to None.
+input_array (Optional[np.array], optional): Data array.
+Defaults to None.
+metric (str, optional): In-model-distance to compute.
+Must be one of set {‘HotellingT2’}. Defaults to ‘HotellingT2’.</p>
 </dd>
 <dt>Raises:</dt><dd><p>NotFittedError: If model has not been fit.
 ValueError: If neither scores nor data are provided.
@@ -549,13 +525,11 @@ Supported metrics are: {‘QRes’,’DModX’}. Defaults to ‘QRes’.</p>
 <dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS" title="open_nipals.nipalsPLS.NipalsPLS"><span class="pre">NipalsPLS</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.fit" title="Link to this definition"></a></dt>
 <dd><p>Function to fit PLS model from X/Y Data.</p>
-<dl>
+<dl class="simple">
 <dt>Args:</dt><dd><p>X (np.array): Input X data.
 y (np.array): Input Y data.
-verbose (bool, optional): Turn verbosity on and off.</p>
-<blockquote>
-<div><p>Defaults to False.</p>
-</div></blockquote>
+verbose (bool, optional): Turn verbosity on and off.
+Defaults to False.</p>
 </dd>
 <dt>Raises:</dt><dd><p>NotFittedError: Model has not yet been fit</p>
 </dd>
@@ -574,10 +548,8 @@ y (np.array): The Y-data.</p>
 </dd>
 <dt>Raises:</dt><dd><p>ValueError: If attempt to use fit_transform on already fitted data.</p>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>Tuple[np.array, np.array]: A tuple containing the fitted scores</dt><dd><p>for X and Y.</p>
-</dd>
-</dl>
+<dt>Returns:</dt><dd><p>Tuple[np.array, np.array]: A tuple containing the fitted scores
+for X and Y.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -589,7 +561,7 @@ y (np.array): The Y-data.</p>
 This may differ from self.n_components which is the number of
 components used by the model.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>int</p>
+<dt>Returns:</dt><dd><p>int: number of fitted components</p>
 </dd>
 </dl>
 </dd></dl>
@@ -643,12 +615,10 @@ ValueError: If neither data nor scores are provided.</p>
 <dd><p>Method for setting the number of components in an
 already-constructed model. It checks to make sure that loadings
 exist for all of the set components and will fit extras if not.</p>
-<dl>
+<dl class="simple">
 <dt>Args:</dt><dd><p>n_component (int): the desired number of components.
-verbose (bool): Whether or not to print out additional</p>
-<blockquote>
-<div><p>convergence information. Defaults to False.</p>
-</div></blockquote>
+verbose (bool): Whether or not to print out additional
+convergence information. Defaults to False.</p>
 </dd>
 <dt>Raises:</dt><dd><p>TypeError: if n_component is not an int
 ValueError: if n_component &lt; 1</p>
@@ -795,11 +765,9 @@ y (np.array, optional): Y-data. Defaults to None.</p>
 </dd>
 <dt>Raises:</dt><dd><p>NotFittedError: If model is not fit.</p>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>Union[np.array, Tuple[np.array, np.array]]: Either the</dt><dd><p>scores for X (when no Y-data is provided) or a tuple
+<dt>Returns:</dt><dd><p>Union[np.array, Tuple[np.array, np.array]]: Either the
+scores for X (when no Y-data is provided) or a tuple
 of two scores-arrays.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -818,49 +786,36 @@ followed by other methods</p>
 <dt class="sig sig-object py" id="open_nipals.utils.ArrangeData">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.utils.</span></span><span class="sig-name descname"><span class="pre">ArrangeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.utils.ArrangeData" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></p>
-<p>[summary]</p>
+<p>ArrangeData class
+creates a sklearn-style transformer object that orders the columns
+in dataframe correctly</p>
 <section id="id9">
 <h3>Attributes:<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>var_dict<span class="classifier">dict</span></dt><dd><p>A dictionary indicating which column should be in which position.</p>
-</dd>
-</dl>
+<p>var_dict (dict): A dictionary indicating which column should be in which position.</p>
 </section>
 <section id="id10">
 <h3>Methods:<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>var_dict_from_df</dt><dd><p>Infer var_dict from template dataframe.</p>
-</dd>
-</dl>
-<p>fit_transform
-fit</p>
-<blockquote>
-<div><p>Applies var_dict_from_df in a manner consistent w/ sklearn nomenclature</p>
-</div></blockquote>
-<dl class="simple">
-<dt>transform</dt><dd><p>Takes a new dataframe or np.array + variable dictionary and arranges
-to be consistent with stored var_dict</p>
-</dd>
-</dl>
+<p>var_dict_from_df: Infer var_dict from template dataframe.
+fit_transform: concatenation of fit and transform
+fit: Applies var_dict_from_df in a consistent manner with sklearn
+nomenclature
+transform: Takes a new dataframe or np.array + variable dictionary
+and arranges to be consistent with stored var_dict</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.utils.ArrangeData.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.utils.ArrangeData.fit" title="Link to this definition"></a></dt>
 <dd><p>The function which will fit the var_dict object.</p>
-<dl>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>input_data (Union[pd.DataFrame, np.ndarray]): The input data to</dt><dd><p>use for fitting.</p>
-</dd>
-<dt>input_var_dict (Optional[dict], optional): Required if input_data</dt><dd><p>is an array, this dictionary contains the headers as
+<dl class="simple">
+<dt>Args:</dt><dd><p>input_data (Union[pd.DataFrame, np.ndarray]): The input data to
+use for fitting.
+input_var_dict (Optional[dict], optional): Required if input_data
+is an array, this dictionary contains the headers as
 {column Name: column index}.</p>
 </dd>
-</dl>
-</dd>
 <dt>Raises:</dt><dd><p>ValueError: input_data is a numpy array and input_var_dict is missing.
-ValueError: input_data is a numpy array and its shape does not</p>
-<blockquote>
-<div><p>match input_var_dict.</p>
-</div></blockquote>
-<p>ValueError: An unknown error occurred.</p>
+ValueError: input_data is a numpy array and its shape does not
+match input_var_dict.
+ValueError: An unknown error occurred.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -870,15 +825,13 @@ ValueError: input_data is a numpy array and its shape does not</p>
 <span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#open_nipals.utils.ArrangeData.fit_transform" title="Link to this definition"></a></dt>
 <dd><p>Fit a data/column model and then transform data.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>input_data (Union[pd.DataFrame, np.ndarray]): The input data</dt><dd><p>to transform. Note that if this is a dataframe it _will_
-be used to fit var_dict. This might not be what you want.</p>
+<dt>Args:</dt><dd><p>input_data (Union[pd.DataFrame, np.ndarray]): The input data
+to transform. Note that if this is a dataframe it _will_
+be used to fit var_dict. This might not be what you want.
+input_var_dict (Optional[dict], optional): The var_dict to be used
+to fit. Defaults to None.</p>
 </dd>
-<dt>input_var_dict (Optional[dict], optional): The var_dict to be used</dt><dd><p>to fit. Defaults to None.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><p>pd.DataFrame: [description]</p>
+<dt>Returns:</dt><dd><p>pd.DataFrame: transformed input frame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -887,24 +840,18 @@ be used to fit var_dict. This might not be what you want.</p>
 <dt class="sig sig-object py" id="open_nipals.utils.ArrangeData.transform">
 <span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.utils.ArrangeData.transform" title="Link to this definition"></a></dt>
 <dd><p>Transform input data based on stored data model.</p>
-<dl>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>input_data (Union[pd.DataFrame, np.ndarray]): The input_data to</dt><dd><p>transform.</p>
-</dd>
-<dt>input_var_dict (Optional[dict], optional): Required if input_data</dt><dd><p>is an array, this dictionary contains the headers as
+<dl class="simple">
+<dt>Args:</dt><dd><p>input_data (Union[pd.DataFrame, np.ndarray]): The input_data to
+transform.
+input_var_dict (Optional[dict], optional): Required if input_data
+is an array, this dictionary contains the headers as
 {column Name: column index}.. Defaults to None.</p>
 </dd>
-</dl>
-</dd>
 <dt>Raises:</dt><dd><p>ValueError: ArrangeData object has not yet been fit.
-ValueError: input_data is a numpy array and no input_var_dict has</p>
-<blockquote>
-<div><p>been provided.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>ValueError: input_data is a numpy array and its shape does not</dt><dd><p>match input_var_dict</p>
-</dd>
-</dl>
+ValueError: input_data is a numpy array and no input_var_dict has
+been provided.
+ValueError: input_data is a numpy array and its shape does not
+match input_var_dict</p>
 </dd>
 <dt>Returns:</dt><dd><p>np.ndarray: The transformed (column-rearranged) data.</p>
 </dd>
@@ -916,10 +863,8 @@ ValueError: input_data is a numpy array and no input_var_dict has</p>
 <span class="sig-name descname"><span class="pre">var_dict_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#open_nipals.utils.ArrangeData.var_dict_from_df" title="Link to this definition"></a></dt>
 <dd><p>Infer the var_dict from a template dataframe.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>input_df (pd.DataFrame): A dataframe that has the desired</dt><dd><p>order of columns.</p>
-</dd>
-</dl>
+<dt>Args:</dt><dd><p>input_df (pd.DataFrame): A dataframe that has the desired
+order of columns.</p>
 </dd>
 <dt>Returns:</dt><dd><p>dict: The corresponding var_dict. {column Name: column index}</p>
 </dd>
