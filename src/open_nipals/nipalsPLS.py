@@ -32,6 +32,63 @@ from typing import Optional, Tuple, Union
 
 
 class NipalsPLS(_PLS):
+    """The custom-built class to use PLS using the NIPALS algorithm,
+    i.e., the same algorithm used in SIMCA.
+
+    Attributes:
+    --------------------
+    n_components : int
+        The number of principal components.
+    max_iter : int
+        The max number of iterations for the fitting step.
+    tol_criteria : float
+        The convergence tolerance criterion.
+    mean_centered : bool
+        Whether or not the original data is mean-centered.
+    force_include : bool
+        True will force including the data
+        which has all nans in y-block. Defaults to False.
+    fit_data_x : np.ndarray
+        The X data used to fit the model.
+    fit_data_y : np.ndarray
+        The y data used to fit the model.
+    loadings_x : np.ndarray
+        The X loadings vectors of the PLS model.
+    loadings_y : np.ndarray
+        The y loadings vectors of the PLS model.
+    fit_scores_x : np.ndarray
+        The fitted X scores of the PLS model.
+    fit_scores_x : np.ndarray
+        The fitted y scores of the PLS model.
+    regression_matrix : np.ndarray
+        The regression matrix of the PLS model.
+    fitted_components : int:
+        The number of current LVs in the model (0 if not fitted yet.)
+
+    Methods:
+    --------------------
+    transform
+        Transform input data to scores.
+    fit
+        Fit PLS model on input data.
+    fit_transform
+        Fit PLS model on input data, then transform said data to scores.
+    inverse_transform
+        Obtain approximation of X input data given fitted model and X scores.
+    calc_imd
+        Calculate within-model distance.
+    calc_oomd
+        Calculate out-of-model distance.
+    calc_limit
+        Calculate suitable distance threshold given fitted data.
+    predict
+        Obtain prediction for y data given model and X data.
+    set_components
+        Change the number of model components.
+    get_reg_vector
+        Give regression vector of the model.
+    """
+
     def __init__(
         self,
         n_components: int = 2,
@@ -47,9 +104,9 @@ class NipalsPLS(_PLS):
             max_iter (int): The maximum number of iterations to use when fitting
             tol_criteria (float): Tolerance limit to compare when fitting
             mean_centered (boolean): Whether the data is mean centered or not.
-            It is HIGHLY suggested to mean center your data.
+                It is HIGHLY suggested to mean center your data.
             force_include (bool, optional): True will force including the data
-            which has all nans in y-block. Defaults to False.
+                which has all nans in y-block. Defaults to False.
 
         Returns:
             NipalsPLS: NipalsPLS object
@@ -121,7 +178,7 @@ class NipalsPLS(_PLS):
         Args:
             n_add (int): number of components to add
             verbose (bool): Whether or not to print out additional
-            convergence information. Defaults to False.
+                convergence information. Defaults to False.
         """
         X = self.fit_data_x.copy()
         y = self.fit_data_y.copy()
@@ -302,7 +359,7 @@ class NipalsPLS(_PLS):
         Args:
             n_component (int): the desired number of components.
             verbose (bool): Whether or not to print out additional
-            convergence information. Defaults to False.
+                convergence information. Defaults to False.
 
         Raises:
             TypeError: if n_component is not an int
@@ -336,7 +393,7 @@ class NipalsPLS(_PLS):
             X (np.array): Input X data.
             y (np.array): Input Y data.
             verbose (bool, optional): Turn verbosity on and off.
-            Defaults to False.
+                Defaults to False.
 
         Raises:
             NotFittedError: Model has not yet been fit
@@ -387,8 +444,8 @@ class NipalsPLS(_PLS):
 
         Returns:
             Union[np.array, Tuple[np.array, np.array]]: Either the
-            scores for X (when no Y-data is provided) or a tuple
-            of two scores-arrays.
+                scores for X (when no Y-data is provided) or a tuple
+                of two scores-arrays.
         """
 
         # Check whether the model is available or not
@@ -490,7 +547,7 @@ class NipalsPLS(_PLS):
 
         Returns:
             Tuple[np.array, np.array]: A tuple containing the fitted scores
-            for X and Y.
+                for X and Y.
         """
 
         # Check whether the model is available or not
@@ -513,17 +570,18 @@ class NipalsPLS(_PLS):
         metric: str = "HotellingT2",
     ):
         """Function copied from nipalsPCA code. This will take in an input
-            Array OR scores and return hotelling's T2 value for each row.
-            In theory you could expand to include a Y-block in-model distance,
-            but the value is limited for the typical use cases.
+        Array OR scores and return hotelling's T2 value for each row.
+        In theory you could expand to include a Y-block in-model distance,
+        but the value is limited for the typical use cases.
 
         Args:
             input_scores (Optional[np.array], optional): Scores array.
-            Defaults to None.
+                Defaults to None.
             input_array (Optional[np.array], optional): Data array.
-            Defaults to None.
+                Defaults to None.
             metric (str, optional): In-model-distance to compute.
-            Must be one of set {'HotellingT2'}. Defaults to 'HotellingT2'.
+                Must be one of set {'HotellingT2'}.
+                Defaults to 'HotellingT2'.
 
         Raises:
             NotFittedError: If model has not been fit.
@@ -631,7 +689,8 @@ class NipalsPLS(_PLS):
         Args:
             input_array (np.array): The input data.
             metric (str, optional): The metric to compute.
-            Supported metrics are: {'QRes','DModX'}. Defaults to 'QRes'.
+                Supported metrics are: {'QRes','DModX'}.
+                Defaults to 'QRes'.
 
         Raises:
             ValueError: If input metric is unknown.

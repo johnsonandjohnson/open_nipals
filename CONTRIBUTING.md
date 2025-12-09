@@ -1,6 +1,6 @@
 # Contributing
 
-Welcome to `open_nipals` contributor's guide.
+Welcome to the `open_nipals` contributor's guide.
 
 ## Code Contributions
 

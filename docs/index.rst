@@ -1,22 +1,14 @@
-.. open_nipals documentation master file, created by
-   sphinx-quickstart on Wed Nov 19 10:44:59 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+open\_nipals documentation
+==========================
 
-open_nipals documentation
-=========================
+This is release |release| of the documentation for the open\_nipals package.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :hidden:
 
-open_nipals
+   readme
+   open_nipals
+   contributing
+   authors
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 

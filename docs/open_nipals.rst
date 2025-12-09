@@ -1,8 +1,5 @@
-open\_nipals package
+Package documentation open\_nipals
 ====================
-
-Submodules
-----------
 
 open\_nipals.nipalsPCA module
 -----------------------------
@@ -24,14 +21,6 @@ open\_nipals.utils module
 -------------------------
 
 .. automodule:: open_nipals.utils
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-Module contents
----------------
-
-.. automodule:: open_nipals
    :members:
    :show-inheritance:
    :undoc-members:

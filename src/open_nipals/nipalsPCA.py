@@ -31,14 +31,14 @@ class NipalsPCA(_BasePCA):
     the same algorithm used in SIMCA.
 
     Attributes:
-    ----------
+    --------------------
     n_components : int
         The number of principal components.
     max_iter : int
         The max number of iterations for the fitting step.
     tol_criteria : float
         The convergence tolerance criterion.
-    loadings : bool
+    loadings : np.ndarray
         The loadings vectors of the PCA model.
     fit_scores : np.ndarray
         The fitted scores of the PCA model.
@@ -50,7 +50,7 @@ class NipalsPCA(_BasePCA):
         The number of current LVs in the model (0 if not fitted yet.)
 
     Methods:
-    ----------
+    --------------------
     transform
         Transform input data to scores.
     fit
@@ -65,6 +65,8 @@ class NipalsPCA(_BasePCA):
         Calculate out-of-model distance.
     calc_limit
         Calculate suitable distance threshold given fitted data.
+    set_components
+        Change the number of model components.
     """
 
     def __init__(
@@ -111,7 +113,7 @@ class NipalsPCA(_BasePCA):
         components used by the model.
 
         Returns:
-            int
+            int: Number of fitted components
         """
         if self.loadings is None:
             return 0
@@ -272,16 +274,16 @@ class NipalsPCA(_BasePCA):
 
         Args:
             X (np.ndarray): The nxm input array in the original
-            feature space to be projected.
+                feature space to be projected.
             method (str, optional): The method to use for the projection.
-            See reference listed in module docstring.
-            Valid options are {'naive','projection','conditionalMean'}
-            Defaults to 'naive'.
+                See reference listed in module docstring.
+                Valid options are {'naive','projection','conditionalMean'}
+                Defaults to 'naive'.
 
         Raises:
             NotFittedError: If model has not been fit yet (no loadings).
             ValueError: Method 'conditionalMean' is selected but fit_data is
-            not available.
+                not available.
 
         Returns:
             np.ndarray: The corresponding scores.
@@ -382,7 +384,7 @@ class NipalsPCA(_BasePCA):
         Args:
             X (np.ndarray): The input data to fit on.
             verbose (bool, optional): Whether or not to print out additional
-            convergence information. Defaults to False.
+                convergence information. Defaults to False.
 
         Returns:
             NipalsPCA: A reference to the object.
@@ -404,17 +406,16 @@ class NipalsPCA(_BasePCA):
         self, X: np.ndarray, verbose: bool = False
     ) -> np.ndarray:
         """Fit, then transform input data.
-
-
         This function is equivalent to
         >>>> P = NipalsPCA()
         >>>> P.fit(X)
         >>>> T = P.transform(X)
+
         Args:
             X (np.ndarray): The The input data to fit on and
-            to transform.
+                to transform.
             verbose (bool, optional): Whether or not to print out additional
-            convergence information. Defaults to False.
+                convergence information. Defaults to False.
 
         Raises:
             ValueError: Model has already been fit.
@@ -442,7 +443,7 @@ class NipalsPCA(_BasePCA):
         Raises:
             NotFittedError: PCA model has not been fit yet.
             ValueError: Shape of provided scores does not match n_components
-            in model.
+                in model.
 
         Returns:
             np.ndarray: The approximation of the original data.
@@ -475,23 +476,23 @@ class NipalsPCA(_BasePCA):
         metric: str = "HotellingT2",
     ) -> np.ndarray:
         """Calculate within-model distance.
+        This is the distance from the center of the hyperplane
+        to the projected observation.
 
-        This is the distance from the
-        center of the hyperplane to the projected observation.
         Args:
             input_scores (Optional[np.ndarray], optional): The scores from
-            which to calculate the distance. Defaults to None.
+                which to calculate the distance. Defaults to None.
             input_array (Optional[np.ndarray], optional): The input data in
-            original space from which to calculate the distance.
-            Defaults to None.
+                original space from which to calculate the distance.
+                Defaults to None.
             metric (str, optional): The metric to use. Valid options are
-            {'HotellingT2'}. Defaults to 'HotellingT2'.
+                {'HotellingT2'}. Defaults to 'HotellingT2'.
 
         Raises:
             NotFittedError: Model has not been fit yet.
             ValueError: Neither scores nor input data provided.
             ValueError: Input scores are inconsistent with n_components of
-            model.
+                model.
             ValueError: Other, unknown error with calculation of metric.
             NotImplementedError: Any metric that has not yet been implemented.
 
@@ -558,9 +559,9 @@ class NipalsPCA(_BasePCA):
 
         Args:
             input_array (np.ndarray): The data for which to calculate the
-                oomds.
+                oomd.
             metric (str, optional): The metric to use. Valid options are
-                {'Qres','DModX'} Defaults to 'QRes'.
+                {'Qres','DModX'}. Defaults to 'QRes'.
 
         Raises:
             NotImplementedError: Unknown metric.
