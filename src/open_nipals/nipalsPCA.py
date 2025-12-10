@@ -332,7 +332,7 @@ class NipalsPCA(_BasePCA):
             # (Handling missing data in PCA by projection to the model plane)
             for row in range(n):
                 not_null = np.invert(nan_mask[row, :])  # just for readability
-                denom = np.linalg.inv(
+                denom = np.linalg.pinv(
                     loadings[not_null, :num_lvs].T
                     @ loadings[not_null, :num_lvs]
                 )  # denominator in eq. 9
