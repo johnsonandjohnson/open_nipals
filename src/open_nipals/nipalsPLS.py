@@ -569,8 +569,8 @@ class NipalsPLS(_PLS):
         input_array: Optional[np.array] = None,
         metric: str = "HotellingT2",
     ):
-        """Function copied from nipalsPCA code. This will take in an input
-        Array OR scores and return hotelling's T2 value for each row.
+        """This will take in an input array OR scores and return
+        Hotelling's T2 value for each row.
         In theory you could expand to include a Y-block in-model distance,
         but the value is limited for the typical use cases.
 
@@ -594,27 +594,27 @@ class NipalsPLS(_PLS):
         """
 
         # Warnings and errors
-        if not self.__sklearn_is_fitted__():  # if not fit
+        if not self.__sklearn_is_fitted__():
+            # if not fit
             raise NotFittedError(
                 "Model has not yet been fit. "
                 + "Try fit() or fit_transform() instead."
             )
-        elif (input_array is None) and (
-            input_scores is None
-        ):  # If Nothing Given
-            raise ValueError("No values provided.")
-
-        # Calculate scores
-        if input_array is not None:  # If we have data, calculate with that
-            if (
-                input_scores is not None
-            ):  # Both inputs = warn and calc with only data
+        elif input_array is None:
+            # If Nothing Given
+            if input_scores is None:
+                raise ValueError("No values provided.")
+        else:
+            # Both inputs = warn and calc with only data
+            if input_scores is not None:
                 warnings.warn(
                     "Both Scores and Data are given. Operating on Data alone."
                 )
-            # Get Scores
+
+        # Get scores, either calculated or given
+        if input_array is not None:
             scores = self.transform(X=input_array)
-        elif input_scores is not None:  # If scores only, use those
+        else:
             scores = input_scores
 
         # Calculate in model distances
