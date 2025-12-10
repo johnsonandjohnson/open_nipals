@@ -537,7 +537,7 @@ class NipalsPLS(_PLS):
                 maxmean = np.NaN
 
             # Return boolean
-            return maxmean < 10**-10
+            return maxmean < 1e-10
 
     def fit_transform(
         self, X: np.array, y: np.array
