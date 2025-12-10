@@ -309,7 +309,7 @@ class NipalsPLS(_PLS):
             # Check whether it actually converged
             # or just terminated after max_iter
             if iter_count >= self.max_iter:
-                print(f"max_iter Reached on LV {ind_lv}.")
+                warnings.warn(f"max_iter Reached on LV {ind_lv}.")
 
             # x loading
             if not nan_flag:

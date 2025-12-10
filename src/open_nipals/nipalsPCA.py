@@ -181,8 +181,8 @@ class NipalsPCA(_BasePCA):
             # Loop until Converged
             while (not converged) and (num_iter < self.max_iter):
                 if verbose:
-                    print("LV {} Iteration {} Started".format(i, num_iter))
-                    print("     Conv Test is {}".format(conv_test))
+                    print(f"LV {i} Iteration num_iter Started")
+                    print(f"     Conv Test is {conv_test}")
                 # Update t_old
                 t_old = t_new.copy()
 
@@ -227,10 +227,10 @@ class NipalsPCA(_BasePCA):
                 loadings[:, i : i + 1] = loadings_loc
 
             if num_iter >= self.max_iter:
-                print("max_iter Reached on LV {}".format(i))
+                warnings.warn(f"max_iter Reached on LV {i}")
 
             if verbose:
-                print("Iteration finished on LV {}".format(i))
+                print(f"Iteration finished on LV {i}")
             # Deflate the input matrix
             data = data - t_new @ loadings_loc.T
             if verbose:
