@@ -640,7 +640,7 @@ class NipalsPLS(_PLS):
                 )
                 # Calculate imd, the Hotelling's T2
                 out_imd = np.sum(
-                    (input_scores - fit_means) ** 2 / fit_vars, axis=1
+                    (scores - fit_means) ** 2 / fit_vars, axis=1
                 ).reshape(-1, 1)
 
         else:  # If incorrect metric given
