@@ -575,7 +575,9 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         input_array: Optional[np.array] = None,
         metric: str = "HotellingT2",
     ):
-        """This will take in an input array OR scores and return
+        """
+        Calculate the in-model distance (IMD) of observations.
+        This will take in an input array OR scores and return
         Hotelling's T2 value for each row.
         In theory you could expand to include a Y-block in-model distance,
         but the value is limited for the typical use cases.
@@ -688,12 +690,13 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
     def calc_oomd(
         self, input_array: np.array, metric: str = "QRes"
     ) -> np.array:
-        """Calculate the Out of Model Distance.
+        """Calculate the out-of-model distance (OOMD) of observations.
         In theory can be used for Y-block, but the value in
         typical use is limited.
 
         Args:
-            input_array (np.array): The input data.
+            input_array (np.array): The X input data for which to
+                calculate the OOMD.
             metric (str, optional): The metric to compute.
                 Supported metrics are: {'QRes','DModX'}.
                 Defaults to 'QRes'.
@@ -706,27 +709,31 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         """
 
         # Select particular metric
-        if metric == "QRes":  # Q-residual
+        if metric == "QRes":
+            # To not perform calc on input_array
+            transform_dat = input_array.copy()
+
             # Get shape and Preallocate output
             n, _ = input_array.shape
             out_oomd = np.zeros((n, 1))
 
             # Calculate scores (transform should handle error Handling)
-            scores = self.transform(input_array)
+            scores = self.transform(transform_dat)
 
             # Calculate Fitted Data
             modeled_data = self.inverse_transform(X=scores)
 
             # Calculate Residuals
-            residual = input_array - modeled_data
+            resids = transform_dat - modeled_data
 
-            nan_mask = np.isnan(residual)
-            not_null = np.invert(nan_mask)
+            nan_mask = np.isnan(resids)
+            not_null = ~nan_mask
+
             # Calculate Q_residuals as DMODX is based off of this value
             for row in range(n):
                 out_oomd[row, 0] = (
-                    residual[row, not_null[row, :]]
-                    @ residual[row, not_null[row, :]].T
+                    resids[row, not_null[row, :]]
+                    @ resids[row, not_null[row, :]].T
                 )
 
         elif metric == "DModX":  # DModX
@@ -746,8 +753,9 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             K = self.fit_data_x.shape[1]
             factor = np.sqrt(n / ((n - num_lvs - A0) * (K - num_lvs)))
             out_oomd = factor.reshape(-1, 1) * np.sqrt(out_oomd)
+
         else:
-            raise ValueError("Input metric not recognized")
+            raise NotImplementedError("Input metric not recognized. See doc.")
 
         return out_oomd
 

@@ -362,10 +362,14 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 T = self.fit_scores
                 P = self.loadings
             elif fit_cols > self.n_components:
-                full_model = NipalsPCA(fit_cols)
-                full_model.fit(self.fit_data, verbose=False)
-                P = full_model.loadings
-                T = full_model.fit_scores
+                # if more fit_cols required
+                # fit them temporarily and
+                # go back to lower number
+                old_components = self.n_components
+                self.set_components(fit_cols)
+                T = self.fit_scores
+                P = self.loadings
+                self.set_components(old_components)
 
             theta = (T.T @ T) / (fit_rows - 1)
             for row in range(n):
@@ -481,7 +485,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         input_array: Optional[np.ndarray] = None,
         metric: str = "HotellingT2",
     ) -> np.ndarray:
-        """Calculate within-model distance.
+        """Calculate in-model distance (IMD) of observations.
         This is the distance from the center of the hyperplane
         to the projected observation.
 
@@ -562,11 +566,11 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
     def calc_oomd(
         self, input_array: np.ndarray, metric: str = "QRes"
     ) -> np.ndarray:
-        """Calculated the out-of-model distance (oomd) of an observation.
+        """Calculate the out-of-model distance (OOMD) of an observations.
 
         Args:
             input_array (np.ndarray): The data for which to calculate the
-                oomd.
+                OOMD.
             metric (str, optional): The metric to use. Valid options are
                 {'Qres','DModX'}. Defaults to 'QRes'.
 
@@ -596,6 +600,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
 
             nan_mask = np.isnan(resids)
             not_null = ~nan_mask
+
             # Calculate Q_residuals as DMODX is based off of this value
             for row in range(n):
                 out_oomd[row, 0] = (
