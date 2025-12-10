@@ -23,15 +23,15 @@ revised 2024: Niels Schlusser
 from __future__ import (
     annotations,
 )  # needed so we can return NipalsPLS class in our type hints
-import numpy as np
-from sklearn.cross_decomposition._pls import _PLS
-from sklearn.exceptions import NotFittedError
 import warnings
-from open_nipals.utils import _nan_mult
 from typing import Optional, Tuple, Union
+import numpy as np
+from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
+from sklearn.exceptions import NotFittedError
+from open_nipals.utils import _nan_mult
 
 
-class NipalsPLS(_PLS):
+class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
     """The custom-built class to use PLS using the NIPALS algorithm,
     i.e., the same algorithm used in SIMCA.
 

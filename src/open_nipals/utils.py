@@ -5,12 +5,11 @@ followed by other methods
 (c) 2020: Ryan Wall
 """
 
+import warnings
+from typing import Optional, Union
 import numpy as np
 from sklearn.base import TransformerMixin
-import warnings
 import pandas as pd
-
-from typing import Optional, Union
 
 
 def _nan_mult(
