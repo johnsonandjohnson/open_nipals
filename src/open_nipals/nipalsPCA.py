@@ -376,7 +376,7 @@ class NipalsPCA(_BasePCA):
                     S22 = P[not_null, :] @ theta @ P[not_null, :].T
 
                     # compute an estimate for the missing data
-                    z_hash = S12 @ np.linalg.inv(S22) @ X[row, not_null].T
+                    z_hash = S12 @ np.linalg.pinv(S22) @ X[row, not_null].T
                     X[row, is_null] = z_hash
 
                 scores[row, :] = (P.T @ X[row, :].T)[0 : self.n_components]
