@@ -212,9 +212,11 @@ class NipalsPCA(_BasePCA):
 
                 # Perform the convergence test
                 score_diff = t_old - t_new
-                conv_test = np.sqrt(score_diff.T @ score_diff) / np.sqrt(
-                    t_new.T @ t_new
-                )
+
+                # guard against zero norm
+                den = max(np.sqrt(t_new.T @ t_new), 1e-12)
+
+                conv_test = np.sqrt(score_diff.T @ score_diff) / den
                 converged = conv_test < self.tol_criteria
 
                 # Increase num_iter
@@ -513,17 +515,18 @@ class NipalsPCA(_BasePCA):
             if (input_array is None) and (input_scores is None):
                 raise ValueError("No values provided.")
 
-            # Both inputs = warn and recalc with only one of the inputs
-            elif (input_array is not None) and (input_scores is not None):
-                warnings.warn(
-                    "Both Scores and Data are given. Operating on Data alone."
-                )
-                # Call same function with only input_array
-                out_t2 = self.calc_imd(input_array=input_array)
+            elif input_array is not None:
+                # Both inputs = warn and recalc with only one of the inputs
+                if input_scores is not None:
+                    warnings.warn(
+                        "Both Scores and Data are given. Operating on Data alone."
+                    )
 
-            elif (input_scores is None) and (input_array is not None):
-                scores = self.transform(input_array)
-                out_t2 = self.calc_imd(input_scores=scores)
+                    # Call same function with only input_array
+                    out_t2 = self.calc_imd(input_array=input_array)
+                else:
+                    scores = self.transform(input_array)
+                    out_t2 = self.calc_imd(input_scores=scores)
 
             else:
                 # Calculate Hotelling's T2

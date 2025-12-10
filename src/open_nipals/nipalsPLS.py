@@ -295,8 +295,11 @@ class NipalsPLS(_PLS):
                     qi = qi / np.linalg.norm(qi)
                     ui = _nan_mult(y_res, qi, nan_mask_y)
 
+                # guard against zero norm
+                den = max(np.linalg.norm(ti), 1e-12)
+
                 # Check convergence
-                diff_norm = np.linalg.norm(ti - ti_old) / np.linalg.norm(ti)
+                diff_norm = np.linalg.norm(ti - ti_old) / den
 
                 converged = diff_norm < self.tol_criteria
 
