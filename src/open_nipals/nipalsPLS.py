@@ -93,18 +93,21 @@ class NipalsPLS(_PLS):
         self,
         n_components: int = 2,
         max_iter: int = 10000,
-        tol_criteria: float = 10**-10,
+        tol_criteria: float = 1e-6,
         mean_centered: bool = True,
         force_include: bool = False,
     ):
         """Constructor for initialization
 
         Args:
-            n_components (int): The number of components to use in the model
-            max_iter (int): The maximum number of iterations to use when fitting
-            tol_criteria (float): Tolerance limit to compare when fitting
+            n_components (int): The number of components to use in the model.
+                Defaults to 2.
+            max_iter (int): The maximum number of iterations to use when fitting.
+                Defaults to 10000.
+            tol_criteria (float): Relative tolerance limit to compare when fitting.
+                Defaults to 1e-6.
             mean_centered (boolean): Whether the data is mean centered or not.
-                It is HIGHLY suggested to mean center your data.
+                It is HIGHLY suggested to mean center your data. Defaults to True.
             force_include (bool, optional): True will force including the data
                 which has all nans in y-block. Defaults to False.
 
@@ -218,20 +221,20 @@ class NipalsPLS(_PLS):
             X = X - sim_data_x
             y = y - sim_data_y
 
-            p = np.append(
-                self.loadings_x, np.zeros((n_cols_x, n_add)), axis=1
+            p = np.concatenate(
+                [self.loadings_x, np.zeros((n_cols_x, n_add))], axis=1
             )  # x loadings
-            t = np.append(
-                self.fit_scores_x, np.zeros((n_rows_x, n_add)), axis=1
+            t = np.concatenate(
+                [self.fit_scores_x, np.zeros((n_rows_x, n_add))], axis=1
             )  # x scores
-            u = np.append(
-                self.fit_scores_y, np.zeros((n_rows_x, n_add)), axis=1
+            u = np.concatenate(
+                [self.fit_scores_y, np.zeros((n_rows_x, n_add))], axis=1
             )  # y scores
-            w = np.append(
-                self.weights_x, np.zeros((n_cols_x, n_add)), axis=1
+            w = np.concatenate(
+                [self.weights_x, np.zeros((n_cols_x, n_add))], axis=1
             )  # weights
-            q = np.append(
-                self.loadings_y, np.zeros((n_cols_y, n_add)), axis=1
+            q = np.concatenate(
+                [self.loadings_y, np.zeros((n_cols_y, n_add))], axis=1
             )  # y loading
             b = np.zeros(
                 (fitted_components + n_add, fitted_components + n_add)

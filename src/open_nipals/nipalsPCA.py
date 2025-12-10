@@ -73,7 +73,7 @@ class NipalsPCA(_BasePCA):
         self,
         n_components: int = 2,
         max_iter: int = 10000,
-        tol_criteria: float = 10**-8,
+        tol_criteria: float = 1e-6,
         mean_centered: bool = True,
     ):
         """The constructor for the NipalsPCA class.
@@ -83,8 +83,8 @@ class NipalsPCA(_BasePCA):
                 Defaults to 2.
             max_iter (int, optional): The maximum number of iterations until
                 convergence. Defaults to 10000.
-            tol_criteria (float, optional): The convergence threshold.
-                Defaults to 10**-8.
+            tol_criteria (float, optional): Relative tolerance limit.
+                Defaults to 1e-6.
             mean_centered (bool, optional): Whether or not the data is already
                 mean-centered. Defaults to True.
 
@@ -151,8 +151,12 @@ class NipalsPCA(_BasePCA):
             num_lvs = range(fitted_components, fitted_components + n_add)
 
             # Preallocate empty columns in scores/loadings
-            scores = np.append(self.fit_scores, np.zeros((n, n_add)), axis=1)
-            loadings = np.append(self.loadings, np.zeros((m, n_add)), axis=1)
+            scores = np.concatenate(
+                [self.fit_scores, np.zeros((n, n_add))], axis=1
+            )
+            loadings = np.concatenate(
+                [self.loadings, np.zeros((m, n_add))], axis=1
+            )
 
         if verbose:
             print("Scores and Loads preallocated")
