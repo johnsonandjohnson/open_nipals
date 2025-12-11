@@ -22,6 +22,7 @@ from typing import Optional
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.exceptions import NotFittedError
+from sklearn.covariance import LedoitWolf
 from scipy.stats import f as F_dist
 from open_nipals.utils import _nan_mult
 
@@ -484,6 +485,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         input_scores: Optional[np.ndarray] = None,
         input_array: Optional[np.ndarray] = None,
         metric: str = "HotellingT2",
+        covariance: str = "diag",
     ) -> np.ndarray:
         """Calculate in-model distance (IMD) of observations.
         This is the distance from the center of the hyperplane
@@ -497,71 +499,91 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 Defaults to None.
             metric (str, optional): The metric to use. Valid options are
                 {'HotellingT2'}. Defaults to 'HotellingT2'.
+            covariance (str, optional): Method to compute covariance. Valid
+                options are {'diag', 'full'}. Defaults to 'diag'
+                (quick version). 'full' uses the entire covariance matrix
+                computed by Ledoit-Wolf shrinkage.
 
         Raises:
             NotFittedError: Model has not been fit yet.
             ValueError: Neither scores nor input data provided.
             ValueError: Input scores are inconsistent with n_components of
                 model.
-            ValueError: Other, unknown error with calculation of metric.
             NotImplementedError: Any metric that has not yet been implemented.
 
         Returns:
             np.ndarray: The calculated within-model distance for each
             observation (row).
         """
-        # Warnings if not fit
+        # Warnings and errors
         if not self.__sklearn_is_fitted__():
+            # if not fit
             raise NotFittedError(
                 "Model has not yet been fit. Try fit() or fit_transform()"
                 + " instead."
             )
-
-        if metric == "HotellingT2":
-            # Handling cases of input_array/input_scores being present or not
-            # No inputs = halt with value Error
-            if (input_array is None) and (input_scores is None):
+        elif input_array is None:
+            # If Nothing Given
+            if input_scores is None:
                 raise ValueError("No values provided.")
+        else:
+            # Both inputs = warn and calc with only data
+            if input_scores is not None:
+                warnings.warn(
+                    "Both Scores and Data are given. Operating on Data alone."
+                )
 
-            elif input_array is not None:
-                # Both inputs = warn and recalc with only one of the inputs
-                if input_scores is not None:
-                    warnings.warn(
-                        "Both Scores and Data are given. Operating on Data alone."
-                    )
+        # Get scores, either calculated or given
+        if input_array is not None:
+            scores = self.transform(X=input_array)
+        else:
+            scores = input_scores
 
-                    # Call same function with only input_array
-                    out_t2 = self.calc_imd(input_array=input_array)
-                else:
-                    scores = self.transform(input_array)
-                    out_t2 = self.calc_imd(input_scores=scores)
+        # Calculate in-model distances
+        if metric == "HotellingT2":
+            # Calculate Hotelling's T2
+            num_lvs_fit = self.n_components
 
+            if scores.shape[1] != num_lvs_fit:
+                raise ValueError(
+                    "Input_scores have different number of columns/latent"
+                    + " variables than model n_components."
+                )
             else:
-                # Calculate Hotelling's T2
-                _, num_lvs = input_scores.shape
-                num_lvs_fit = self.n_components
+                fit_means = np.mean(self.fit_scores[:, :num_lvs_fit], axis=0)
 
-                if num_lvs != num_lvs_fit:
-                    raise ValueError(
-                        "input_scores have different number of columns/latent"
-                        + " variables than model n_components."
-                    )
-                else:
-                    fit_means = np.mean(
-                        self.fit_scores[:, :num_lvs_fit], axis=0
-                    )
+                if covariance == "diag":
                     fit_vars = np.var(
                         self.fit_scores[:, :num_lvs_fit], axis=0, ddof=1
                     )
-                    out_t2 = np.sum(
-                        (input_scores - fit_means) ** 2 / fit_vars, axis=1
+                    out_imd = np.sum(
+                        (scores - fit_means) ** 2 / fit_vars, axis=1
                     ).reshape(-1, 1)
+                elif covariance == "full":
+                    # Ledoit Wolf shrinkage
+                    # TODO: this still needs work
+                    # dimensionalities doe not work out yet
+                    lw_obj = LedoitWolf(
+                        assume_centered=self.mean_centered
+                    ).fit(self.fit_scores_x[:, :num_lvs_fit])
+                    out_imd = (
+                        (scores - fit_means)
+                        @ np.linalg.pinv(lw_obj.covariance_)
+                        @ (scores - fit_means)
+                    )
+                else:
+                    raise NotImplementedError(
+                        f"Covariance method {covariance} not implemented."
+                        + "Needs to be in {'diag', 'full'}."
+                    )
+
         else:
+            # If incorrect metric given
             raise NotImplementedError(
                 "This metric has not been implemented. See doc."
             )
 
-        return out_t2
+        return out_imd
 
     def calc_oomd(
         self, input_array: np.ndarray, metric: str = "QRes"

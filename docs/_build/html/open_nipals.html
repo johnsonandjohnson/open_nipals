@@ -207,7 +207,6 @@ Defaults to None.</p></li>
 <li><p><strong>ValueError</strong> – Neither scores nor input data provided.</p></li>
 <li><p><strong>ValueError</strong> – Input scores are inconsistent with n_components of
     model.</p></li>
-<li><p><strong>ValueError</strong> – Other, unknown error with calculation of metric.</p></li>
 <li><p><strong>NotImplementedError</strong> – Any metric that has not yet been implemented.</p></li>
 </ul>
 </dd>
@@ -607,7 +606,7 @@ Defaults to ‘HotellingT2’.</p></li>
 <li><p><strong>NotFittedError</strong> – If model has not been fit.</p></li>
 <li><p><strong>ValueError</strong> – If neither scores nor data are provided.</p></li>
 <li><p><strong>ValueError</strong> – If input scores shapes does not match model.</p></li>
-<li><p><strong>ValueError</strong> – If unknown metric was requested.</p></li>
+<li><p><strong>NotImplementedError</strong> – If unknown metric was requested.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

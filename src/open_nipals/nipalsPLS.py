@@ -28,6 +28,7 @@ from typing import Optional, Tuple, Union
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
 from sklearn.exceptions import NotFittedError
+from sklearn.covariance import LedoitWolf
 from open_nipals.utils import _nan_mult
 
 
@@ -574,6 +575,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         input_scores: Optional[np.array] = None,
         input_array: Optional[np.array] = None,
         metric: str = "HotellingT2",
+        covariance: str = "diag",
     ):
         """
         Calculate the in-model distance (IMD) of observations.
@@ -590,12 +592,16 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             metric (str, optional): In-model-distance to compute.
                 Must be one of set {'HotellingT2'}.
                 Defaults to 'HotellingT2'.
+            covariance (str, optional): Method to compute covariance. Valid
+                options are {'diag', 'full'}. Defaults to 'diag'
+                (quick version). 'full' uses the entire covariance matrix
+                computed by Ledoit-Wolf shrinkage.
 
         Raises:
             NotFittedError: If model has not been fit.
             ValueError: If neither scores nor data are provided.
             ValueError: If input scores shapes does not match model.
-            ValueError: If unknown metric was requested.
+            NotImplementedError: If unknown metric was requested.
 
         Returns:
             float: The within-model distance(s).
@@ -625,8 +631,9 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         else:
             scores = input_scores
 
-        # Calculate in model distances
-        if metric == "HotellingT2":  # Calculate Hotelling's T2
+        # Calculate in-model distances
+        if metric == "HotellingT2":
+            # Calculate Hotelling's T2
             num_lvs_fit = self.n_components
 
             if scores.shape[1] != num_lvs_fit:  # Error if incorrect sizes
@@ -637,15 +644,35 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             else:
                 # Calculate fit means/variances
                 fit_means = np.mean(self.fit_scores_x[:, :num_lvs_fit], axis=0)
-                fit_vars = np.var(
-                    self.fit_scores_x[:, :num_lvs_fit], axis=0, ddof=1
-                )
-                # Calculate imd, the Hotelling's T2
-                out_imd = np.sum(
-                    (scores - fit_means) ** 2 / fit_vars, axis=1
-                ).reshape(-1, 1)
 
-        else:  # If incorrect metric given
+                if covariance == "diag":
+                    fit_vars = np.var(
+                        self.fit_scores_x[:, :num_lvs_fit], axis=0, ddof=1
+                    )
+                    # Calculate imd, the Hotelling's T2
+                    out_imd = np.sum(
+                        (scores - fit_means) ** 2 / fit_vars, axis=1
+                    ).reshape(-1, 1)
+                elif covariance == "full":
+                    # Ledoit Wolf shrinkage
+                    # TODO: this still needs work
+                    # dimensionalities doe not work out yet
+                    lw_obj = LedoitWolf(
+                        assume_centered=self.mean_centered
+                    ).fit(self.fit_scores_x[:, :num_lvs_fit])
+                    out_imd = (
+                        (scores - fit_means)
+                        @ np.linalg.pinv(lw_obj.covariance_)
+                        @ (scores - fit_means)
+                    )
+                else:
+                    raise NotImplementedError(
+                        f"Covariance method {covariance} not implemented."
+                        + "Needs to be in {'diag', 'full'}."
+                    )
+
+        else:
+            # If incorrect metric given
             raise ValueError(
                 "Unknown metric requested (metric = HotellingT2)."
             )
