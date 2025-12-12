@@ -72,15 +72,20 @@ class ArrangeData(TransformerMixin):
 
     Attributes:
     --------------------
-    var_dict (dict): A dictionary indicating which column should be in which position.
+    var_dict : dict
+        A dictionary indicating which column should be in which position.
 
     Methods:
     --------------------
-    var_dict_from_df: Infer var_dict from template dataframe.
-    fit_transform: concatenation of fit and transform
-    fit: Applies var_dict_from_df in a consistent manner with sklearn
+    var_dict_from_df
+        Infer var_dict from template dataframe.
+    fit_transform
+        concatenation of fit and transform
+    fit
+        Applies var_dict_from_df in a consistent manner with sklearn
         nomenclature
-    transform: Takes a new dataframe or np.array + variable dictionary
+    transform
+        Takes a new dataframe or np.array + variable dictionary
         and arranges to be consistent with stored var_dict
     """
 

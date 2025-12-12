@@ -159,7 +159,7 @@ the same algorithm used in SIMCA.</p>
 </dd>
 <dt>mean_centered<span class="classifier">bool</span></dt><dd><p>Whether or not the original data is mean-centered.</p>
 </dd>
-<dt>fitted_components<span class="classifier">int:</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+<dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
 </dd>
 </dl>
 </section>
@@ -185,7 +185,7 @@ the same algorithm used in SIMCA.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.calc_imd">
-<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'diag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd" title="Link to this definition"></a></dt>
 <dd><p>Calculate in-model distance (IMD) of observations.
 This is the distance from the center of the hyperplane
 to the projected observation.</p>
@@ -199,6 +199,12 @@ original space from which to calculate the distance.
 Defaults to None.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to use. Valid options are
 {‘HotellingT2’}. Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>covariance</strong> (<em>str</em><em>, </em><em>optional</em>) – Method to compute covariance. Valid
+options are {‘diag’, ‘full’, ‘ledoit_wolf’}.
+Defaults to ‘diag’ (quick version).
+‘full’ uses the entire covariance matrix computed by numpy.
+‘ledoit_wolf’ uses the full covariance matrix computed
+by Ledoit-Wolf shrinkage.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -553,7 +559,7 @@ which has all nans in y-block. Defaults to False.</p>
 </dd>
 <dt>regression_matrix<span class="classifier">np.ndarray</span></dt><dd><p>The regression matrix of the PLS model.</p>
 </dd>
-<dt>fitted_components<span class="classifier">int:</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+<dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
 </dd>
 </dl>
 </section>
@@ -583,7 +589,7 @@ which has all nans in y-block. Defaults to False.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.calc_imd">
-<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'diag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd" title="Link to this definition"></a></dt>
 <dd><p>Calculate the in-model distance (IMD) of observations.
 This will take in an input array OR scores and return
 Hotelling’s T2 value for each row.
@@ -599,6 +605,12 @@ Defaults to None.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – In-model-distance to compute.
 Must be one of set {‘HotellingT2’}.
 Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>covariance</strong> (<em>str</em><em>, </em><em>optional</em>) – Method to compute covariance. Valid
+options are {‘diag’, ‘full’, ‘ledoit_wolf’}.
+Defaults to ‘diag’ (quick version).
+‘full’ uses the entire covariance matrix computed by numpy.
+‘ledoit_wolf’ uses the full covariance matrix computed
+by Ledoit-Wolf shrinkage.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -956,18 +968,23 @@ creates a sklearn-style transformer object that orders the columns
 in dataframe correctly</p>
 <section id="id3">
 <h3>Attributes:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>var_dict (dict): A dictionary indicating which column should be in which position.</p>
+<dl class="simple">
+<dt>var_dict<span class="classifier">dict</span></dt><dd><p>A dictionary indicating which column should be in which position.</p>
+</dd>
+</dl>
 </section>
 <section id="id4">
 <h3>Methods:<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
-<p>var_dict_from_df: Infer var_dict from template dataframe.
-fit_transform: concatenation of fit and transform
-fit: Applies var_dict_from_df in a consistent manner with sklearn</p>
-<blockquote>
-<div><p>nomenclature</p>
-</div></blockquote>
 <dl class="simple">
-<dt>transform: Takes a new dataframe or np.array + variable dictionary</dt><dd><p>and arranges to be consistent with stored var_dict</p>
+<dt>var_dict_from_df</dt><dd><p>Infer var_dict from template dataframe.</p>
+</dd>
+<dt>fit_transform</dt><dd><p>concatenation of fit and transform</p>
+</dd>
+<dt>fit</dt><dd><p>Applies var_dict_from_df in a consistent manner with sklearn
+nomenclature</p>
+</dd>
+<dt>transform</dt><dd><p>Takes a new dataframe or np.array + variable dictionary
+and arranges to be consistent with stored var_dict</p>
 </dd>
 </dl>
 <dl class="py method">

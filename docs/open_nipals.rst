@@ -1,5 +1,5 @@
 Package documentation open\_nipals
-====================
+==================================
 
 open\_nipals.nipalsPCA module
 -----------------------------

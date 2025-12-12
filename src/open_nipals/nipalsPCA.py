@@ -47,7 +47,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         The data used to fit the model.
     mean_centered  : bool
         Whether or not the original data is mean-centered.
-    fitted_components : int:
+    fitted_components : int
         The number of current LVs in the model (0 if not fitted yet.)
 
     Methods:
@@ -500,9 +500,11 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
             metric (str, optional): The metric to use. Valid options are
                 {'HotellingT2'}. Defaults to 'HotellingT2'.
             covariance (str, optional): Method to compute covariance. Valid
-                options are {'diag', 'full'}. Defaults to 'diag'
-                (quick version). 'full' uses the entire covariance matrix
-                computed by Ledoit-Wolf shrinkage.
+                options are {'diag', 'full', 'ledoit_wolf'}.
+                Defaults to 'diag' (quick version).
+                'full' uses the entire covariance matrix computed by numpy.
+                'ledoit_wolf' uses the full covariance matrix computed
+                by Ledoit-Wolf shrinkage.
 
         Raises:
             NotFittedError: Model has not been fit yet.
@@ -553,6 +555,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 fit_means = np.mean(self.fit_scores[:, :num_lvs_fit], axis=0)
 
                 if covariance == "diag":
+                    # assume diagonal covariance matrix
                     fit_vars = np.var(
                         self.fit_scores[:, :num_lvs_fit], axis=0, ddof=1
                     )
@@ -560,21 +563,30 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                         (scores - fit_means) ** 2 / fit_vars, axis=1
                     ).reshape(-1, 1)
                 elif covariance == "full":
-                    # Ledoit Wolf shrinkage
-                    # TODO: this still needs work
-                    # dimensionalities doe not work out yet
+                    # use full covariance matrix
+                    out_imd = np.diagonal(
+                        (scores - fit_means)
+                        @ np.linalg.pinv(
+                            np.cov(self.fit_scores[:, :num_lvs_fit].T, ddof=1)
+                        )
+                        @ (scores - fit_means).T
+                    ).reshape(-1, 1)
+                elif covariance == "ledoit_wolf":
+                    # compute full covariance matrix
+                    # with Ledoit-Wolf shrinkage
                     lw_obj = LedoitWolf(
                         assume_centered=self.mean_centered
-                    ).fit(self.fit_scores_x[:, :num_lvs_fit])
-                    out_imd = (
+                    ).fit(self.fit_scores[:, :num_lvs_fit])
+                    out_imd = np.diagonal(
                         (scores - fit_means)
                         @ np.linalg.pinv(lw_obj.covariance_)
-                        @ (scores - fit_means)
-                    )
+                        @ (scores - fit_means).T
+                    ).reshape(-1, 1)
                 else:
                     raise NotImplementedError(
                         f"Covariance method {covariance} not implemented."
-                        + "Needs to be in {'diag', 'full'}."
+                        + "Possible methods are "
+                        + "{'diag', 'full', 'ledoit_wolf'}."
                     )
 
         else:
