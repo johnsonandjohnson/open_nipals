@@ -284,12 +284,12 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 feature space to be projected.
             method (str, optional): The method to use for the projection.
                 See reference listed in module docstring.
-                Valid options are {'naive','projection','conditionalMean'}
+                Valid options are {'naive','projection','conditional_mean'}
                 Defaults to 'naive'.
 
         Raises:
             NotFittedError: If model has not been fit yet (no loadings).
-            ValueError: Method 'conditionalMean' is selected but fit_data is
+            ValueError: Method 'conditional_mean' is selected but fit_data is
                 not available.
 
         Returns:
@@ -346,7 +346,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 )  # nominator in eq. 9
                 scores[row, :] = (denom @ nom).T
 
-        elif nan_flag and (method == "conditionalMean"):
+        elif nan_flag and (method == "conditional_mean"):
             # uses approach described in section 5.1 of McGregor paper
             # (Missing data replacement using conditional mean replacement)
             fit_rows, fit_cols = self.fit_data.shape
