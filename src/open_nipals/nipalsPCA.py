@@ -772,11 +772,11 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         return self.fitted_components != 0
 
     @property
-    def explained_variance_ratio_(
+    def explained_variance_(
         self,
         in_data: np.array = None,
     ) -> float:
-        """calculate the explained variance ratio
+        """calculate the explained variance
 
         Args:
             in_data (np.array, optional):
@@ -786,7 +786,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
             ValueError: if in_data not mean centered.
 
         Returns:
-            float: variance ratio
+            float: variance
         """
         if in_data is not None:
             if self._check_mean_centered(in_data):
@@ -799,8 +799,42 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         # compute data as per model
         sim_data = self.inverse_transform(self.transform(data))
 
-        # compute resudiual variance
+        # compute residual variance
         resid_var = np.nanvar(data - sim_data, axis=0)
 
         # variance of data scaled to 1, so
         return np.nanmean(1 - resid_var)
+
+    @property
+    def explained_variance_ratio_(
+        self,
+        in_data: np.array = None,
+    ) -> np.ndarray:
+        """calculate the explained variance ratio
+
+        Args:
+            in_data (np.array, optional):
+                Alternative input data. Defaults to None.
+
+        Returns:
+            np.ndarray: variance ratio
+        """
+        orig_n_comp = self.n_components
+        ret = np.zeros(orig_n_comp + 1)
+
+        # compute explained variances per component
+        # automatically pads a zero at position 0
+        for i in range(1, orig_n_comp + 1):
+            self.set_components(i)
+            ret[i] = self.explained_variance_(in_data)
+
+        # go back to original components
+        self.set_components(orig_n_comp)
+
+        # subtract previous component
+        ret = ret[1:] - ret[:-1]
+
+        # normalize
+        ret = ret / sum(ret)
+
+        return ret

@@ -24,7 +24,7 @@ from __future__ import (
     annotations,
 )  # needed so we can return NipalsPLS class in our type hints
 import warnings
-from typing import Optional, Tuple, Union
+from typing import Optional, Union, Tuple
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
 from sklearn.exceptions import NotFittedError
@@ -868,12 +868,13 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         return self.fitted_components != 0
 
     @property
-    def explained_variance_ratio_(
+    def explained_variance_(
         self,
         in_x_data: np.array = None,
         in_y_data: np.array = None,
     ) -> (float, float):
-        """calculate the explained variance ratio
+        """calculate the explained variances
+        for X and y arrays
 
         Args:
             in_x_data (np.array, optional):
@@ -886,7 +887,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             ValueError: If in_y_data not mean centered.
 
         Returns:
-            (float, float): variance ratios for X and y
+            (float, float): variance for X and y
         """
         if in_x_data is not None:
             if self._check_mean_centered(in_x_data):
@@ -914,3 +915,45 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
         # variance of data scaled to 1,so
         return np.nanmean(1 - resid_x_var), np.nanmean(1 - resid_y_var)
+
+    @property
+    def explained_variance_ratio_(
+        self,
+        in_x_data: np.array = None,
+        in_y_data: np.array = None,
+    ) -> (np.ndarray, np.ndarray):
+        """calculate the explained variance ratios
+        for X and y arrays
+
+        Args:
+            in_x_data (np.array, optional):
+                Alternative input X data. Defaults to None.
+            in_y_data (np.array, optional):
+                Alternative input y data. Defaults to None.
+
+        Returns:
+            (np.ndarray, np.ndarray):
+                variance ratios for X and y
+        """
+        orig_n_comp = self.n_components
+        ret_x = np.zeros(orig_n_comp + 1)
+        ret_y = np.zeros(orig_n_comp + 1)
+
+        # compute explained variances per component
+        # automatically pads a zero at position 0
+        for i in range(1, orig_n_comp + 1):
+            self.set_components(i)
+            ret_x[i], ret_y[i] = self.explained_variance_(in_x_data, in_y_data)
+
+        # go back to original components
+        self.set_components(orig_n_comp)
+
+        # subtract previous components
+        ret_x = ret_x[1:] - ret_x[:-1]
+        ret_y = ret_y[1:] - ret_y[:-1]
+
+        # normalize
+        ret_x = ret_x / sum(ret_x)
+        ret_y = ret_y / sum(ret_y)
+
+        return ret_x, ret_y

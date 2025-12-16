@@ -543,12 +543,11 @@ class TestFit(unittest.TestCase):
         with self.subTest():
             self.assertGreater(lin_val, 1 - 1e-2, msg=f"linConc = {lin_val}")
 
-
-    def test_explained_variance_ratio(self):
-        """test the explained_variance_ratio_ method"""
+    def test_explained_variance(self):
+        """test the explained_variance_ method"""
         model = self.model[0]
 
-        x_var_orig, y_var_orig = model.explained_variance_ratio_
+        x_var_orig, y_var_orig = model.explained_variance_
 
         # check if in [0,1]
         with self.subTest():
@@ -565,20 +564,20 @@ class TestFit(unittest.TestCase):
         # add one component
         more_comp_model = NipalsPLS(
             mean_centered=True, n_components=model.n_components + 1
-            ).fit(X=model.fit_data_x, y=model.fit_data_y)
+        ).fit(X=model.fit_data_x, y=model.fit_data_y)
 
-        x_var_more, y_var_more = more_comp_model.explained_variance_ratio_
+        x_var_more, y_var_more = more_comp_model.explained_variance_
 
         # check if in [0,1]
         with self.subTest():
             self.assertTrue(
                 0 <= x_var_more <= 1,
-                msg=f"Explained X variance ratio {x_var_more} not in [0,1].",
+                msg=f"Explained X variance {x_var_more} not in [0,1].",
             )
         with self.subTest():
             self.assertTrue(
                 0 <= y_var_more <= 1,
-                msg=f"Explained y variance ratio {y_var_more} not in [0,1].",
+                msg=f"Explained y variance {y_var_more} not in [0,1].",
             )
 
         # check if strictly ascending after increasing components
@@ -586,14 +585,59 @@ class TestFit(unittest.TestCase):
             self.assertGreater(
                 x_var_more,
                 x_var_orig,
-                msg=f"Explained X variance ratio {x_var_more} does not increase with n_components.",
+                msg=f"Explained X variance {x_var_more} does not increase with n_components.",
             )
         with self.subTest():
             self.assertGreater(
                 y_var_more,
                 y_var_orig,
-                msg=f"Explained y variance ratio {y_var_more} does not increase with n_components.",
+                msg=f"Explained y variance {y_var_more} does not increase with n_components.",
             )
+
+    def test_explained_variance_ratio(self):
+        """test the explained_variance_ratio_ method"""
+        model = self.model[0]
+
+        ex_x_var, ex_y_var = model.explained_variance_ratio_
+
+        # check if in [0,1]
+        with self.subTest():
+            self.assertTrue(
+                all(0 <= ex_x_var <= 1),
+                msg=f"Explained X variance ratios {ex_x_var} not in [0,1].",
+            )
+        with self.subTest():
+            self.assertTrue(
+                all(0 <= ex_y_var <= 1),
+                msg=f"Explained y variance ratios {ex_y_var} not in [0,1].",
+            )
+
+        # check if normalized
+        with self.subTest():
+            self.assertEqual(
+                sum(ex_x_var),
+                1,
+                msg=f"Explained X variance ratios {ex_x_var} not normalized.",
+            )
+        with self.subTest():
+            self.assertEqual(
+                sum(ex_y_var),
+                1,
+                msg=f"Explained y variance ratios {ex_y_var} not normalized.",
+            )
+
+        # check if strictly descending
+        with self.subTest():
+            self.assertTrue(
+                all(ex_x_var[1:] - ex_x_var[:-1] < 0),
+                msg=f"Explained X variance ratio {ex_x_var} does not monotonously fall.",
+            )
+        with self.subTest():
+            self.assertTrue(
+                all(ex_y_var[1:] - ex_y_var[:-1] < 0),
+                msg=f"Explained y variance ratio {ex_y_var} does not monotonously fall.",
+            )
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromModule(sys.modules[__name__])

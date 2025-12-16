@@ -3,6 +3,7 @@ import sys
 import unittest
 from typing import Tuple
 from pathlib import Path
+import warnings
 from parameterized import parameterized_class
 import pandas as pd
 import numpy as np
@@ -329,11 +330,13 @@ class TestFit(unittest.TestCase):
                 max_oomd_diff, 1e-9, msg=f"Max OOMD diff = {max_oomd_diff}"
             )
 
-    def test_explained_variance_ratio(self):
-        """test the explained_variance_ratio_ method"""
+    def test_explained_variance_(self):
+        """test the explained_variance_ method"""
         model = self.model[0]
 
-        var_orig = model.explained_variance_ratio_
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
+            var_orig = model.explained_variance_
 
         # check if in [0,1]
         with self.subTest():
@@ -345,9 +348,11 @@ class TestFit(unittest.TestCase):
         # add one component
         more_comp_model = NipalsPCA(
             mean_centered=True, n_components=model.n_components + 1
-            ).fit(X=model.fit_data)
+        ).fit(X=model.fit_data)
 
-        var_more = more_comp_model.explained_variance_ratio_
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
+            var_more = more_comp_model.explained_variance_
 
         # check if in [0,1]
         with self.subTest():
@@ -362,6 +367,36 @@ class TestFit(unittest.TestCase):
                 var_more,
                 var_orig,
                 msg=f"Explained variance ratio {var_more} after set_components not monotonous.",
+            )
+
+    def test_explained_variance_ratio(self):
+        """test the explained_variance_ratio_ method"""
+        model = self.model[0]
+
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
+            ex_var = model.explained_variance_ratio_
+
+        # check if in [0,1]
+        with self.subTest():
+            self.assertTrue(
+                all(0 <= ex_var <= 1),
+                msg=f"Explained variance ratios {ex_var} not in [0,1].",
+            )
+
+        # check if normalized
+        with self.subTest():
+            self.assertEqual(
+                sum(ex_var),
+                1,
+                msg=f"Explained variance ratios {ex_var} not normalized.",
+            )
+
+        # check if strictly descending
+        with self.subTest():
+            self.assertTrue(
+                all(ex_var[1:] - ex_var[:-1] < 0),
+                msg=f"Explained variance ratio {ex_var} not monotonously falling.",
             )
 
 
