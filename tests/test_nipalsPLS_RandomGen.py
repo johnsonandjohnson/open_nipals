@@ -547,95 +547,103 @@ class TestFit(unittest.TestCase):
         """test the explained_variance_ method"""
         model = self.model[0]
 
-        x_var_orig, y_var_orig = model.explained_variance_
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
+            ex_var_x, ex_var_y = model.explained_variance_
 
         # check if in [0,1]
         with self.subTest():
             self.assertTrue(
-                0 <= x_var_orig <= 1,
-                msg=f"Explained X variance ratio {x_var_orig} not in [0,1].",
+                all(0 <= ex_var_x),
+                msg=f"Explained X variance ratio {ex_var_x} not >= 0.",
             )
+            self.assertTrue(
+                all(ex_var_x <= 1),
+                msg=f"Explained X variance ratio {ex_var_x} not <= 1.",
+            )
+            self.assertTrue(
+                all(0 <= ex_var_y),
+                msg=f"Explained y variance ratio {ex_var_y} not >= 0.",
+            )
+            self.assertTrue(
+                all(ex_var_y <= 1),
+                msg=f"Explained y variance ratio {ex_var_y} not <= 1.",
+            )
+
+        # check if strictly descending
         with self.subTest():
             self.assertTrue(
-                0 <= y_var_orig <= 1,
-                msg=f"Explained y variance ratio {y_var_orig} not in [0,1].",
+                all(ex_var_x[1:] - ex_var_x[:-1] < 0),
+                msg=f"Explained variance ratio {ex_var_x} not monotonously falling.",
             )
-
-        # add one component
-        more_comp_model = NipalsPLS(
-            mean_centered=True, n_components=model.n_components + 1
-        ).fit(X=model.fit_data_x, y=model.fit_data_y)
-
-        x_var_more, y_var_more = more_comp_model.explained_variance_
-
-        # check if in [0,1]
-        with self.subTest():
             self.assertTrue(
-                0 <= x_var_more <= 1,
-                msg=f"Explained X variance {x_var_more} not in [0,1].",
-            )
-        with self.subTest():
-            self.assertTrue(
-                0 <= y_var_more <= 1,
-                msg=f"Explained y variance {y_var_more} not in [0,1].",
-            )
-
-        # check if strictly ascending after increasing components
-        with self.subTest():
-            self.assertGreater(
-                x_var_more,
-                x_var_orig,
-                msg=f"Explained X variance {x_var_more} does not increase with n_components.",
-            )
-        with self.subTest():
-            self.assertGreater(
-                y_var_more,
-                y_var_orig,
-                msg=f"Explained y variance {y_var_more} does not increase with n_components.",
+                all(ex_var_y[1:] - ex_var_y[:-1] < 0),
+                msg=f"Explained variance ratio {ex_var_y} not monotonously falling.",
             )
 
     def test_explained_variance_ratio(self):
         """test the explained_variance_ratio_ method"""
         model = self.model[0]
 
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
+            ex_var_x, ex_var_y = model.explained_variance_
+            ex_var_rat_x, ex_var_rat_y = model.explained_variance_ratio_
+
         ex_x_var, ex_y_var = model.explained_variance_ratio_
 
         # check if in [0,1]
         with self.subTest():
             self.assertTrue(
-                all(0 <= ex_x_var <= 1),
-                msg=f"Explained X variance ratios {ex_x_var} not in [0,1].",
+                all(0 <= ex_var_rat_x),
+                msg=f"Explained X variance ratios {ex_var_rat_x} not >= 0.",
             )
-        with self.subTest():
             self.assertTrue(
-                all(0 <= ex_y_var <= 1),
-                msg=f"Explained y variance ratios {ex_y_var} not in [0,1].",
+                all(ex_var_rat_x <= 1),
+                msg=f"Explained X variance ratios {ex_var_rat_x} not <= 1.",
+            )
+            self.assertTrue(
+                all(0 <= ex_var_rat_y),
+                msg=f"Explained y variance ratios {ex_var_rat_y} not >= 0.",
+            )
+            self.assertTrue(
+                all(ex_var_rat_y <= 1),
+                msg=f"Explained y variance ratios {ex_var_rat_y} not <= 1.",
             )
 
         # check if normalized
         with self.subTest():
             self.assertEqual(
-                sum(ex_x_var),
+                sum(ex_var_rat_x),
                 1,
-                msg=f"Explained X variance ratios {ex_x_var} not normalized.",
+                msg=f"Explained X variance ratios {ex_var_rat_x} not normalized.",
             )
-        with self.subTest():
             self.assertEqual(
-                sum(ex_y_var),
+                sum(ex_var_rat_y),
                 1,
-                msg=f"Explained y variance ratios {ex_y_var} not normalized.",
+                msg=f"Explained y variance ratios {ex_var_rat_y} not normalized.",
             )
 
         # check if strictly descending
         with self.subTest():
             self.assertTrue(
-                all(ex_x_var[1:] - ex_x_var[:-1] < 0),
-                msg=f"Explained X variance ratio {ex_x_var} does not monotonously fall.",
+                all(ex_var_rat_x[1:] - ex_var_rat_x[:-1] < 0),
+                msg=f"Explained X variance ratio {ex_var_rat_x} does not monotonously fall.",
             )
+            self.assertTrue(
+                all(ex_var_rat_y[1:] - ex_var_rat_y[:-1] < 0),
+                msg=f"Explained y variance ratio {ex_var_rat_y} does not monotonously fall.",
+            )
+
+        # check if ratio is >= variance
         with self.subTest():
             self.assertTrue(
-                all(ex_y_var[1:] - ex_y_var[:-1] < 0),
-                msg=f"Explained y variance ratio {ex_y_var} does not monotonously fall.",
+                all(ex_var_x - ex_var_rat_x <= 0),
+                msg=f"Explained variance ratio {ex_var_rat_x} not >= explained variance.",
+            )
+            self.assertTrue(
+                all(ex_var_y - ex_var_rat_y <= 0),
+                msg=f"Explained variance ratio {ex_var_rat_y} not >= explained variance.",
             )
 
 

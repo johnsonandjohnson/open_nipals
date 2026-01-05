@@ -771,12 +771,11 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         """
         return self.fitted_components != 0
 
-    @property
-    def explained_variance_(
+    def get_explained_variance(
         self,
         in_data: np.array = None,
-    ) -> float:
-        """calculate the explained variance
+    ) -> np.ndarray:
+        """calculate the explained variances
 
         Args:
             in_data (np.array, optional):
@@ -786,7 +785,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
             ValueError: if in_data not mean centered.
 
         Returns:
-            float: variance
+            np.ndarray: explained variances
         """
         if in_data is not None:
             if self._check_mean_centered(in_data):
@@ -796,29 +795,6 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         else:
             data = self.fit_data
 
-        # compute data as per model
-        sim_data = self.inverse_transform(self.transform(data))
-
-        # compute residual variance
-        resid_var = np.nanvar(data - sim_data, axis=0)
-
-        # variance of data scaled to 1, so
-        return np.nanmean(1 - resid_var)
-
-    @property
-    def explained_variance_ratio_(
-        self,
-        in_data: np.array = None,
-    ) -> np.ndarray:
-        """calculate the explained variance ratio
-
-        Args:
-            in_data (np.array, optional):
-                Alternative input data. Defaults to None.
-
-        Returns:
-            np.ndarray: variance ratio
-        """
         orig_n_comp = self.n_components
         ret = np.zeros(orig_n_comp + 1)
 
@@ -826,7 +802,16 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         # automatically pads a zero at position 0
         for i in range(1, orig_n_comp + 1):
             self.set_components(i)
-            ret[i] = self.explained_variance_(in_data)
+
+            # compute data as per model
+            sim_data = self.inverse_transform(self.transform(data))
+
+            # compute residual variance
+            resid_var = np.nanvar(data - sim_data, axis=0)
+
+            # variance of data scaled to 1
+            # average over variables
+            ret[i] = np.nanmean(1 - resid_var)
 
         # go back to original components
         self.set_components(orig_n_comp)
@@ -834,7 +819,32 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         # subtract previous component
         ret = ret[1:] - ret[:-1]
 
+        return ret
+
+    # a bit hacky, avoid writing explained_variance_ once with arguments
+    # as method and once without arguments as property
+    explained_variance_ = property(get_explained_variance)
+
+    def get_explained_variance_ratio(
+        self,
+        in_data: np.array = None,
+    ) -> np.ndarray:
+        """calculate the explained variance ratio, i.e. the
+        explained variance of each component as a fraction of
+        the total variance explained by the model
+
+        Args:
+            in_data (np.array, optional):
+                Alternative input data. Defaults to None.
+
+        Returns:
+            np.ndarray: explained variance ratios
+        """
+        ret = self.get_explained_variance(in_data)
+
         # normalize
         ret = ret / sum(ret)
 
         return ret
+
+    explained_variance_ratio_ = property(get_explained_variance_ratio)

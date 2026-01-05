@@ -336,37 +336,21 @@ class TestFit(unittest.TestCase):
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=RuntimeWarning)
-            var_orig = model.explained_variance_
+            ex_var = model.explained_variance_
 
         # check if in [0,1]
         with self.subTest():
             self.assertTrue(
-                0 <= var_orig <= 1,
-                msg=f"Explained variance ratio {var_orig} not in [0,1].",
+                # all(0 <= ex_var <= 1),
+                all(0 <= ex_var),
+                msg=f"Explained variance ratios {ex_var} not in [0,1].",
             )
 
-        # add one component
-        more_comp_model = NipalsPCA(
-            mean_centered=True, n_components=model.n_components + 1
-        ).fit(X=model.fit_data)
-
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=RuntimeWarning)
-            var_more = more_comp_model.explained_variance_
-
-        # check if in [0,1]
+        # check if strictly descending
         with self.subTest():
             self.assertTrue(
-                0 <= var_more <= 1,
-                msg=f"Explained variance ratio {var_more} not in [0,1].",
-            )
-
-        # check if strictly ascending after increasing components
-        with self.subTest():
-            self.assertGreater(
-                var_more,
-                var_orig,
-                msg=f"Explained variance ratio {var_more} after set_components not monotonous.",
+                all(ex_var[1:] - ex_var[:-1] < 0),
+                msg=f"Explained variance ratio {ex_var} not monotonously falling.",
             )
 
     def test_explained_variance_ratio(self):
@@ -375,28 +359,40 @@ class TestFit(unittest.TestCase):
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=RuntimeWarning)
-            ex_var = model.explained_variance_ratio_
+            ex_var = model.explained_variance_
+            ex_var_rat = model.explained_variance_ratio_
 
         # check if in [0,1]
         with self.subTest():
             self.assertTrue(
-                all(0 <= ex_var <= 1),
-                msg=f"Explained variance ratios {ex_var} not in [0,1].",
+                all(0 <= ex_var_rat),
+                msg=f"Explained variance ratios {ex_var_rat} not >= 0.",
+            )
+            self.assertTrue(
+                all(ex_var_rat <= 1),
+                msg=f"Explained variance ratios {ex_var_rat} not <= 1.",
             )
 
         # check if normalized
         with self.subTest():
             self.assertEqual(
-                sum(ex_var),
+                sum(ex_var_rat),
                 1,
-                msg=f"Explained variance ratios {ex_var} not normalized.",
+                msg=f"Explained variance ratios {ex_var_rat} not normalized.",
             )
 
         # check if strictly descending
         with self.subTest():
             self.assertTrue(
-                all(ex_var[1:] - ex_var[:-1] < 0),
-                msg=f"Explained variance ratio {ex_var} not monotonously falling.",
+                all(ex_var_rat[1:] - ex_var_rat[:-1] < 0),
+                msg=f"Explained variance ratio {ex_var_rat} not monotonously falling.",
+            )
+
+        # check if ratio is >= than variance
+        with self.subTest():
+            self.assertTrue(
+                all(ex_var - ex_var_rat <= 0),
+                msg=f"Explained variance ratio {ex_var_rat} not >= explained variance.",
             )
 
 

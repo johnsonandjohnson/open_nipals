@@ -867,12 +867,11 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         """
         return self.fitted_components != 0
 
-    @property
-    def explained_variance_(
+    def get_explained_variance(
         self,
         in_x_data: np.array = None,
         in_y_data: np.array = None,
-    ) -> (float, float):
+    ) -> (np.ndarray, np.ndarray):
         """calculate the explained variances
         for X and y arrays
 
@@ -887,7 +886,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             ValueError: If in_y_data not mean centered.
 
         Returns:
-            (float, float): variance for X and y
+            (np.ndarray, np.ndarray): explained variances for X and y
         """
         if in_x_data is not None:
             if self._check_mean_centered(in_x_data):
@@ -905,19 +904,42 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         else:
             y_data = self.fit_data_y
 
-        # compute data as per model
-        sim_data_x = self.inverse_transform(self.transform(x_data))
-        sim_data_y = self.predict(x_data, self.fit_scores_x)
+        orig_n_comp = self.n_components
+        ret_x = np.zeros(orig_n_comp + 1)
+        ret_y = np.zeros(orig_n_comp + 1)
 
-        # compute residual variance
-        resid_x_var = np.nanvar(x_data - sim_data_x, axis=0)
-        resid_y_var = np.nanvar(y_data - sim_data_y, axis=0)
+        # compute explained variances per component
+        # automatically pads a zero at position 0
+        for i in range(1, orig_n_comp + 1):
+            self.set_components(i)
 
-        # variance of data scaled to 1,so
-        return np.nanmean(1 - resid_x_var), np.nanmean(1 - resid_y_var)
+            # compute data as per model
+            sim_data_x = self.inverse_transform(self.transform(x_data))
+            sim_data_y = self.predict(x_data, self.fit_scores_x)
 
-    @property
-    def explained_variance_ratio_(
+            # compute residual variance
+            resid_x_var = np.nanvar(x_data - sim_data_x, axis=0)
+            resid_y_var = np.nanvar(y_data - sim_data_y, axis=0)
+
+            # variance of data scaled to 1
+            # average over variables
+            ret_x[i] = np.nanmean(1 - resid_x_var)
+            ret_y[i] = np.nanmean(1 - resid_y_var)
+
+        # go back to original components
+        self.set_components(orig_n_comp)
+
+        # subtract previous components
+        ret_x = ret_x[1:] - ret_x[:-1]
+        ret_y = ret_y[1:] - ret_y[:-1]
+
+        return ret_x, ret_y
+
+    # a bit hacky, avoid writing explained_variance_ once with arguments
+    # as method and once without arguments as property
+    explained_variance_ = property(get_explained_variance)
+
+    def get_explained_variance_ratio(
         self,
         in_x_data: np.array = None,
         in_y_data: np.array = None,
@@ -933,27 +955,14 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
         Returns:
             (np.ndarray, np.ndarray):
-                variance ratios for X and y
+                explained variance ratios for X and y
         """
-        orig_n_comp = self.n_components
-        ret_x = np.zeros(orig_n_comp + 1)
-        ret_y = np.zeros(orig_n_comp + 1)
-
-        # compute explained variances per component
-        # automatically pads a zero at position 0
-        for i in range(1, orig_n_comp + 1):
-            self.set_components(i)
-            ret_x[i], ret_y[i] = self.explained_variance_(in_x_data, in_y_data)
-
-        # go back to original components
-        self.set_components(orig_n_comp)
-
-        # subtract previous components
-        ret_x = ret_x[1:] - ret_x[:-1]
-        ret_y = ret_y[1:] - ret_y[:-1]
+        ret_x, ret_y = self.get_explained_variance(in_x_data, in_y_data)
 
         # normalize
         ret_x = ret_x / sum(ret_x)
         ret_y = ret_y / sum(ret_y)
 
         return ret_x, ret_y
+
+    explained_variance_ratio_ = property(get_explained_variance_ratio)
