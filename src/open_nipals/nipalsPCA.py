@@ -68,6 +68,10 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         Calculate suitable distance threshold given fitted data.
     set_components
         Change the number of model components.
+    get_explained_variance
+        Calculate explained variances per fitted component.
+    get_explained_variance_ratio
+        Calculate explained variances as ratio of total explained variance.
     """
 
     def __init__(
@@ -253,6 +257,10 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         """Method for setting the number of components in an
         already-constructed model. It checks to make sure that loadings
         exist for all of the set components and will fit extras if not.
+        Note that in case of decreasing the number of components, previously
+        fitted components are internally stored. In case you prefer a clean
+        model, create a new model object and fit it with the desired number
+        of components.
 
         Args:
             n_component (int): the desired number of components.
@@ -764,7 +772,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
             return d_crit
 
     def __sklearn_is_fitted__(self) -> bool:
-        """Determine if this is fitted or not
+        """Determine if present model is fitted or not
 
         Returns:
             bool: is fitted or not
@@ -775,7 +783,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         self,
         in_data: np.array = None,
     ) -> np.ndarray:
-        """calculate the explained variances
+        """calculate the explained variances per fitted component
 
         Args:
             in_data (np.array, optional):
@@ -829,7 +837,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         self,
         in_data: np.array = None,
     ) -> np.ndarray:
-        """calculate the explained variance ratio, i.e. the
+        """calculate the explained variance ratios, i.e. the
         explained variance of each component as a fraction of
         the total variance explained by the model
 

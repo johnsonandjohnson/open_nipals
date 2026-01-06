@@ -88,6 +88,10 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         Change the number of model components.
     get_reg_vector
         Give regression vector of the model.
+    get_explained_variance
+        Calculate explained variances per fitted component.
+    get_explained_variance_ratio
+        Calculate explained variances as ratio of total explained variance.
     """
 
     def __init__(
@@ -362,6 +366,10 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         """Method for setting the number of components in an
         already-constructed model. It checks to make sure that loadings
         exist for all of the set components and will fit extras if not.
+        Note that in case of decreasing the number of components, previously
+        fitted components are internally stored. In case you prefer a clean
+        model, create a new model object and fit it with the desired number
+        of components.
 
         Args:
             n_component (int): the desired number of components.
@@ -860,7 +868,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         return reg_vects
 
     def __sklearn_is_fitted__(self) -> bool:
-        """Determine if this is fitted or not
+        """Determine if present model is fitted or not
 
         Returns:
             bool: is fitted or not
@@ -873,7 +881,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         in_y_data: np.array = None,
     ) -> (np.ndarray, np.ndarray):
         """calculate the explained variances
-        for X and y arrays
+        for X and y arrays per fitted component
 
         Args:
             in_x_data (np.array, optional):
@@ -945,7 +953,8 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         in_y_data: np.array = None,
     ) -> (np.ndarray, np.ndarray):
         """calculate the explained variance ratios
-        for X and y arrays
+        for X and y arrays, i.e. the fraction of the total
+        variance explained by the model per fitted component
 
         Args:
             in_x_data (np.array, optional):
