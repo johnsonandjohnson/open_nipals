@@ -181,7 +181,10 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
     def _add_components(self, n_add: int, verbose: bool = False):
         """Method for adding components to an already-constructed
-        model.
+        model. Follows the NIPALS implementation in Kevin Dunn's book
+        "Process Improvement using Data", see https://learnche.org/pid/
+        latent-variable-modelling/projection-to-latent-structures/
+        how-the-pls-model-is-calculated
 
         Args:
             n_add (int): number of components to add
@@ -292,15 +295,13 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
                     wi = wi / np.linalg.norm(wi)  # Normalize weights
                     ti = x_res @ wi  # x score
                     qi = y_res.T @ ti  # y weight
-                    qi = qi / np.linalg.norm(qi)  # Normalize y-weights
                     ui = y_res @ qi  # y score
 
                 else:  # Loop for handling NaNs,
                     wi = _nan_mult(x_res.T, ui, nan_mask_x.T)
                     wi = wi / np.linalg.norm(wi)
-                    ti = _nan_mult(x_res, wi, nan_mask_x, use_denom=True)
+                    ti = _nan_mult(x_res, wi, nan_mask_x)
                     qi = _nan_mult(y_res.T, ti, nan_mask_y.T)
-                    qi = qi / np.linalg.norm(qi)
                     ui = _nan_mult(y_res, qi, nan_mask_y)
 
                 # guard against zero norm
@@ -325,19 +326,6 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             else:
                 pi = _nan_mult(x_res.T, ti, nan_mask_x.T)
 
-            p_weight = np.linalg.norm(pi)  # Reused to scale ti,wi
-            pi = pi / p_weight
-
-            # Scaling x weight
-            wi = (wi.T * p_weight).T
-
-            # Scaling x score
-            # Recalc score if NaNs
-            if not nan_flag:
-                ti = ti * p_weight  # Faster if no NaNs
-            else:
-                ti = _nan_mult(x_res, wi, nan_mask_x, use_denom=True)
-
             # regression coefficient, is a scalar!
             bi = (ui.T @ ti) / (ti.T @ ti)
 
@@ -351,7 +339,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
             # update residual matrices for next LV
             x_res = x_res - ti @ pi.T
-            y_res = y_res - bi * ti @ qi.T
+            y_res = y_res - ti @ qi.T
 
             # End of for loop
 
@@ -517,7 +505,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         # (Single component projection algorithm for missing data in PCA/PLS)
         for ind_lv in range(num_lvs):
             scores[:, [ind_lv]] = _nan_mult(
-                resids, weights[:, [ind_lv]], nan_mask, use_denom=True
+                resids, weights[:, [ind_lv]], nan_mask
             )
             # deflate input data
             resids = resids - scores[:, [ind_lv]] @ loadings[:, [ind_lv]].T

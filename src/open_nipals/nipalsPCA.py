@@ -201,9 +201,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 # Calculate the loadings vector
 
                 if nan_flag:
-                    loadings_loc = _nan_mult(
-                        data.T, t_old, nan_mask.T, use_denom=True
-                    )
+                    loadings_loc = _nan_mult(data.T, t_old, nan_mask.T)
 
                     # Normalize the loading
                     loadings_loc = loadings_loc / np.sqrt(
@@ -211,9 +209,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                     )
 
                     # Now we compute the scores!
-                    t_new = _nan_mult(
-                        data, loadings_loc, nan_mask, use_denom=True
-                    )
+                    t_new = _nan_mult(data, loadings_loc, nan_mask)
                 else:
                     loadings_loc = (data.T @ t_old) / (t_old.T @ t_old)
                     loadings_loc = loadings_loc / np.sqrt(
