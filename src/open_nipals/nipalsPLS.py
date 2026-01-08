@@ -279,9 +279,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             iter_count = 0
             converged = False
             if verbose:
-                print(
-                    f"LV {ind_lv} Started"
-                )  # oh wow, I didn't now about f strings, love it. - DRO
+                print(f"LV {ind_lv} Started")
 
             while (not converged) and (iter_count < self.max_iter):
                 if verbose:
@@ -291,11 +289,11 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
                 ti_old = ti.copy()
 
                 if not nan_flag:  # Loop for no NaN
-                    wi = x_res.T @ ui  # x weight
+                    wi = (x_res.T @ ui) / (ui.T @ ui)  # x weight
                     wi = wi / np.linalg.norm(wi)  # Normalize weights
-                    ti = x_res @ wi  # x score
-                    qi = y_res.T @ ti  # y weight
-                    ui = y_res @ qi  # y score
+                    ti = (x_res @ wi) / (wi.T @ wi)  # x score
+                    qi = (y_res.T @ ti) / (ti.T @ ti)  # y weight
+                    ui = (y_res @ qi) / (qi.T @ qi)  # y score
 
                 else:  # Loop for handling NaNs,
                     wi = _nan_mult(x_res.T, ui, nan_mask_x.T)
