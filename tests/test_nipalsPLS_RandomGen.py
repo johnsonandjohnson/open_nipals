@@ -234,10 +234,15 @@ class TestFit(unittest.TestCase):
         """Compare fitted scores to scores from package (T)"""
         test_val = rmse(self.T, self.model[0].fit_scores_x)
         lin_val = nan_conc_coeff(self.T, self.model[0].fit_scores_x)
+
+        # tolerances per dataset
         if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-1
+            err_lim = 5e-2
+        elif self.name == "No NaN, PLST RandomGen":
+            err_lim = 5e-3
         else:
-            err_lim = 1e-2
+            err_lim = 5e-5
+
         with self.subTest():
             # overall rmse is low
             self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
@@ -268,15 +273,24 @@ class TestFit(unittest.TestCase):
             self.assertLess(test_val, 1e-9, msg=f"rmse = {test_val}")
         with self.subTest():
             # correlation is very high
-            self.assertGreater(lin_val, 1 - 1e-6, msg=f"linConc = {lin_val}")
+            self.assertGreater(lin_val, 1 - 1e-9, msg=f"linConc = {lin_val}")
 
     def test_fit_loadings(self):
         """Compare loadings to loadings from package (P)"""
         test_val = rmse(self.P, self.model[0].loadings_x)
         lin_val = nan_conc_coeff(self.P, self.model[0].loadings_x)
+
+        # tolerances per dataset
+        if self.name == "Yes NaN, PLST RandomGen":
+            err_lim = 5e-5
+        elif self.name == "No NaN, PLST RandomGen":
+            err_lim = 5e-6
+        else:
+            err_lim = 5e-8
+
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
+            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -292,10 +306,15 @@ class TestFit(unittest.TestCase):
         )  # reverse standardscaling
         test_val = rmse(self.yhat, py_y_vals)
         lin_val = nan_conc_coeff(self.yhat, py_y_vals)
+
+        # tolerances per dataset
         if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-1
+            err_lim = 5e-2
+        elif self.name == "No NaN, PLST RandomGen":
+            err_lim = 5e-3
         else:
-            err_lim = 1e-2
+            err_lim = 5e-4
+
         with self.subTest():
             # overall rmse is low
             self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
@@ -312,9 +331,16 @@ class TestFit(unittest.TestCase):
         py_reg_vects = py_reg_vects / np.linalg.norm(py_reg_vects)  # Normalize
         test_val = rmse(b, py_reg_vects)
         lin_val = nan_conc_coeff(b, py_reg_vects)
+
+        # tolerances per dataset
+        if self.name == "Yes NaN, PLST RandomGen":
+            err_lim = 5e-5
+        else:
+            err_lim = 5e-7
+
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
+            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -328,10 +354,13 @@ class TestFit(unittest.TestCase):
         )
         test_val = rmse(test_imd, known_imd)
         lin_val = nan_conc_coeff(test_imd, known_imd)
+
+        # tolerances per dataset
         if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-2
+            err_lim = 5e-3
         else:
-            err_lim = 1e-5
+            err_lim = 5e-6
+
         with self.subTest():
             self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
         with self.subTest():
@@ -358,10 +387,11 @@ class TestFit(unittest.TestCase):
         test_val = rmse(test_oomd, known_oomd)
         lin_val = nan_conc_coeff(test_oomd, known_oomd)
 
+        # tolerances per dataset
         if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 0.5
+            err_lim = 5e-1
         else:
-            err_lim = 1e-2
+            err_lim = 5e-3
 
         with self.subTest():
             self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
@@ -393,15 +423,31 @@ class TestFit(unittest.TestCase):
         model_low.set_components(n_component=num_lvs)
 
         # compare X scores
+        # tolerances per dataset
         if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-1
+            err_lim_scores = 5e-2
+            err_lim_loadings = 5e-5
+            err_lim_predict = 5e-2
+            err_lim_imd = 5e-3
+            err_lim_oomd = 5e-1
+        elif self.name == "No NaN, PLST RandomGen":
+            err_lim_scores = 5e-3
+            err_lim_loadings = 5e-6
+            err_lim_predict = 5e-3
+            err_lim_imd = 5e-6
+            err_lim_oomd = 5e-3
         else:
-            err_lim = 1e-2
+            err_lim_scores = 5e-5
+            err_lim_loadings = 5e-8
+            err_lim_predict = 5e-4
+            err_lim_imd = 5e-6
+            err_lim_oomd = 5e-3
+
         test_val = rmse(model.fit_scores_x, model_low.fit_scores_x)
         lin_val = nan_conc_coeff(model.fit_scores_x, model_low.fit_scores_x)
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
+            self.assertLess(test_val, err_lim_scores, msg=f"rmse = {test_val}")
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -411,7 +457,9 @@ class TestFit(unittest.TestCase):
         lin_val = nan_conc_coeff(model.loadings_x, model_low.loadings_x)
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
+            self.assertLess(
+                test_val, err_lim_loadings, msg=f"rmse = {test_val}"
+            )
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -421,30 +469,12 @@ class TestFit(unittest.TestCase):
         py_y_vals_low = model_low.predict(scores_x=model_low.fit_scores_x)
         test_val = rmse(py_y_vals, py_y_vals_low)
         lin_val = nan_conc_coeff(py_y_vals, py_y_vals_low)
-        if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-1
-        else:
-            err_lim = 1e-2
+
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
-        with self.subTest():
-            # correlation is very high
-            self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
-
-        # compare regression vectors
-        py_reg_vects = model.get_reg_vector()
-        py_reg_vects = py_reg_vects / np.linalg.norm(py_reg_vects)  # Normalize
-
-        py_reg_vects_low = py_reg_vects / np.linalg.norm(
-            py_reg_vects
-        )  # Normalize
-
-        test_val = rmse(py_reg_vects, py_reg_vects_low)
-        lin_val = nan_conc_coeff(py_reg_vects, py_reg_vects_low)
-        with self.subTest():
-            # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
+            self.assertLess(
+                test_val, err_lim_predict, msg=f"rmse = {test_val}"
+            )
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -454,15 +484,11 @@ class TestFit(unittest.TestCase):
         model_low.set_components(n_component=num_lvs)
 
         # compare X scores
-        if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-1
-        else:
-            err_lim = 1e-2
         test_val = rmse(self.T, model_low.fit_scores_x[:, :num_lvs])
         lin_val = nan_conc_coeff(self.T, model_low.fit_scores_x[:, :num_lvs])
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
+            self.assertLess(test_val, err_lim_scores, msg=f"rmse = {test_val}")
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -472,7 +498,9 @@ class TestFit(unittest.TestCase):
         lin_val = nan_conc_coeff(self.P, model_low.loadings_x[:, :num_lvs])
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
+            self.assertLess(
+                test_val, err_lim_loadings, msg=f"rmse = {test_val}"
+            )
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -484,30 +512,12 @@ class TestFit(unittest.TestCase):
         )
         test_val = rmse(py_y_vals, py_y_vals_low)
         lin_val = nan_conc_coeff(py_y_vals, py_y_vals_low)
-        if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-1
-        else:
-            err_lim = 1e-2
+
         with self.subTest():
             # overall rmse is low
-            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
-        with self.subTest():
-            # correlation is very high
-            self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
-
-        # compare regression vectors
-        py_reg_vects = model.get_reg_vector()
-        py_reg_vects = py_reg_vects / np.linalg.norm(py_reg_vects)  # Normalize
-
-        py_reg_vects_low = py_reg_vects / np.linalg.norm(
-            py_reg_vects
-        )  # Normalize
-
-        test_val = rmse(py_reg_vects, py_reg_vects_low)
-        lin_val = nan_conc_coeff(py_reg_vects, py_reg_vects_low)
-        with self.subTest():
-            # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
+            self.assertLess(
+                test_val, err_lim_predict, msg=f"rmse = {test_val}"
+            )
         with self.subTest():
             # correlation is very high
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
@@ -519,12 +529,9 @@ class TestFit(unittest.TestCase):
         )
         test_val = rmse(test_imd, known_imd)
         lin_val = nan_conc_coeff(test_imd, known_imd)
-        if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 1e-2
-        else:
-            err_lim = 1e-5
+
         with self.subTest():
-            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
+            self.assertLess(test_val, err_lim_imd, msg=f"rmse = {test_val}")
         with self.subTest():
             self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
 
@@ -534,12 +541,9 @@ class TestFit(unittest.TestCase):
         )
         test_val = rmse(known_oomd, test_oomd)
         lin_val = nan_conc_coeff(test_oomd, known_oomd)
-        if self.name == "Yes NaN, PLST RandomGen":
-            err_lim = 0.5
-        else:
-            err_lim = 1e-2
+
         with self.subTest():
-            self.assertLess(test_val, err_lim, msg=f"rmse = {test_val}")
+            self.assertLess(test_val, err_lim_oomd, msg=f"rmse = {test_val}")
         with self.subTest():
             self.assertGreater(lin_val, 1 - 1e-2, msg=f"linConc = {lin_val}")
 
@@ -589,8 +593,6 @@ class TestFit(unittest.TestCase):
             warnings.filterwarnings("ignore", category=RuntimeWarning)
             ex_var_x, ex_var_y = model.explained_variance_
             ex_var_rat_x, ex_var_rat_y = model.explained_variance_ratio_
-
-        ex_x_var, ex_y_var = model.explained_variance_ratio_
 
         # check if in [0,1]
         with self.subTest():
