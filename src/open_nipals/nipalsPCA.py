@@ -235,7 +235,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
                 loadings[:, i : i + 1] = loadings_loc
 
             if num_iter >= self.max_iter:
-                warnings.warn(f"max_iter Reached on LV {i}")
+                warnings.warn(f"max_iter reached on LV {i}")
 
             if verbose:
                 print(f"Iteration finished on LV {i}")

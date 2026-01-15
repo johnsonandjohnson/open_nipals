@@ -80,8 +80,6 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         Calculate within-model distance.
     calc_oomd
         Calculate out-of-model distance.
-    calc_limit
-        Calculate suitable distance threshold given fitted data.
     predict
         Obtain prediction for y data given model and X data.
     set_components
@@ -316,7 +314,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             # Check whether it actually converged
             # or just terminated after max_iter
             if iter_count >= self.max_iter:
-                warnings.warn(f"max_iter Reached on LV {ind_lv}.")
+                warnings.warn(f"max_iter reached on LV {ind_lv}.")
 
             # x loading
             if not nan_flag:

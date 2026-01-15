@@ -1,109 +1,89 @@
 # pylint: disable=no-member
-import sys
-import unittest
 from typing import Tuple
 from pathlib import Path
+import pytest
 import warnings
-from parameterized import parameterized_class
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 from open_nipals.nipalsPCA import NipalsPCA
-
-# Load Data
-path = Path(__file__).parents[1].joinpath("data")
-
-pca_dat = pd.read_excel(
-    path.joinpath("PCATestData.xlsx"), header=None, engine="openpyxl"
-)
-input_array = pca_dat.to_numpy()
-
-df_simca_loads = pd.read_excel(
-    path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
-    engine="openpyxl",
-)
-simca_loads = df_simca_loads.to_numpy()[:, 1:3].astype(
-    float
-)  # First column is garbage index
-
-df_simca_sample_dat = pd.read_excel(
-    path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
-    engine="openpyxl",
-)
-simca_scores = df_simca_sample_dat.to_numpy()[
-    :, 1:3
-]  # First column is garbage index
-simca_T2 = df_simca_sample_dat.to_numpy()[:, 3:4]
-simca_DmodX_abs = df_simca_sample_dat.to_numpy()[:, 4:5]
-
-# NAN data
-nan_dat = pd.read_excel(
-    path.joinpath("PCANanData.xlsx"), header=None, engine="openpyxl"
-)
-input_array_nan = nan_dat.to_numpy()
-
-df_simca_loads_nan = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNaNDat_Loadings.xlsx"),
-    engine="openpyxl",
-)
-simca_loads_nan = df_simca_loads_nan.to_numpy()[:, 1:3].astype(
-    float
-)  # First column is garbage index
-
-df_simca_sample_dat_nan = pd.read_excel(
-    path.joinpath("SIMCA_ScaledNaNDat_Scores_T2Range_DMODXAbs.xlsx"),
-    engine="openpyxl",
-)
-simca_scores_nan = df_simca_sample_dat_nan.to_numpy()[
-    :, 1:3
-]  # First column is garbage index
-simca_T2_nan = df_simca_sample_dat_nan.to_numpy()[:, 3:4]
-simca_DmodX_abs_nan = df_simca_sample_dat_nan.to_numpy()[:, 4:5]
+from sklearn.preprocessing import StandardScaler
+from conftest import nan_conc_coeff, rmse, init_scaler
 
 
-def nan_conc_coeff(y: np.ndarray, yhat: np.ndarray) -> float:
-    """Calculate the Lin's Concordance Coefficient, a
-    linearity metric that shows how close to 1:1 a line is"""
-    # Note that using the standard numpy var,cov, etc caused some
-    # weird errors. could get correlations of 1.001001 etc.
-
-    nan_mask = np.isnan(y)
-    nan_mask_yhat = np.isnan(yhat)
-    new_y = y[np.invert(nan_mask)].copy()
-    new_yhat = yhat[np.invert(nan_mask_yhat)].copy()
-
-    # averages
-    ybar = np.mean(new_y)
-    yhatbar = np.mean(new_yhat)
-
-    # variances
-    sy = np.sum((new_y - ybar) ** 2) / len(new_y)
-    syhat = np.sum((new_yhat - yhatbar) ** 2) / len(new_yhat)
-    syyhat = np.sum((new_y - ybar) * (new_yhat - yhatbar)) / len(
-        new_y
-    )  # covariance
-
-    numer = 2 * syyhat
-    denom = sy + syhat + (ybar - yhatbar) ** 2
-    return numer / denom
+@pytest.fixture(scope="module")
+def data_path():
+    """Fixture for the data directory path."""
+    return Path(__file__).parents[1].joinpath("data")
 
 
-def rmse(y: np.ndarray, yhat: np.ndarray) -> float:
-    """Calculate Root Mean Square Error"""
-    y = y.ravel()
-    yhat = yhat.ravel()
+@pytest.fixture(scope="module")
+def pca_input(data_path):
+    """Fixture for input array from PCA data."""
+    df_input = pd.read_excel(
+        data_path.joinpath("PCATestData.xlsx"), header=None, engine="openpyxl"
+    )
+    return df_input.to_numpy()
 
-    return np.sqrt(np.mean((y - yhat) ** 2))
+
+@pytest.fixture(scope="module")
+def simca_loads(data_path):
+    """Fixture for SIMCA loadings data."""
+    df_simca_loads = pd.read_excel(
+        data_path.joinpath("SIMCA_ScaledFullDat_Loadings.xlsx"),
+        engine="openpyxl",
+        usecols=[1, 2],
+    )  # First column is garbage index
+    return df_simca_loads.to_numpy()
 
 
-def init_scaler(dat: np.ndarray) -> Tuple[StandardScaler, np.array]:
-    scaler = StandardScaler()
-    scaler.fit(dat)
-    scaler.scale_ = np.nanstd(
-        dat, axis=0, ddof=1
-    )  # standardscaler uses biased variance, but we want unbiased estimator
+@pytest.fixture(scope="module")
+def simca_scores_data(data_path):
+    """Fixture for SIMCA scores, T2, and DModX data."""
+    df_simca_sample_dat = pd.read_excel(
+        data_path.joinpath("SIMCA_ScaledFullDat_Scores_T2Range_DMODXAbs.xlsx"),
+        engine="openpyxl",
+    )
+    simca_scores = df_simca_sample_dat.to_numpy()[
+        :, 1:3
+    ]  # First column is garbage index
+    simca_t2 = df_simca_sample_dat.to_numpy()[:, 3:4]
+    simca_dmodx_abs = df_simca_sample_dat.to_numpy()[:, 4:5]
+    return simca_scores, simca_t2, simca_dmodx_abs
 
-    return scaler, scaler.transform(dat)
+
+@pytest.fixture(scope="module")
+def pca_input_nan(data_path):
+    """Fixture for NaN test data."""
+    df_pca_input_nan = pd.read_excel(
+        data_path.joinpath("PCANanData.xlsx"), header=None, engine="openpyxl"
+    )
+    return df_pca_input_nan.to_numpy()
+
+
+@pytest.fixture(scope="module")
+def simca_loads_nan(data_path):
+    """Fixture for SIMCA loadings with NaN data."""
+    df_simca_loads = pd.read_excel(
+        data_path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
+        engine="openpyxl",
+        usecols=[1, 2],
+    )  # First column is garbage index
+    return df_simca_loads.to_numpy()
+
+
+@pytest.fixture(scope="module")
+def simca_scores_nan_data(data_path):
+    """Fixture for SIMCA scores, T2, and DModX data with NaN."""
+    df_simca_sample_dat = pd.read_excel(
+        data_path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+        engine="openpyxl",
+    )
+    simca_scores_nan = df_simca_sample_dat.to_numpy()[
+        :, 1:3
+    ]  # First column is garbage index
+    simca_t2_nan = df_simca_sample_dat.to_numpy()[:, 3:4]
+    simca_dmodx_abs_nan = df_simca_sample_dat.to_numpy()[:, 4:5]
+    return simca_scores_nan, simca_t2_nan, simca_dmodx_abs_nan
 
 
 def fitted_model_pass_dat(x: np.ndarray) -> Tuple[NipalsPCA, StandardScaler]:
@@ -115,287 +95,306 @@ def fitted_model_pass_dat(x: np.ndarray) -> Tuple[NipalsPCA, StandardScaler]:
     return pca_model, scaler_x
 
 
-def class_name(cls, num, params_dict: dict) -> str:
-    return f"{params_dict['name']}"
+@pytest.fixture(scope="module")
+def test_sub_funcs_setup(pca_input):
+    """Setup fixture for basic tests."""
+    data_raw = pca_input
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(pca_input)
+    return {"data_raw": data_raw, "scaler": scaler, "data_scaled": scaled_data}
 
 
-class TestSubFuncs(unittest.TestCase):
-    """This is a wrap of the quicker to test things that should check for
-    bad behavior or improper use cases"""
-
-    def setUp(self) -> None:
-        self.data_raw = input_array
-        scalar = StandardScaler()
-        scaled_data = scalar.fit_transform(input_array)
-        self.scalar = scalar
-        self.data_scaled = scaled_data
-        return super().setUp()
-
-    def test_multiFit(self):
-        """Test fitting twice, should throw an error"""
-        model = NipalsPCA().fit(self.data_scaled)
-
-        with self.assertRaises(BaseException) as e:
-            model.fit(X=self.data_scaled)
-
-            with self.subTest():
-                self.assertIn(
-                    "Model Object has already been fit.", str(e.exception)
-                )
-            with self.subTest():
-                self.assertEqual(model.n_components, 2)
-
-    def test_is_fitted(self):
-        """Test the __sklearn_is_fitted__() method"""
-        model = NipalsPCA()
-        with self.subTest():
-            self.assertFalse(model.__sklearn_is_fitted__())
-
-        model = NipalsPCA().fit(self.data_scaled)
-        with self.subTest():
-            self.assertTrue(model.__sklearn_is_fitted__())
+# test data fixtures
+@pytest.fixture(scope="module")
+def test_data_no_nan(pca_input, simca_scores_data, simca_loads):
+    """Fixture for no NaN test data."""
+    simca_scores, simca_t2, simca_dmodx_abs = simca_scores_data
+    return {
+        "name": "No NaN, SIMCA",
+        "X": pca_input,
+        "T": simca_scores,
+        "P": simca_loads,
+        "imd": ("HotellingT2", simca_t2),
+        "oomd": ("DModX", simca_dmodx_abs),
+        "model": fitted_model_pass_dat(pca_input),
+    }
 
 
-@parameterized_class(
+@pytest.fixture(scope="module")
+def test_data_with_nan(pca_input_nan, simca_scores_nan_data, simca_loads_nan):
+    """Fixture for NaN test data."""
+    simca_scores_nan, simca_t2_nan, simca_dmodx_abs_nan = simca_scores_nan_data
+    return {
+        "name": "Yes NaN, SIMCA",
+        "X": pca_input_nan,
+        "T": simca_scores_nan,
+        "P": simca_loads_nan,
+        "imd": ("HotellingT2", simca_t2_nan),
+        "oomd": ("DModX", simca_dmodx_abs_nan),
+        "model": fitted_model_pass_dat(pca_input_nan),
+    }
+
+
+def test_multi_fit(test_sub_funcs_setup):
+    """Test fitting twice, should throw an error"""
+    model = NipalsPCA().fit(test_sub_funcs_setup["data_scaled"])
+
+    with pytest.raises(Exception) as exc_info:
+        model.fit(test_sub_funcs_setup["data_scaled"])
+
+    assert "Model Object has already been fit." in str(exc_info.value), "Should raise error when fitting twice"
+    assert model.n_components == 2, "n_components should be 2"
+
+
+def test_is_fitted(test_sub_funcs_setup):
+    """Test the __sklearn_is_fitted__() method"""
+    model = NipalsPCA()
+    assert model.__sklearn_is_fitted__() is False, (
+        "Unfitted model should return False"
+    )
+
+    model = NipalsPCA().fit(test_sub_funcs_setup["data_scaled"])
+    assert model.__sklearn_is_fitted__(), "Fitted model should return True"
+
+
+@pytest.mark.parametrize(
+    "get_data",
     [
-        {
-            "name": "No NaN, SIMCA",
-            "X": input_array,
-            "T": simca_scores,
-            "P": simca_loads,
-            "imd": ("HotellingT2", simca_T2),  # tuple to define metric
-            "oomd": ("DModX", simca_DmodX_abs),  # tuple to define metric
-            "model": fitted_model_pass_dat(input_array),
-        },
-        {
-            "name": "Yes NaN, SIMCA",
-            "X": input_array_nan,
-            "T": simca_scores_nan,
-            "P": simca_loads_nan,
-            "imd": ("HotellingT2", simca_T2_nan),  # tuple to define metric
-            "oomd": ("DModX", simca_DmodX_abs_nan),  # tuple to define metric
-            "model": fitted_model_pass_dat(input_array_nan),
-        },
+        "test_data_no_nan",
+        "test_data_with_nan",
     ],
-    class_name_func=class_name,
 )
-class TestFit(unittest.TestCase):
-    # self is an object that contains (among other things) the fields
-    # indicated in the dicts passed to parameterized_class
-    def test_fit_scores(
-        self,
-    ):
-        """Compare fitted scores to scores from package (T)"""
-        test_val = rmse(self.T, self.model[0].fit_scores)
-        lin_val = nan_conc_coeff(self.T, self.model[0].fit_scores)
-        with self.subTest():
-            # overall rmse is low
-            self.assertLess(test_val, 1e-2, msg=f"rmse = {test_val}")
-        with self.subTest():
-            # correlation is very high
-            self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
+def test_fit_scores(get_data, request):
+    """Compare fitted scores to scores from package (T)"""
+    test_data_dict = request.getfixturevalue(get_data)
 
-    def test_score_method_equivalence(self):
-        """Calculate scores and compare to fitted scores.
-        Basically ensures that a new dataset coming in would result in
-        the same projection as the original training set.
-        Surprisingly non-obvious."""
-        model = self.model[0]
-        scaler_x = self.model[1]
-        input_data = self.X
-        py_calc_scores = model.transform(X=scaler_x.transform(input_data))
-        test_val = rmse(model.fit_scores, py_calc_scores)
-        lin_val = nan_conc_coeff(model.fit_scores, py_calc_scores)
-        with self.subTest():
-            # overall rmse is low
-            self.assertLess(test_val, 1e-9, msg=f"rmse = {test_val}")
-        with self.subTest():
-            # correlation is very high
-            self.assertGreater(lin_val, 1 - 1e-6, msg=f"linConc = {lin_val}")
+    T = test_data_dict["T"]
+    model = test_data_dict["model"][0]
 
-    def test_fit_loadings(self):
-        """Compare loadings to loadings from package (P)"""
-        test_val = rmse(self.P, self.model[0].loadings)
-        lin_val = nan_conc_coeff(self.P, self.model[0].loadings)
-        with self.subTest():
-            # overall rmse is low
-            self.assertLess(test_val, 1e-3, msg=f"rmse = {test_val}")
-        with self.subTest():
-            # correlation is very high
-            self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
+    test_val = rmse(T, model.fit_scores)
+    lin_val = nan_conc_coeff(T, model.fit_scores)
 
-    def test_imd(self):
-        """Test the in-model distance"""
-        model = self.model[0]
-        metric, known_imd = self.imd
-        test_imd = model.calc_imd(input_scores=model.fit_scores, metric=metric)
-        test_val = rmse(test_imd, known_imd)
-        lin_val = nan_conc_coeff(test_imd, known_imd)
-
-        with self.subTest():
-            self.assertLess(test_val, 1e-4, msg=f"rmse = {test_val}")
-        with self.subTest():
-            self.assertGreater(lin_val, 1 - 1e-5, msg=f"linConc = {lin_val}")
-
-    def test_oomd(self):
-        """Test the out-of-model distance"""
-        model = self.model[0]
-        scaler_x = self.model[1]
-        input_data = self.X
-        metric, known_oomd = self.oomd
-        transformed_data = scaler_x.transform(input_data)
-        test_oomd = model.calc_oomd(
-            input_array=transformed_data, metric=metric
-        )
-        test_val = rmse(test_oomd, known_oomd)
-        lin_val = nan_conc_coeff(test_oomd, known_oomd)
-
-        with self.subTest():
-            self.assertLess(test_val, 1e-2, msg=f"rmse = {test_val}")
-        with self.subTest():
-            self.assertGreater(lin_val, 1 - 1e-2, msg=f"linConc = {lin_val}")
-
-    def test_set_component(self):
-        """Test the set_component function"""
-        model = self.model[0]
-        scaler_x = self.model[1]
-        input_data = self.X
-        transformed_data = scaler_x.transform(input_data)
-        model_low = NipalsPCA(n_components=1)
-        model_low.fit(transformed_data)
-
-        # Update to new amount of components
-        num_lvs = model.n_components
-        model_low.set_components(n_component=num_lvs)
-
-        # Demonstrate loadings/scores are the same
-        max_score_diff = np.max(
-            np.abs(model.fit_scores - model_low.fit_scores)
-        )
-        max_load_diff = np.max(np.abs(model.loadings - model_low.loadings))
-
-        with self.subTest():
-            self.assertLess(
-                max_score_diff,
-                1e-9,
-                msg=f"Lower add score diff = {max_score_diff}",
-            )
-        with self.subTest():
-            self.assertLess(
-                max_load_diff,
-                1e-9,
-                msg=f"Lower add load diff = {max_load_diff}",
-            )
-
-        # Add an extra component, drop back down
-        model_low.set_components(n_component=num_lvs + 1)
-        model_low.set_components(n_component=num_lvs)
-
-        # Same loadings/scores test to ensure they didn't change
-        max_score_diff = np.max(
-            np.abs(model.fit_scores - model_low.fit_scores[:, :num_lvs])
-        )
-        max_load_diff = np.max(
-            np.abs(model.loadings - model_low.loadings[:, :num_lvs])
-        )
-
-        with self.subTest():
-            self.assertLess(
-                max_score_diff,
-                1e-9,
-                msg=f"Greater add score diff = {max_score_diff}",
-            )
-        with self.subTest():
-            self.assertLess(
-                max_load_diff,
-                1e-9,
-                msg=f"Greater add load diff = {max_load_diff}",
-            )
-
-        # Now show that calc_imd/calc_oomd function the same
-        known_imd = model.calc_imd(input_array=model.fit_data)
-        test_imd = model_low.calc_imd(input_array=model_low.fit_data)
-        max_imd_diff = np.max(np.abs(known_imd - test_imd))
-
-        known_oomd = model.calc_oomd(input_array=model.fit_data)
-        test_oomd = model_low.calc_oomd(input_array=model_low.fit_data)
-        max_oomd_diff = np.max(np.abs(known_oomd - test_oomd))
-
-        with self.subTest():
-            self.assertLess(
-                max_imd_diff, 1e-9, msg=f"Max IMD diff = {max_imd_diff}"
-            )
-        with self.subTest():
-            self.assertLess(
-                max_oomd_diff, 1e-9, msg=f"Max OOMD diff = {max_oomd_diff}"
-            )
-
-    def test_explained_variance_(self):
-        """test the explained_variance_ method"""
-        model = self.model[0]
-
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=RuntimeWarning)
-            ex_var = model.explained_variance_
-
-        # check if in [0,1]
-        with self.subTest():
-            self.assertTrue(
-                # all(0 <= ex_var <= 1),
-                all(0 <= ex_var),
-                msg=f"Explained variance ratios {ex_var} not in [0,1].",
-            )
-
-        # check if strictly descending
-        with self.subTest():
-            self.assertTrue(
-                all(ex_var[1:] - ex_var[:-1] < 0),
-                msg=f"Explained variance ratio {ex_var} not monotonously falling.",
-            )
-
-    def test_explained_variance_ratio(self):
-        """test the explained_variance_ratio_ method"""
-        model = self.model[0]
-
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=RuntimeWarning)
-            ex_var = model.explained_variance_
-            ex_var_rat = model.explained_variance_ratio_
-
-        # check if in [0,1]
-        with self.subTest():
-            self.assertTrue(
-                all(0 <= ex_var_rat),
-                msg=f"Explained variance ratios {ex_var_rat} not >= 0.",
-            )
-            self.assertTrue(
-                all(ex_var_rat <= 1),
-                msg=f"Explained variance ratios {ex_var_rat} not <= 1.",
-            )
-
-        # check if normalized
-        with self.subTest():
-            self.assertEqual(
-                sum(ex_var_rat),
-                1,
-                msg=f"Explained variance ratios {ex_var_rat} not normalized.",
-            )
-
-        # check if strictly descending
-        with self.subTest():
-            self.assertTrue(
-                all(ex_var_rat[1:] - ex_var_rat[:-1] < 0),
-                msg=f"Explained variance ratio {ex_var_rat} not monotonously falling.",
-            )
-
-        # check if ratio is >= than variance
-        with self.subTest():
-            self.assertTrue(
-                all(ex_var - ex_var_rat <= 0),
-                msg=f"Explained variance ratio {ex_var_rat} not >= explained variance.",
-            )
+    # overall rmse is low
+    assert test_val < 1e-2, f"rmse = {test_val}"
+    # correlation is very high
+    assert lin_val > 1 - 1e-5, f"linConc = {lin_val}"
 
 
-if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromModule(sys.modules[__name__])
-    unittest.TextTestRunner(verbosity=3).run(suite)
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_score_method_equivalence(get_data, request):
+    """Calculate scores and compare to fitted scores"""
+    test_data_dict = request.getfixturevalue(get_data)
+
+    model = test_data_dict["model"][0]
+    scaler_x = test_data_dict["model"][1]
+    input_data = test_data_dict["X"]
+
+    py_calc_scores = model.transform(scaler_x.transform(input_data))
+    test_val = rmse(model.fit_scores, py_calc_scores)
+    lin_val = nan_conc_coeff(model.fit_scores, py_calc_scores)
+
+    # overall rmse is low
+    assert test_val < 1e-9, f"rmse = {test_val}"
+    # correlation is very high
+    assert lin_val > 1 - 1e-6, f"linConc = {lin_val}"
+
+
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_fit_loadings(get_data, request):
+    """Compare loadings to loadings from package (P)"""
+    test_data_dict = request.getfixturevalue(get_data)
+
+    P = test_data_dict["P"]
+    model = test_data_dict["model"]
+
+    test_val = rmse(P, model[0].loadings)
+    lin_val = nan_conc_coeff(P, model[0].loadings)
+
+    # overall rmse is low
+    assert test_val < 1e-3, f"rmse = {test_val}"
+    # correlation is very high
+    assert lin_val > 1 - 1e-5, f"linConc = {lin_val}"
+
+
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_imd(get_data, request):
+    """Test the in-model distance"""
+    test_data_dict = request.getfixturevalue(get_data)
+
+    model = test_data_dict["model"][0]
+    metric, known_imd = test_data_dict["imd"]
+
+    test_imd = model.calc_imd(input_scores=model.fit_scores, metric=metric)
+    test_val = rmse(test_imd, known_imd)
+    lin_val = nan_conc_coeff(test_imd, known_imd)
+
+    assert test_val < 1e-4, f"rmse = {test_val}"
+    assert lin_val > 1 - 1e-5, f"linConc = {lin_val}"
+
+
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_oomd(get_data, request):
+    """Test the out-of-model distance"""
+    test_data_dict = request.getfixturevalue(get_data)
+
+    model = test_data_dict["model"][0]
+    scaler_x = test_data_dict["model"][1]
+    input_data = test_data_dict["X"]
+    metric, known_oomd = test_data_dict["oomd"]
+
+    transformed_data = scaler_x.transform(input_data)
+    test_oomd = model.calc_oomd(transformed_data, metric=metric)
+    test_val = rmse(test_oomd, known_oomd)
+    lin_val = nan_conc_coeff(test_oomd, known_oomd)
+
+    assert test_val < 1e-2, f"rmse = {test_val}"
+    assert lin_val > 1 - 1e-2, f"linConc = {lin_val}"
+
+
+def _run_set_component_test(test_data):
+    """Helper function to run set_component tests"""
+    model = test_data["model"][0]
+    scaler_x = test_data["model"][1]
+    input_data = test_data["X"]
+    transformed_data = scaler_x.transform(input_data)
+
+    model_low = NipalsPCA(n_components=1)
+    model_low.fit(transformed_data)
+
+    # Update to new amount of components
+    num_lvs = model.n_components
+    model_low.set_components(num_lvs)
+
+    # Demonstrate loadings/scores are the same
+    max_score_diff = np.max(np.abs(model.fit_scores - model_low.fit_scores))
+    max_load_diff = np.max(np.abs(model.loadings - model_low.loadings))
+
+    assert max_score_diff < 1e-9, f"Inc comps score diff = {max_score_diff}"
+    assert max_load_diff < 1e-9, f"Inc comps load diff = {max_load_diff}"
+
+    # Add an extra component, drop back down
+    model_low.set_components(num_lvs + 1)
+    model_low.set_components(num_lvs)
+
+    # Same loadings/scores test to ensure they didn't change
+    max_score_diff = np.max(
+        np.abs(model.fit_scores - model_low.fit_scores[:, :num_lvs])
+    )
+    max_load_diff = np.max(
+        np.abs(model.loadings - model_low.loadings[:, :num_lvs])
+    )
+
+    assert max_score_diff < 1e-9, f"Decr comps score diff = {max_score_diff}"
+    assert max_load_diff < 1e-9, f"Decr comps load diff = {max_load_diff}"
+
+    # Now show that calc_imd/calc_oomd function the same
+    known_imd = model.calc_imd(input_array=model.fit_data)
+    test_imd = model_low.calc_imd(input_array=model_low.fit_data)
+    max_imd_diff = np.max(np.abs(known_imd - test_imd))
+
+    known_oomd = model.calc_oomd(model.fit_data)
+    test_oomd = model_low.calc_oomd(model_low.fit_data)
+    max_oomd_diff = np.max(np.abs(known_oomd - test_oomd))
+
+    assert max_imd_diff < 1e-9, f"Max IMD diff = {max_imd_diff}"
+    assert max_oomd_diff < 1e-9, f"Max OOMD diff = {max_oomd_diff}"
+
+
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_set_component(get_data, request):
+    """Test the set_component function"""
+    test_data_dict = request.getfixturevalue(get_data)
+    _run_set_component_test(test_data_dict)
+
+
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_explained_variance(get_data, request):
+    """Test explained variance calculation"""
+    test_data_dict = request.getfixturevalue(get_data)
+
+    model = test_data_dict["model"][0]
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        ex_var = model.explained_variance_
+
+    # check if in [0,1]
+    assert np.all(ex_var >= 0) and np.all(ex_var <= 1), (
+        "Explained variance must be in [0,1]"
+    )
+
+    # check if strictly decreasing
+    diffs = np.diff(ex_var)
+    assert np.all(diffs <= 0), "Explained variance must be decreasing"
+
+
+@pytest.mark.parametrize(
+    "get_data",
+    [
+        "test_data_no_nan",
+        "test_data_with_nan",
+    ],
+)
+def test_explained_variance_ratio(get_data, request):
+    """test explained variance ratio calculation"""
+    test_data_dict = request.getfixturevalue(get_data)
+
+    model = test_data_dict["model"][0]
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        ex_var = model.explained_variance_
+        ex_var_ratio = model.explained_variance_ratio_
+
+    # check if in [0,1]
+    assert np.all(ex_var_ratio >= 0) and np.all(ex_var_ratio <= 1), (
+        "Explained variance ratio must be in [0,1]"
+    )
+
+    # check if normalized
+    assert sum(ex_var_ratio) - 1.0 < 1e-9, (
+        "Explained variance ratio must sum to 1"
+    )
+
+    # check if strictly decreasing
+    diffs = np.diff(ex_var_ratio)
+    assert np.all(diffs <= 0), "Explained variance ratio must be decreasing"
+
+    # check if ratio is >= than variance
+    assert np.all(ex_var_ratio >= ex_var), "Variance ratio must be >= variance"
