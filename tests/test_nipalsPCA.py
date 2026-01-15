@@ -64,7 +64,7 @@ def pca_input_nan(data_path):
 def simca_loads_nan(data_path):
     """Fixture for SIMCA loadings with NaN data."""
     df_simca_loads = pd.read_excel(
-        data_path.joinpath("SIMCA_ScaledNanDat_Loadings.xlsx"),
+        data_path.joinpath("SIMCA_ScaledNaNDat_Loadings.xlsx"),
         engine="openpyxl",
         usecols=[1, 2],
     )  # First column is garbage index
@@ -75,7 +75,7 @@ def simca_loads_nan(data_path):
 def simca_scores_nan_data(data_path):
     """Fixture for SIMCA scores, T2, and DModX data with NaN."""
     df_simca_sample_dat = pd.read_excel(
-        data_path.joinpath("SIMCA_ScaledNanDat_Scores_T2Range_DMODXAbs.xlsx"),
+        data_path.joinpath("SIMCA_ScaledNaNDat_Scores_T2Range_DMODXAbs.xlsx"),
         engine="openpyxl",
     )
     simca_scores_nan = df_simca_sample_dat.to_numpy()[
@@ -142,7 +142,9 @@ def test_multi_fit(test_sub_funcs_setup):
     with pytest.raises(Exception) as exc_info:
         model.fit(test_sub_funcs_setup["data_scaled"])
 
-    assert "Model Object has already been fit." in str(exc_info.value), "Should raise error when fitting twice"
+    assert "Model Object has already been fit." in str(exc_info.value), (
+        "Should raise error when fitting twice"
+    )
     assert model.n_components == 2, "n_components should be 2"
 
 
