@@ -844,9 +844,10 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         if not self.__sklearn_is_fitted__():
             raise NotFittedError("Model has not yet been fit")
 
-        reg_vects = self.weights_x[:, : self.n_components] @ (
-            self.regression_matrix[: self.n_components, :]
-            @ self.loadings_y[:, : self.n_components].T
+        num_lvs = self.n_components
+        reg_vects = self.weights_x[:, :num_lvs] @ (
+            self.regression_matrix[:num_lvs, :num_lvs]
+            @ self.loadings_y[:, :num_lvs].T
         )
 
         return reg_vects
