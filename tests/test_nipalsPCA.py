@@ -346,33 +346,6 @@ def test_set_component(get_data, request):
         "test_data_with_nan",
     ],
 )
-def test_explained_variance(get_data, request):
-    """Test explained variance calculation"""
-    test_data_dict = request.getfixturevalue(get_data)
-
-    model = test_data_dict["model"][0]
-
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", category=RuntimeWarning)
-        ex_var = model.explained_variance_
-
-    # check if in [0,1]
-    assert np.all(ex_var >= 0) and np.all(ex_var <= 1), (
-        "Explained variance must be in [0,1]"
-    )
-
-    # check if strictly decreasing
-    diffs = np.diff(ex_var)
-    assert np.all(diffs <= 0), "Explained variance must be decreasing"
-
-
-@pytest.mark.parametrize(
-    "get_data",
-    [
-        "test_data_no_nan",
-        "test_data_with_nan",
-    ],
-)
 def test_explained_variance_ratio(get_data, request):
     """test explained variance ratio calculation"""
     test_data_dict = request.getfixturevalue(get_data)
@@ -381,7 +354,6 @@ def test_explained_variance_ratio(get_data, request):
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=RuntimeWarning)
-        ex_var = model.explained_variance_
         ex_var_ratio = model.explained_variance_ratio_
 
     # check if in [0,1]
@@ -390,13 +362,10 @@ def test_explained_variance_ratio(get_data, request):
     )
 
     # check if normalized
-    assert sum(ex_var_ratio) - 1.0 < 1e-9, (
-        "Explained variance ratio must sum to 1"
+    assert sum(ex_var_ratio) <= 1.0, (
+        "Explained variance ratio must sum to <= 1"
     )
 
     # check if strictly decreasing
     diffs = np.diff(ex_var_ratio)
     assert np.all(diffs <= 0), "Explained variance ratio must be decreasing"
-
-    # check if ratio is >= than variance
-    assert np.all(ex_var_ratio >= ex_var), "Variance ratio must be >= variance"

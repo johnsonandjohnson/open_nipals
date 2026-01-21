@@ -604,37 +604,6 @@ def test_set_component(get_data, request):
         "test_data_with_nan_plst",
     ],
 )
-def test_explained_variance(get_data, request):
-    """Test explained variance"""
-    test_data_dict = request.getfixturevalue(get_data)
-
-    model = test_data_dict["model"][0]
-
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", category=RuntimeWarning)
-        ex_var_x, ex_var_y = model.explained_variance_
-
-    # check if in [0,1]
-    assert np.all(ex_var_x >= 0) and np.all(ex_var_x <= 1)
-    assert np.all(ex_var_y >= 0) and np.all(ex_var_y <= 1)
-
-    # check if strictly decreasing
-    diffs_x = np.diff(ex_var_x)
-    diffs_y = np.diff(ex_var_y)
-
-    assert np.all(diffs_x < 0)
-    assert np.all(diffs_y < 0)
-
-
-@pytest.mark.parametrize(
-    "get_data",
-    [
-        "test_data_no_nan_simca",
-        "test_data_with_nan_simca",
-        "test_data_no_nan_plst",
-        "test_data_with_nan_plst",
-    ],
-)
 def test_explained_variance_ratio(get_data, request):
     """Test explained variance ratio"""
     test_data_dict = request.getfixturevalue(get_data)
@@ -643,7 +612,6 @@ def test_explained_variance_ratio(get_data, request):
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=RuntimeWarning)
-        ex_var_x, ex_var_y = model.explained_variance_
         ex_var_rat_x, ex_var_rat_y = model.explained_variance_ratio_
 
     # check if in [0,1]
@@ -655,11 +623,11 @@ def test_explained_variance_ratio(get_data, request):
     )
 
     # check if normalized
-    assert sum(ex_var_rat_x) - 1.0 < 1e-9, (
-        "Explained X variance ratio must sum to 1"
+    assert sum(ex_var_rat_x) <= 1, (
+        "Explained X variance ratio must sum to >= 1"
     )
-    assert sum(ex_var_rat_y) - 1.0 < 1e-9, (
-        "Explained y variance ratio must sum to 1"
+    assert sum(ex_var_rat_y) <= 1, (
+        "Explained y variance ratio must sum to >= 1"
     )
 
     # check if strictly decreasing
@@ -668,11 +636,3 @@ def test_explained_variance_ratio(get_data, request):
 
     assert np.all(diffs_x < 0), "Explained X variance ratio must be decreasing"
     assert np.all(diffs_y < 0), "Explained y variance ratio must be decreasing"
-
-    # check if ratio is >= variance
-    assert np.all(ex_var_rat_x >= ex_var_x), (
-        "X variance ratio must be >= X variance"
-    )
-    assert np.all(ex_var_rat_y >= ex_var_y), (
-        "y variance ratio must be >= y variance"
-    )

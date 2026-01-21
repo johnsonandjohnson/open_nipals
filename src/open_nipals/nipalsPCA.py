@@ -775,11 +775,11 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         """
         return self.fitted_components != 0
 
-    def get_explained_variance(
+    def get_explained_variance_ratio(
         self,
         in_data: np.array = None,
     ) -> np.ndarray:
-        """calculate the explained variances per fitted component
+        """calculate the explained variance ratios per fitted component
 
         Args:
             in_data (np.array, optional):
@@ -827,28 +827,4 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
 
     # a bit hacky, avoid writing explained_variance_ once with arguments
     # as method and once without arguments as property
-    explained_variance_ = property(get_explained_variance)
-
-    def get_explained_variance_ratio(
-        self,
-        in_data: np.array = None,
-    ) -> np.ndarray:
-        """calculate the explained variance ratios, i.e. the
-        explained variance of each component as a fraction of
-        the total variance explained by the model
-
-        Args:
-            in_data (np.array, optional):
-                Alternative input data. Defaults to None.
-
-        Returns:
-            np.ndarray: explained variance ratios
-        """
-        ret = self.get_explained_variance(in_data)
-
-        # normalize
-        ret = ret / sum(ret)
-
-        return ret
-
     explained_variance_ratio_ = property(get_explained_variance_ratio)

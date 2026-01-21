@@ -860,12 +860,12 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         """
         return self.fitted_components != 0
 
-    def get_explained_variance(
+    def get_explained_variance_ratio(
         self,
         in_x_data: np.array = None,
         in_y_data: np.array = None,
     ) -> (np.ndarray, np.ndarray):
-        """calculate the explained variances
+        """calculate the explained variance ratios
         for X and y arrays per fitted component
 
         Args:
@@ -879,7 +879,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             ValueError: If in_y_data not mean centered.
 
         Returns:
-            (np.ndarray, np.ndarray): explained variances for X and y
+            (np.ndarray, np.ndarray): explained variance ratios for X and y
         """
         if in_x_data is not None:
             if self._check_mean_centered(in_x_data):
@@ -901,7 +901,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         ret_x = np.zeros(orig_n_comp + 1)
         ret_y = np.zeros(orig_n_comp + 1)
 
-        # compute explained variances per component
+        # compute explained variance ratios per component
         # automatically pads a zero at position 0
         for i in range(1, orig_n_comp + 1):
             self.set_components(i)
@@ -928,35 +928,6 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
         return ret_x, ret_y
 
-    # a bit hacky, avoid writing explained_variance_ once with arguments
+    # a bit hacky, avoid writing explained_variance_ratio_ once with arguments
     # as method and once without arguments as property
-    explained_variance_ = property(get_explained_variance)
-
-    def get_explained_variance_ratio(
-        self,
-        in_x_data: np.array = None,
-        in_y_data: np.array = None,
-    ) -> (np.ndarray, np.ndarray):
-        """calculate the explained variance ratios
-        for X and y arrays, i.e. the fraction of the total
-        variance explained by the model per fitted component
-
-        Args:
-            in_x_data (np.array, optional):
-                Alternative input X data. Defaults to None.
-            in_y_data (np.array, optional):
-                Alternative input y data. Defaults to None.
-
-        Returns:
-            (np.ndarray, np.ndarray):
-                explained variance ratios for X and y
-        """
-        ret_x, ret_y = self.get_explained_variance(in_x_data, in_y_data)
-
-        # normalize
-        ret_x = ret_x / sum(ret_x)
-        ret_y = ret_y / sum(ret_y)
-
-        return ret_x, ret_y
-
     explained_variance_ratio_ = property(get_explained_variance_ratio)
