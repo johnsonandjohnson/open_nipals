@@ -133,7 +133,7 @@ Finally, the `calc_limit()` function calculates theoretical limits on both IMD a
 Following the data preparation scheme detailed in the benchmarking section, we simulated 1000 samples in a 40-dimensional data space, and trained a 4-component PCA model on it.
 \autoref{fig:imd_oomd} shows the IMD-OOMD plot given this model and the theoretical limits calculated with it. 
 
-![PCA-modelled data points on the IMD-OOMD plane with 0.95 confidence interval.\label{fig:imd_oomd}](./plots/HT2_DModX_example_plot.png){ width=90% }
+![PCA-modelled data points on the IMD-OOMD plane with 0.95 confidence interval.\label{fig:imd_oomd}](./plots/HT2_DModX_example_plot.png){ width=100% }
 
 
 ## PLS
@@ -164,7 +164,7 @@ Summary statistics of PLS models can be displayed in similar plots to \autoref{f
 `NipalsPLS` primarily differs from `NipalsPCA` by the inclusion of a `predict()` method to predict a y-matrix from an x-matrix with a previously fitted model, and the calculation of the regression vector with `get_reg_vector()`.
 The latter serves as a measure for what input features the model considers predictive of the output, see \autoref{fig:reg_vect}.
 
-![Visualization of a PLS regression vector, generated from simulated test data inspired by spectroscopy.\label{fig:reg_vect}](./plots/regression_vector_plot.png){ width=90% }
+![Visualization of a PLS regression vector, generated from simulated test data inspired by spectroscopy.\label{fig:reg_vect}](./plots/regression_vector_plot.png){ width=100% }
 
 ## Debugging
 
