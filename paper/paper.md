@@ -12,7 +12,7 @@ authors:
     orcid: 0000-0002-3534-2153
     equal-contrib: true
     affiliation: 1
-  - name: Ryan Wall
+  - name: Ryan M. Wall
     orcid: 0000-0003-2051-5899
     equal-contrib: true
     affiliation: 2
@@ -25,7 +25,7 @@ affiliations:
  - name: Johnson & Johnson Innovative Medicine, Titusville, New Jersey, USA
    index: 2
 
-date: 15 January 2026
+date: 22 January 2026
 bibliography: paper.bib
 
 ---
@@ -43,7 +43,7 @@ Packages like `numpy` for vector operations [@Harris2020], `pandas` for the hand
 However, `sklearn` relies on Singular Value Decomposition (SVD) for its PCA and PLS classes, with negative effects on performance for applications like batch manufacturing and chemometrics, where missing data is common [@Nelson1996].
 PCA and PLS models require unit scaled and mean centered input data, a feature that is nicely implemented in `sklearn`'s `StandardScaler` class.  
 To this end, we felt the need to complement `sklearn` with an implementation of the NIPALS algorithm for PCA and PLS. 
-As will be discussed in the benchmarking section below, the NIPALS algorithm has especially beneficial properties when it comes to peak memory consumption scaling and accuracy. 
+As will be discussed [below](#benchmarking), the NIPALS algorithm has especially beneficial properties when it comes to peak memory consumption scaling and accuracy. 
 Since it is an iterative algorithm, the runtime requirement can be balanced with the desired accuracy target.
 In general, it is a favorable option at small number of latent variables (`n_components < 10`) and a high numerical accuracy requirement.
 
@@ -51,7 +51,7 @@ In general, it is a favorable option at small number of latent variables (`n_com
 
 We decided to wrap the implementation of NIPALS PCA and PLS into a separate package instead of extending `sklearn` by another model because:
 
-1. `open_nipals`' usecase is very specific to batch manufacturing and chemometrics (cf. benchmarking section). `sklearn`'s audience is a broader Python machine learning community.
+1. `open_nipals`' usecase is very specific to batch manufacturing and chemometrics (cf. [benchmarking](#benchmarking)). `sklearn`'s audience is a broader Python machine learning community.
 2. `open_nipals` follows a slightly different philosophy in that it integrates the missing value imputation into the proper package, and therefore does not align with `sklearn` in that particular aspect. Integrating the imputation of missing data into the analysis package comes with a performance advantage.
 3. Keeping `open_nipals` and `sklearn` apart facilitates maintainability of both packages.
 
@@ -130,7 +130,7 @@ This is available as two metrics, `DModX` and `QRes` [@Eriksson1999].
 
 Finally, the `calc_limit()` function calculates theoretical limits on both IMD and OOMD such that a specified fraction `alpha` of the data lies within these limits, assuming the data follows an f-distribution [@Brereton2016].
 
-Following the data preparation scheme detailed in the benchmarking section, we simulated 1000 samples in a 40-dimensional data space, and trained a 4-component PCA model on it.
+Following the data preparation scheme detailed in the [benchmarking section](#benchmarking), we simulated 1000 samples in a 40-dimensional data space, and trained a 4-component PCA model on it.
 \autoref{fig:imd_oomd} shows the IMD-OOMD plot given this model and the theoretical limits calculated with it. 
 
 ![PCA-modelled data points on the IMD-OOMD plane with 0.95 confidence interval.\label{fig:imd_oomd}](./plots/HT2_DModX_example_plot.png){ width=100% }
@@ -285,9 +285,9 @@ This makes it particularly valuable and superior in settings with small- to medi
 
 # Availability
 
-`open_nipals` is available open-source under APACHE 2.0 license from this github repository [@on_github]. We appreciate your feedback and contributions.
+`open_nipals` is available open-source under the BSD 3-clause license from this github repository [@on_github]. We appreciate your feedback and contributions.
 The latest version is deployed to the Python Package Index [@on_pypi], the documentation was deployed to `readthedocs` [@on_readthedocs].
-A jupyter [notebook](placeholder for git link) to reproduce \autoref{fig:imd_oomd}, another [notebook](placeholder for git link) to generate \autoref{fig:reg_vect}, and a [notebook](placeholder for git link) to generate \autoref{fig:comb_comp} can be found in [@on_github] under the `paper` branch.
+A jupyter [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/imd_oomd_plot.ipynb) to reproduce \autoref{fig:imd_oomd}, another [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/regression_vector_visualization.ipynb) to generate \autoref{fig:reg_vect}, and a [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/numerical_complexity.ipynb) to run the benchmark and generate \autoref{fig:comb_comp} can be found in [@on_github] under the `paper` branch.
 
 # Acknowledgements
 
