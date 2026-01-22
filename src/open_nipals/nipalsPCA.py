@@ -45,10 +45,12 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         The fitted scores of the PCA model.
     fit_data : np.ndarray
         The data used to fit the model.
-    mean_centered  : bool
+    mean_centered : bool
         Whether or not the original data is mean-centered.
     fitted_components : int
         The number of current LVs in the model (0 if not fitted yet.)
+    explained_variance_ratio\_ : np.ndarray
+        The explained variance ratios per fitted component.
 
     Methods:
     --------------------
@@ -68,8 +70,6 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         Calculate suitable distance threshold given fitted data.
     set_components
         Change the number of model components.
-    get_explained_variance
-        Calculate explained variances per fitted component.
     get_explained_variance_ratio
         Calculate explained variances as ratio of total explained variance.
     """

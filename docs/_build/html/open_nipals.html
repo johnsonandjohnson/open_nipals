@@ -165,6 +165,8 @@ the same algorithm used in SIMCA.</p>
 </dd>
 <dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
 </dd>
+<dt>explained_variance_ratio_<span class="classifier">np.ndarray</span></dt><dd><p>The explained variance ratios per fitted component.</p>
+</dd>
 </dl>
 </section>
 <section id="methods">
@@ -185,8 +187,6 @@ the same algorithm used in SIMCA.</p>
 <dt>calc_limit</dt><dd><p>Calculate suitable distance threshold given fitted data.</p>
 </dd>
 <dt>set_components</dt><dd><p>Change the number of model components.</p>
-</dd>
-<dt>get_explained_variance</dt><dd><p>Calculate explained variances per fitted component.</p>
 </dd>
 <dt>get_explained_variance_ratio</dt><dd><p>Calculate explained variances as ratio of total explained variance.</p>
 </dd>
@@ -613,6 +613,8 @@ which has all nans in y-block. Defaults to False.</p>
 </dd>
 <dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
 </dd>
+<dt>explained_variance_ratio_<span class="classifier">np.ndarray</span></dt><dd><p>The explained variance ratios per fitted component.</p>
+</dd>
 </dl>
 </section>
 <section id="id2">
@@ -635,8 +637,6 @@ which has all nans in y-block. Defaults to False.</p>
 <dt>set_components</dt><dd><p>Change the number of model components.</p>
 </dd>
 <dt>get_reg_vector</dt><dd><p>Give regression vector of the model.</p>
-</dd>
-<dt>get_explained_variance</dt><dd><p>Calculate explained variances per fitted component.</p>
 </dd>
 <dt>get_explained_variance_ratio</dt><dd><p>Calculate explained variances as ratio of total explained variance.</p>
 </dd>

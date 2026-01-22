@@ -65,6 +65,8 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         The regression matrix of the PLS model.
     fitted_components : int
         The number of current LVs in the model (0 if not fitted yet.)
+    explained_variance_ratio\_ : np.ndarray
+        The explained variance ratios per fitted component.
 
     Methods:
     --------------------
@@ -86,8 +88,6 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         Change the number of model components.
     get_reg_vector
         Give regression vector of the model.
-    get_explained_variance
-        Calculate explained variances per fitted component.
     get_explained_variance_ratio
         Calculate explained variances as ratio of total explained variance.
     """
