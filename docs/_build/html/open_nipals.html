@@ -50,9 +50,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.calc_imd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.calc_limit"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.calc_limit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.calc_oomd"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.calc_oomd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.explained_variance_ratio_"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.explained_variance_ratio_</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.fit"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.fit_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.fit_transform()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.fitted_components"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.fitted_components</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.get_explained_variance_ratio"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.get_explained_variance_ratio()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.inverse_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.inverse_transform()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.set_components"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.set_components()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.set_fit_request"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.set_fit_request()</span></code></a></li>
@@ -66,9 +68,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS"><code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.calc_imd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.calc_oomd"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.calc_oomd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.explained_variance_ratio_"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.explained_variance_ratio_</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.fit"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.fit_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.fit_transform()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.fitted_components"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.fitted_components</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.get_explained_variance_ratio"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.get_explained_variance_ratio()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.get_reg_vector"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.get_reg_vector()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.inverse_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.inverse_transform()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.predict"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.predict()</span></code></a></li>
@@ -138,8 +142,8 @@ Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
 revised 2024: Niels Schlusser</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.nipalsPCA.</span></span><span class="sig-name descname"><span class="pre">NipalsPCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_centered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_BasePCA</span></code></p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.nipalsPCA.</span></span><span class="sig-name descname"><span class="pre">NipalsPCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_centered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></p>
 <p>The custom-built class to use PCA using the NIPALS algorithm, i.e.,
 the same algorithm used in SIMCA.</p>
 <section id="attributes">
@@ -159,7 +163,9 @@ the same algorithm used in SIMCA.</p>
 </dd>
 <dt>mean_centered<span class="classifier">bool</span></dt><dd><p>Whether or not the original data is mean-centered.</p>
 </dd>
-<dt>fitted_components<span class="classifier">int:</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+<dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+</dd>
+<dt>explained_variance_ratio_<span class="classifier">np.ndarray</span></dt><dd><p>The explained variance ratios per fitted component.</p>
 </dd>
 </dl>
 </section>
@@ -182,11 +188,13 @@ the same algorithm used in SIMCA.</p>
 </dd>
 <dt>set_components</dt><dd><p>Change the number of model components.</p>
 </dd>
+<dt>get_explained_variance_ratio</dt><dd><p>Calculate explained variances as ratio of total explained variance.</p>
+</dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.calc_imd">
-<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd" title="Link to this definition"></a></dt>
-<dd><p>Calculate within-model distance.
+<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'diag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd" title="Link to this definition"></a></dt>
+<dd><p>Calculate in-model distance (IMD) of observations.
 This is the distance from the center of the hyperplane
 to the projected observation.</p>
 <dl class="field-list simple">
@@ -199,6 +207,12 @@ original space from which to calculate the distance.
 Defaults to None.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to use. Valid options are
 {‘HotellingT2’}. Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>covariance</strong> (<em>str</em><em>, </em><em>optional</em>) – Method to compute covariance. Valid
+options are {‘diag’, ‘full’, ‘ledoit_wolf’}.
+Defaults to ‘diag’ (quick version).
+‘full’ uses the entire covariance matrix computed by numpy.
+‘ledoit_wolf’ uses the full covariance matrix computed
+by Ledoit-Wolf shrinkage.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -207,7 +221,6 @@ Defaults to None.</p></li>
 <li><p><strong>ValueError</strong> – Neither scores nor input data provided.</p></li>
 <li><p><strong>ValueError</strong> – Input scores are inconsistent with n_components of
     model.</p></li>
-<li><p><strong>ValueError</strong> – Other, unknown error with calculation of metric.</p></li>
 <li><p><strong>NotImplementedError</strong> – Any metric that has not yet been implemented.</p></li>
 </ul>
 </dd>
@@ -261,12 +274,12 @@ Defaults to 0.95.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.calc_oomd">
 <span class="sig-name descname"><span class="pre">calc_oomd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'QRes'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_oomd" title="Link to this definition"></a></dt>
-<dd><p>Calculated the out-of-model distance (oomd) of an observation.</p>
+<dd><p>Calculate the out-of-model distance (OOMD) of an observations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_array</strong> (<em>np.ndarray</em>) – The data for which to calculate the
-oomd.</p></li>
+OOMD.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to use. Valid options are
 {‘Qres’,’DModX’}. Defaults to ‘QRes’.</p></li>
 </ul>
@@ -276,6 +289,26 @@ oomd.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The distances for the provided observations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.explained_variance_ratio_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explained_variance_ratio_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.explained_variance_ratio_" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input data. Defaults to None.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if in_data not mean centered.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variances</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.ndarray</p>
@@ -350,6 +383,26 @@ components used by the model.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.get_explained_variance_ratio">
+<span class="sig-name descname"><span class="pre">get_explained_variance_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.get_explained_variance_ratio" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input data. Defaults to None.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if in_data not mean centered.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variances</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.inverse_transform">
 <span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.inverse_transform" title="Link to this definition"></a></dt>
 <dd><p>Approximate original data from scores.</p>
@@ -378,7 +431,11 @@ components used by the model.</p>
 <span class="sig-name descname"><span class="pre">set_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.set_components" title="Link to this definition"></a></dt>
 <dd><p>Method for setting the number of components in an
 already-constructed model. It checks to make sure that loadings
-exist for all of the set components and will fit extras if not.</p>
+exist for all of the set components and will fit extras if not.
+Note that in case of decreasing the number of components, previously
+fitted components are internally stored. In case you prefer a clean
+model, create a new model object and fit it with the desired number
+of components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -478,14 +535,14 @@ on a fitted model.</p>
 feature space to be projected.</p></li>
 <li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – The method to use for the projection.
 See reference listed in module docstring.
-Valid options are {‘naive’,’projection’,’conditionalMean’}
+Valid options are {‘naive’,’projection’,’conditional_mean’}
 Defaults to ‘naive’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>NotFittedError</strong> – If model has not been fit yet (no loadings).</p></li>
-<li><p><strong>ValueError</strong> – Method ‘conditionalMean’ is selected but fit_data is
+<li><p><strong>ValueError</strong> – Method ‘conditional_mean’ is selected but fit_data is
     not available.</p></li>
 </ul>
 </dd>
@@ -522,8 +579,8 @@ Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
 revised 2024: Niels Schlusser</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.nipalsPLS.</span></span><span class="sig-name descname"><span class="pre">NipalsPLS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_centered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_PLS</span></code></p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.nipalsPLS.</span></span><span class="sig-name descname"><span class="pre">NipalsPLS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_centered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">RegressorMixin</span></code></p>
 <p>The custom-built class to use PLS using the NIPALS algorithm,
 i.e., the same algorithm used in SIMCA.</p>
 <section id="id1">
@@ -554,7 +611,9 @@ which has all nans in y-block. Defaults to False.</p>
 </dd>
 <dt>regression_matrix<span class="classifier">np.ndarray</span></dt><dd><p>The regression matrix of the PLS model.</p>
 </dd>
-<dt>fitted_components<span class="classifier">int:</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+<dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+</dd>
+<dt>explained_variance_ratio_<span class="classifier">np.ndarray</span></dt><dd><p>The explained variance ratios per fitted component.</p>
 </dd>
 </dl>
 </section>
@@ -573,20 +632,21 @@ which has all nans in y-block. Defaults to False.</p>
 </dd>
 <dt>calc_oomd</dt><dd><p>Calculate out-of-model distance.</p>
 </dd>
-<dt>calc_limit</dt><dd><p>Calculate suitable distance threshold given fitted data.</p>
-</dd>
 <dt>predict</dt><dd><p>Obtain prediction for y data given model and X data.</p>
 </dd>
 <dt>set_components</dt><dd><p>Change the number of model components.</p>
 </dd>
 <dt>get_reg_vector</dt><dd><p>Give regression vector of the model.</p>
 </dd>
+<dt>get_explained_variance_ratio</dt><dd><p>Calculate explained variances as ratio of total explained variance.</p>
+</dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.calc_imd">
-<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd" title="Link to this definition"></a></dt>
-<dd><p>Function copied from nipalsPCA code. This will take in an input
-Array OR scores and return hotelling’s T2 value for each row.
+<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'diag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd" title="Link to this definition"></a></dt>
+<dd><p>Calculate the in-model distance (IMD) of observations.
+This will take in an input array OR scores and return
+Hotelling’s T2 value for each row.
 In theory you could expand to include a Y-block in-model distance,
 but the value is limited for the typical use cases.</p>
 <dl class="field-list simple">
@@ -599,6 +659,12 @@ Defaults to None.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – In-model-distance to compute.
 Must be one of set {‘HotellingT2’}.
 Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>covariance</strong> (<em>str</em><em>, </em><em>optional</em>) – Method to compute covariance. Valid
+options are {‘diag’, ‘full’, ‘ledoit_wolf’}.
+Defaults to ‘diag’ (quick version).
+‘full’ uses the entire covariance matrix computed by numpy.
+‘ledoit_wolf’ uses the full covariance matrix computed
+by Ledoit-Wolf shrinkage.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -606,7 +672,7 @@ Defaults to ‘HotellingT2’.</p></li>
 <li><p><strong>NotFittedError</strong> – If model has not been fit.</p></li>
 <li><p><strong>ValueError</strong> – If neither scores nor data are provided.</p></li>
 <li><p><strong>ValueError</strong> – If input scores shapes does not match model.</p></li>
-<li><p><strong>ValueError</strong> – If unknown metric was requested.</p></li>
+<li><p><strong>NotImplementedError</strong> – If unknown metric was requested.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -621,13 +687,14 @@ Defaults to ‘HotellingT2’.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.calc_oomd">
 <span class="sig-name descname"><span class="pre">calc_oomd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'QRes'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_oomd" title="Link to this definition"></a></dt>
-<dd><p>Calculate the Out of Model Distance.
+<dd><p>Calculate the out-of-model distance (OOMD) of observations.
 In theory can be used for Y-block, but the value in
 typical use is limited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_array</strong> (<em>np.array</em>) – The input data.</p></li>
+<li><p><strong>input_array</strong> (<em>np.array</em>) – The X input data for which to
+calculate the OOMD.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to compute.
 Supported metrics are: {‘QRes’,’DModX’}.
 Defaults to ‘QRes’.</p></li>
@@ -641,6 +708,33 @@ Defaults to ‘QRes’.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.explained_variance_ratio_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explained_variance_ratio_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.explained_variance_ratio_" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios
+for X and y arrays per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_x_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input X data. Defaults to None.</p></li>
+<li><p><strong>in_y_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input y data. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If in_x_data not mean centered.</p></li>
+<li><p><strong>ValueError</strong> – If in_y_data not mean centered.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variance ratios for X and y</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(np.ndarray, np.ndarray)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -709,6 +803,33 @@ components used by the model.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.get_explained_variance_ratio">
+<span class="sig-name descname"><span class="pre">get_explained_variance_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_x_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">np.array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_y_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">np.array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.get_explained_variance_ratio" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios
+for X and y arrays per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_x_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input X data. Defaults to None.</p></li>
+<li><p><strong>in_y_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input y data. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If in_x_data not mean centered.</p></li>
+<li><p><strong>ValueError</strong> – If in_y_data not mean centered.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variance ratios for X and y</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(np.ndarray, np.ndarray)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -784,7 +905,11 @@ components used by the model.</p>
 <span class="sig-name descname"><span class="pre">set_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.set_components" title="Link to this definition"></a></dt>
 <dd><p>Method for setting the number of components in an
 already-constructed model. It checks to make sure that loadings
-exist for all of the set components and will fit extras if not.</p>
+exist for all of the set components and will fit extras if not.
+Note that in case of decreasing the number of components, previously
+fitted components are internally stored. In case you prefer a clean
+model, create a new model object and fit it with the desired number
+of components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -944,7 +1069,7 @@ of two scores-arrays.</p>
 <p>Code for pipelining a data arrangement in sklearn. Allows for standarscaler()
 followed by other methods</p>
 <ol class="loweralpha simple" start="3">
-<li><p>2020: Ryan Wall</p></li>
+<li><p>2020: Ryan Wall, revised 2025: Calvin Ristad, Niels Schlusser</p></li>
 </ol>
 <dl class="py class">
 <dt class="sig sig-object py" id="open_nipals.utils.ArrangeData">
@@ -955,18 +1080,23 @@ creates a sklearn-style transformer object that orders the columns
 in dataframe correctly</p>
 <section id="id3">
 <h3>Attributes:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>var_dict (dict): A dictionary indicating which column should be in which position.</p>
+<dl class="simple">
+<dt>var_dict<span class="classifier">dict</span></dt><dd><p>A dictionary indicating which column should be in which position.</p>
+</dd>
+</dl>
 </section>
 <section id="id4">
 <h3>Methods:<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
-<p>var_dict_from_df: Infer var_dict from template dataframe.
-fit_transform: concatenation of fit and transform
-fit: Applies var_dict_from_df in a consistent manner with sklearn</p>
-<blockquote>
-<div><p>nomenclature</p>
-</div></blockquote>
 <dl class="simple">
-<dt>transform: Takes a new dataframe or np.array + variable dictionary</dt><dd><p>and arranges to be consistent with stored var_dict</p>
+<dt>var_dict_from_df</dt><dd><p>Infer var_dict from template dataframe.</p>
+</dd>
+<dt>fit_transform</dt><dd><p>concatenation of fit and transform</p>
+</dd>
+<dt>fit</dt><dd><p>Applies var_dict_from_df in a consistent manner with sklearn
+nomenclature</p>
+</dd>
+<dt>transform</dt><dd><p>Takes a new dataframe or np.array + variable dictionary
+and arranges to be consistent with stored var_dict</p>
 </dd>
 </dl>
 <dl class="py method">

@@ -2,15 +2,14 @@
 Code for pipelining a data arrangement in sklearn. Allows for standarscaler()
 followed by other methods
 
-(c) 2020: Ryan Wall
+(c) 2020: Ryan Wall, revised 2025: Calvin Ristad, Niels Schlusser
 """
 
+import warnings
+from typing import Optional, Union
 import numpy as np
 from sklearn.base import TransformerMixin
-import warnings
 import pandas as pd
-
-from typing import Optional, Union
 
 
 def _nan_mult(
@@ -18,7 +17,7 @@ def _nan_mult(
     y: np.array,
     nan_mask: Optional[np.array] = None,
     use_denom: bool = True,
-) -> np.array:
+) -> np.ndarray:
     """Matrix multiplication for when the left matrix (X) contains NaNs.
 
     Args:
@@ -36,34 +35,44 @@ def _nan_mult(
     Returns:
         np.array: The product of the matrix multiplication.
     """
-    rows_x, _ = x.shape
-    _, cols_y = y.shape
-
-    out_vals = np.zeros((rows_x, cols_y))  # Preallocate output
+    N, M = x.shape
 
     if nan_mask is None:
         nan_mask = np.isnan(x)
     else:
         # Catch error for if nan_mask isn't rotated correctly
         rows_nan, _ = nan_mask.shape
-        if rows_x != rows_nan:
+        if N != rows_nan:
             raise ValueError("nan_mask not rotated correctly")
 
-    # should be a single loop...
-    for row in range(rows_x):
-        # Calculate not_null for readability
-        not_null = np.invert(nan_mask[row, :])
-        # If there is ANYTHING in the row, calculate a value
-        # (default is zero)
-        if np.any(not_null):
-            if use_denom:
-                denom = y[not_null].T @ y[not_null]
-            else:
-                denom = 1
-            out_vals[row] = (x[row, not_null] @ y[not_null]) / denom
-    # End for loop
+    y_was_1d = y.ndim == 1  # if y was already 1 dim
 
-    return out_vals
+    if y_was_1d:
+        y2d = y.reshape(M, 1)  # (M,1)
+    else:
+        y2d = y
+
+    x_nomiss = x.copy()
+    x_nomiss[nan_mask] = 0.0
+
+    numer = x_nomiss @ y2d  # (N,M) x (M,1) => (N,1)
+
+    if not use_denom:
+        out = numer
+    else:
+        obs = (~nan_mask).astype(x.dtype)  # (N,M)
+        y_sq = (y2d**2).astype(x.dtype)  # (M,1)
+
+        denom = obs @ y_sq  # (N,M) x (M,1) => (N,1)
+
+        out = np.divide(
+            numer, denom, out=np.zeros_like(numer), where=(denom != 0)
+        )  # (N,1)
+
+    if y_was_1d:
+        out = out.ravel()
+
+    return out
 
 
 class ArrangeData(TransformerMixin):
@@ -73,15 +82,20 @@ class ArrangeData(TransformerMixin):
 
     Attributes:
     --------------------
-    var_dict (dict): A dictionary indicating which column should be in which position.
+    var_dict : dict
+        A dictionary indicating which column should be in which position.
 
     Methods:
     --------------------
-    var_dict_from_df: Infer var_dict from template dataframe.
-    fit_transform: concatenation of fit and transform
-    fit: Applies var_dict_from_df in a consistent manner with sklearn
+    var_dict_from_df
+        Infer var_dict from template dataframe.
+    fit_transform
+        concatenation of fit and transform
+    fit
+        Applies var_dict_from_df in a consistent manner with sklearn
         nomenclature
-    transform: Takes a new dataframe or np.array + variable dictionary
+    transform
+        Takes a new dataframe or np.array + variable dictionary
         and arranges to be consistent with stored var_dict
     """
 
