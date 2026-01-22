@@ -1,6 +1,5 @@
 # NIPALS PCA and PLS package
 This package implements the nonlinear iterative partial least squares (NIPALS) algorithm for principal component analysis (PCA) and partial least squares (PLS) regression. 
-The perspective is to publish this joint package open source.
 
 ## Nipals PCA
 Implements the NIPALS algorithm for principal components analysis in python. 
@@ -37,6 +36,14 @@ For the transformation part also see:
 
 
 # Installation
+The package can be installed via the python package index (PyPI) or from the cloned git repo. 
+If you would like to only use the package without needing acccess to the code, the first version is recommended.
+If you would like to modify the code and/or contribute to the package, it is recommended to install via cloning the git repository.
+
+## PyPI
+You can install the package from PyPI with `pip install open-nipals`.
+
+## Git repository
 1. Clone git repository
 2. Open a command line
 3. Navigate to git repository
@@ -78,7 +85,7 @@ from open_nipals.nipalsPCA import NipalsPCA
 
 # data is the numpy data matrix generated in the preprocessing
 model = NipalsPCA()
-transformed_data = model.fit_transform(data)
+transformed_data = model.fit_transform(X=data)
 ```
 
 ### PLS
@@ -88,7 +95,7 @@ from open_nipals.nipalsPLS import NipalsPLS
 # note the X/Y data blocks would need to have
 # separate arrangeData and StandardScaler objects
 model = NipalsPLS()
-transformed_x_data, transformed_y_data = model.fit_transform(data_x, data_y)
+transformed_x_data, transformed_y_data = model.fit_transform(X=data_x, y=data_y)
 ```
 
 ## Distances
@@ -105,7 +112,7 @@ dmodx = model.calc_oomd(input_array = data, metric = "DModX")
 One particular feature of PLS models is that they can predict dependent variables. To this end, run `model.predict()`, where either a matrix of X data `input_x`, 
 or a matrix of X scores `scores_x` need to be given as arguments, e.g. 
 ```python
-predicted_y_data = model.predict(input_x=data_x)
+predicted_y_data = model.predict(X=data_x)
 ```
 
 
