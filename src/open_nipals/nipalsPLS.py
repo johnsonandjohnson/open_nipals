@@ -65,7 +65,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         The regression matrix of the PLS model.
     fitted_components : int
         The number of current LVs in the model (0 if not fitted yet.)
-    explained_variance_ratio\_ : np.ndarray
+    explained_variance_ratio_ : np.ndarray
         The explained variance ratios per fitted component.
 
     Methods:
