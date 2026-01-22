@@ -1,20 +1,20 @@
 """
 Algorithm implemented from Chapter 6 of
-    Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
-    Fault detection and diagnosis in industrial systems.
-    Springer Science & Business Media, 2000.
+Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
+Fault detection and diagnosis in industrial systems.
+Springer Science & Business Media, 2000.
 
 Alternative algorithm derivation from:
-    Geladi, P.; Kowalski, B. R.
-    Partial Least-Squares Regression: A Tutorial.
-    Analytica Chimica Acta 1986, 185, 1–17.
-    https://doi.org/10.1016/0003-2670(86)80028-9.
+Geladi, P.; Kowalski, B. R.
+Partial Least-Squares Regression: A Tutorial.
+Analytica Chimica Acta 1986, 185, 1–17.
+https://doi.org/10.1016/0003-2670(86)80028-9.
 
 For the transformation part also see:
-    Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
-    Missing data methods in PCA and PLS: Score calculations
-    with incomplete observations.
-    Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
+Missing data methods in PCA and PLS: Score calculations
+with incomplete observations.
+Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
 
 (C) 2020-2021: Ryan Wall (lead), David Ochsenbein, YBaranwal
 revised 2024: Niels Schlusser
@@ -23,36 +23,99 @@ revised 2024: Niels Schlusser
 from __future__ import (
     annotations,
 )  # needed so we can return NipalsPLS class in our type hints
-import numpy as np
-from sklearn.cross_decomposition._pls import _PLS
-from sklearn.exceptions import NotFittedError
 import warnings
+from typing import Optional, Union, Tuple
+import numpy as np
+from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
+from sklearn.exceptions import NotFittedError
+from sklearn.covariance import LedoitWolf
 from open_nipals.utils import _nan_mult
-from typing import Optional, Tuple, Union
 
 
-class NipalsPLS(_PLS):
+class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
+    """The custom-built class to use PLS using the NIPALS algorithm,
+    i.e., the same algorithm used in SIMCA.
+
+    Attributes:
+    --------------------
+    n_components : int
+        The number of principal components.
+    max_iter : int
+        The max number of iterations for the fitting step.
+    tol_criteria : float
+        The convergence tolerance criterion.
+    mean_centered : bool
+        Whether or not the original data is mean-centered.
+    force_include : bool
+        True will force including the data
+        which has all nans in y-block. Defaults to False.
+    fit_data_x : np.ndarray
+        The X data used to fit the model.
+    fit_data_y : np.ndarray
+        The y data used to fit the model.
+    loadings_x : np.ndarray
+        The X loadings vectors of the PLS model.
+    loadings_y : np.ndarray
+        The y loadings vectors of the PLS model.
+    fit_scores_x : np.ndarray
+        The fitted X scores of the PLS model.
+    fit_scores_x : np.ndarray
+        The fitted y scores of the PLS model.
+    regression_matrix : np.ndarray
+        The regression matrix of the PLS model.
+    fitted_components : int
+        The number of current LVs in the model (0 if not fitted yet.)
+    explained_variance_ratio\_ : np.ndarray
+        The explained variance ratios per fitted component.
+
+    Methods:
+    --------------------
+    transform
+        Transform input data to scores.
+    fit
+        Fit PLS model on input data.
+    fit_transform
+        Fit PLS model on input data, then transform said data to scores.
+    inverse_transform
+        Obtain approximation of X input data given fitted model and X scores.
+    calc_imd
+        Calculate within-model distance.
+    calc_oomd
+        Calculate out-of-model distance.
+    predict
+        Obtain prediction for y data given model and X data.
+    set_components
+        Change the number of model components.
+    get_reg_vector
+        Give regression vector of the model.
+    get_explained_variance_ratio
+        Calculate explained variances as ratio of total explained variance.
+    """
+
     def __init__(
         self,
         n_components: int = 2,
         max_iter: int = 10000,
-        tol_criteria: float = 10**-10,
+        tol_criteria: float = 1e-6,
         mean_centered: bool = True,
         force_include: bool = False,
     ):
         """Constructor for initialization
 
         Args:
-            n_components (int): The number of components to use in the model
-            max_iter (int): The maximum number of iterations to use when fitting
-            tol_criteria (float): Tolerance limit to compare when fitting
+            n_components (int): The number of components to use in the model.
+                Defaults to 2.
+            max_iter (int): The maximum number of iterations to use when fitting.
+                Defaults to 10000.
+            tol_criteria (float): Relative tolerance limit to compare when fitting.
+                Defaults to 1e-6.
             mean_centered (boolean): Whether the data is mean centered or not.
-                It is HIGHLY suggested to mean center your data.
+                It is HIGHLY suggested to mean center your data. Defaults to True.
             force_include (bool, optional): True will force including the data
                 which has all nans in y-block. Defaults to False.
 
         Returns:
-            NipalsPLS object
+            NipalsPLS: NipalsPLS object
         """
 
         self.n_components = n_components
@@ -84,7 +147,7 @@ class NipalsPLS(_PLS):
         components used by the model.
 
         Returns:
-            int
+            int: number of fitted components
         """
         if self.loadings_x is not None:
             return self.loadings_x.shape[1]
@@ -116,7 +179,10 @@ class NipalsPLS(_PLS):
 
     def _add_components(self, n_add: int, verbose: bool = False):
         """Method for adding components to an already-constructed
-        model.
+        model. Follows the NIPALS implementation in Kevin Dunn's book
+        "Process Improvement using Data", see https://learnche.org/pid/
+        latent-variable-modelling/projection-to-latent-structures/
+        how-the-pls-model-is-calculated
 
         Args:
             n_add (int): number of components to add
@@ -161,20 +227,20 @@ class NipalsPLS(_PLS):
             X = X - sim_data_x
             y = y - sim_data_y
 
-            p = np.append(
-                self.loadings_x, np.zeros((n_cols_x, n_add)), axis=1
+            p = np.concatenate(
+                [self.loadings_x, np.zeros((n_cols_x, n_add))], axis=1
             )  # x loadings
-            t = np.append(
-                self.fit_scores_x, np.zeros((n_rows_x, n_add)), axis=1
+            t = np.concatenate(
+                [self.fit_scores_x, np.zeros((n_rows_x, n_add))], axis=1
             )  # x scores
-            u = np.append(
-                self.fit_scores_y, np.zeros((n_rows_x, n_add)), axis=1
+            u = np.concatenate(
+                [self.fit_scores_y, np.zeros((n_rows_x, n_add))], axis=1
             )  # y scores
-            w = np.append(
-                self.weights_x, np.zeros((n_cols_x, n_add)), axis=1
+            w = np.concatenate(
+                [self.weights_x, np.zeros((n_cols_x, n_add))], axis=1
             )  # weights
-            q = np.append(
-                self.loadings_y, np.zeros((n_cols_y, n_add)), axis=1
+            q = np.concatenate(
+                [self.loadings_y, np.zeros((n_cols_y, n_add))], axis=1
             )  # y loading
             b = np.zeros(
                 (fitted_components + n_add, fitted_components + n_add)
@@ -211,9 +277,7 @@ class NipalsPLS(_PLS):
             iter_count = 0
             converged = False
             if verbose:
-                print(
-                    f"LV {ind_lv} Started"
-                )  # oh wow, I didn't now about f strings, love it. - DRO
+                print(f"LV {ind_lv} Started")
 
             while (not converged) and (iter_count < self.max_iter):
                 if verbose:
@@ -223,23 +287,24 @@ class NipalsPLS(_PLS):
                 ti_old = ti.copy()
 
                 if not nan_flag:  # Loop for no NaN
-                    wi = x_res.T @ ui  # x weight
+                    wi = (x_res.T @ ui) / (ui.T @ ui)  # x weight
                     wi = wi / np.linalg.norm(wi)  # Normalize weights
-                    ti = x_res @ wi  # x score
-                    qi = y_res.T @ ti  # y weight
-                    qi = qi / np.linalg.norm(qi)  # Normalize y-weights
-                    ui = y_res @ qi  # y score
+                    ti = (x_res @ wi) / (wi.T @ wi)  # x score
+                    qi = (y_res.T @ ti) / (ti.T @ ti)  # y weight
+                    ui = (y_res @ qi) / (qi.T @ qi)  # y score
 
                 else:  # Loop for handling NaNs,
                     wi = _nan_mult(x_res.T, ui, nan_mask_x.T)
                     wi = wi / np.linalg.norm(wi)
-                    ti = _nan_mult(x_res, wi, nan_mask_x, use_denom=True)
+                    ti = _nan_mult(x_res, wi, nan_mask_x)
                     qi = _nan_mult(y_res.T, ti, nan_mask_y.T)
-                    qi = qi / np.linalg.norm(qi)
                     ui = _nan_mult(y_res, qi, nan_mask_y)
 
+                # guard against zero norm
+                den = max(np.linalg.norm(ti), 1e-12)
+
                 # Check convergence
-                diff_norm = np.linalg.norm(ti - ti_old) / np.linalg.norm(ti)
+                diff_norm = np.linalg.norm(ti - ti_old) / den
 
                 converged = diff_norm < self.tol_criteria
 
@@ -249,26 +314,13 @@ class NipalsPLS(_PLS):
             # Check whether it actually converged
             # or just terminated after max_iter
             if iter_count >= self.max_iter:
-                print(f"max_iter Reached on LV {ind_lv}.")
+                warnings.warn(f"max_iter reached on LV {ind_lv}.")
 
             # x loading
             if not nan_flag:
                 pi = (x_res.T @ ti) / (ti.T @ ti)
             else:
                 pi = _nan_mult(x_res.T, ti, nan_mask_x.T)
-
-            p_weight = np.linalg.norm(pi)  # Reused to scale ti,wi
-            pi = pi / p_weight
-
-            # Scaling x weight
-            wi = (wi.T * p_weight).T
-
-            # Scaling x score
-            # Recalc score if NaNs
-            if not nan_flag:
-                ti = ti * p_weight  # Faster if no NaNs
-            else:
-                ti = _nan_mult(x_res, wi, nan_mask_x, use_denom=True)
 
             # regression coefficient, is a scalar!
             bi = (ui.T @ ti) / (ti.T @ ti)
@@ -283,7 +335,7 @@ class NipalsPLS(_PLS):
 
             # update residual matrices for next LV
             x_res = x_res - ti @ pi.T
-            y_res = y_res - bi * ti @ qi.T
+            y_res = y_res - ti @ qi.T
 
             # End of for loop
 
@@ -298,6 +350,10 @@ class NipalsPLS(_PLS):
         """Method for setting the number of components in an
         already-constructed model. It checks to make sure that loadings
         exist for all of the set components and will fit extras if not.
+        Note that in case of decreasing the number of components, previously
+        fitted components are internally stored. In case you prefer a clean
+        model, create a new model object and fit it with the desired number
+        of components.
 
         Args:
             n_component (int): the desired number of components.
@@ -445,7 +501,7 @@ class NipalsPLS(_PLS):
         # (Single component projection algorithm for missing data in PCA/PLS)
         for ind_lv in range(num_lvs):
             scores[:, [ind_lv]] = _nan_mult(
-                resids, weights[:, [ind_lv]], nan_mask, use_denom=True
+                resids, weights[:, [ind_lv]], nan_mask
             )
             # deflate input data
             resids = resids - scores[:, [ind_lv]] @ loadings[:, [ind_lv]].T
@@ -474,7 +530,7 @@ class NipalsPLS(_PLS):
                 maxmean = np.NaN
 
             # Return boolean
-            return maxmean < 10**-10
+            return maxmean < 1e-10
 
     def fit_transform(
         self, X: np.array, y: np.array
@@ -511,11 +567,14 @@ class NipalsPLS(_PLS):
         input_scores: Optional[np.array] = None,
         input_array: Optional[np.array] = None,
         metric: str = "HotellingT2",
+        covariance: str = "diag",
     ):
-        """Function copied from nipalsPCA code. This will take in an input
-            Array OR scores and return hotelling's T2 value for each row.
-            In theory you could expand to include a Y-block in-model distance,
-            but the value is limited for the typical use cases.
+        """
+        Calculate the in-model distance (IMD) of observations.
+        This will take in an input array OR scores and return
+        Hotelling's T2 value for each row.
+        In theory you could expand to include a Y-block in-model distance,
+        but the value is limited for the typical use cases.
 
         Args:
             input_scores (Optional[np.array], optional): Scores array.
@@ -523,44 +582,52 @@ class NipalsPLS(_PLS):
             input_array (Optional[np.array], optional): Data array.
                 Defaults to None.
             metric (str, optional): In-model-distance to compute.
-                Must be one of set {'HotellingT2'}. Defaults to 'HotellingT2'.
+                Must be one of set {'HotellingT2'}.
+                Defaults to 'HotellingT2'.
+            covariance (str, optional): Method to compute covariance. Valid
+                options are {'diag', 'full', 'ledoit_wolf'}.
+                Defaults to 'diag' (quick version).
+                'full' uses the entire covariance matrix computed by numpy.
+                'ledoit_wolf' uses the full covariance matrix computed
+                by Ledoit-Wolf shrinkage.
 
         Raises:
             NotFittedError: If model has not been fit.
             ValueError: If neither scores nor data are provided.
             ValueError: If input scores shapes does not match model.
-            ValueError: If unknown metric was requested.
+            NotImplementedError: If unknown metric was requested.
 
         Returns:
             float: The within-model distance(s).
         """
 
         # Warnings and errors
-        if not self.__sklearn_is_fitted__():  # if not fit
+        if not self.__sklearn_is_fitted__():
+            # if not fit
             raise NotFittedError(
                 "Model has not yet been fit. "
                 + "Try fit() or fit_transform() instead."
             )
-        elif (input_array is None) and (
-            input_scores is None
-        ):  # If Nothing Given
-            raise ValueError("No values provided.")
-
-        # Calculate scores
-        if input_array is not None:  # If we have data, calculate with that
-            if (
-                input_scores is not None
-            ):  # Both inputs = warn and calc with only data
+        elif input_array is None:
+            # If Nothing Given
+            if input_scores is None:
+                raise ValueError("No values provided.")
+        else:
+            # Both inputs = warn and calc with only data
+            if input_scores is not None:
                 warnings.warn(
                     "Both Scores and Data are given. Operating on Data alone."
                 )
-            # Get Scores
+
+        # Get scores, either calculated or given
+        if input_array is not None:
             scores = self.transform(X=input_array)
-        elif input_scores is not None:  # If scores only, use those
+        else:
             scores = input_scores
 
-        # Calculate in model distances
-        if metric == "HotellingT2":  # Calculate Hotelling's T2
+        # Calculate in-model distances
+        if metric == "HotellingT2":
+            # Calculate Hotelling's T2
             num_lvs_fit = self.n_components
 
             if scores.shape[1] != num_lvs_fit:  # Error if incorrect sizes
@@ -571,15 +638,46 @@ class NipalsPLS(_PLS):
             else:
                 # Calculate fit means/variances
                 fit_means = np.mean(self.fit_scores_x[:, :num_lvs_fit], axis=0)
-                fit_vars = np.var(
-                    self.fit_scores_x[:, :num_lvs_fit], axis=0, ddof=1
-                )
-                # Calculate imd, the Hotelling's T2
-                out_imd = np.sum(
-                    (input_scores - fit_means) ** 2 / fit_vars, axis=1
-                ).reshape(-1, 1)
 
-        else:  # If incorrect metric given
+                if covariance == "diag":
+                    fit_vars = np.var(
+                        self.fit_scores_x[:, :num_lvs_fit], axis=0, ddof=1
+                    )
+                    # Calculate imd, the Hotelling's T2
+                    out_imd = np.sum(
+                        (scores - fit_means) ** 2 / fit_vars, axis=1
+                    ).reshape(-1, 1)
+                elif covariance == "full":
+                    # use full covariance matrix
+                    out_imd = np.diagonal(
+                        (scores - fit_means)
+                        @ np.linalg.pinv(
+                            np.cov(
+                                self.fit_scores_x[:, :num_lvs_fit].T, ddof=1
+                            )
+                        )
+                        @ (scores - fit_means).T
+                    ).reshape(-1, 1)
+                elif covariance == "ledoit_wolf":
+                    # compute full covariance matrix
+                    # with Ledoit-Wolf shrinkage
+                    lw_obj = LedoitWolf(
+                        assume_centered=self.mean_centered
+                    ).fit(self.fit_scores_x[:, :num_lvs_fit])
+                    out_imd = np.diagonal(
+                        (scores - fit_means)
+                        @ np.linalg.pinv(lw_obj.covariance_)
+                        @ (scores - fit_means).T
+                    ).reshape(-1, 1)
+                else:
+                    raise NotImplementedError(
+                        f"Covariance method {covariance} not implemented."
+                        + "Possible methods are "
+                        + "{'diag', 'full', 'ledoit_wolf'}."
+                    )
+
+        else:
+            # If incorrect metric given
             raise ValueError(
                 "Unknown metric requested (metric = HotellingT2)."
             )
@@ -624,14 +722,16 @@ class NipalsPLS(_PLS):
     def calc_oomd(
         self, input_array: np.array, metric: str = "QRes"
     ) -> np.array:
-        """Calculate the Out of Model Distance.
+        """Calculate the out-of-model distance (OOMD) of observations.
         In theory can be used for Y-block, but the value in
         typical use is limited.
 
         Args:
-            input_array (np.array): The input data.
+            input_array (np.array): The X input data for which to
+                calculate the OOMD.
             metric (str, optional): The metric to compute.
-            Supported metrics are: {'QRes','DModX'}. Defaults to 'QRes'.
+                Supported metrics are: {'QRes','DModX'}.
+                Defaults to 'QRes'.
 
         Raises:
             ValueError: If input metric is unknown.
@@ -641,27 +741,31 @@ class NipalsPLS(_PLS):
         """
 
         # Select particular metric
-        if metric == "QRes":  # Q-residual
+        if metric == "QRes":
+            # To not perform calc on input_array
+            transform_dat = input_array.copy()
+
             # Get shape and Preallocate output
             n, _ = input_array.shape
             out_oomd = np.zeros((n, 1))
 
             # Calculate scores (transform should handle error Handling)
-            scores = self.transform(input_array)
+            scores = self.transform(transform_dat)
 
             # Calculate Fitted Data
             modeled_data = self.inverse_transform(X=scores)
 
             # Calculate Residuals
-            residual = input_array - modeled_data
+            resids = transform_dat - modeled_data
 
-            nan_mask = np.isnan(residual)
-            not_null = np.invert(nan_mask)
+            nan_mask = np.isnan(resids)
+            not_null = ~nan_mask
+
             # Calculate Q_residuals as DMODX is based off of this value
             for row in range(n):
                 out_oomd[row, 0] = (
-                    residual[row, not_null[row, :]]
-                    @ residual[row, not_null[row, :]].T
+                    resids[row, not_null[row, :]]
+                    @ resids[row, not_null[row, :]].T
                 )
 
         elif metric == "DModX":  # DModX
@@ -681,8 +785,9 @@ class NipalsPLS(_PLS):
             K = self.fit_data_x.shape[1]
             factor = np.sqrt(n / ((n - num_lvs - A0) * (K - num_lvs)))
             out_oomd = factor.reshape(-1, 1) * np.sqrt(out_oomd)
+
         else:
-            raise ValueError("Input metric not recognized")
+            raise NotImplementedError("Input metric not recognized. See doc.")
 
         return out_oomd
 
@@ -739,17 +844,90 @@ class NipalsPLS(_PLS):
         if not self.__sklearn_is_fitted__():
             raise NotFittedError("Model has not yet been fit")
 
-        reg_vects = self.weights_x[:, : self.n_components] @ (
-            self.regression_matrix[: self.n_components, :]
-            @ self.loadings_y[:, : self.n_components].T
+        num_lvs = self.n_components
+        reg_vects = self.weights_x[:, :num_lvs] @ (
+            self.regression_matrix[:num_lvs, :num_lvs]
+            @ self.loadings_y[:, :num_lvs].T
         )
 
         return reg_vects
 
     def __sklearn_is_fitted__(self) -> bool:
-        """Determine if this is fitted or not
+        """Determine if present model is fitted or not
 
         Returns:
             bool: is fitted or not
         """
-        return not (self.fitted_components == 0)
+        return self.fitted_components != 0
+
+    def get_explained_variance_ratio(
+        self,
+        in_x_data: np.array = None,
+        in_y_data: np.array = None,
+    ) -> (np.ndarray, np.ndarray):
+        """calculate the explained variance ratios
+        for X and y arrays per fitted component
+
+        Args:
+            in_x_data (np.array, optional):
+                Alternative input X data. Defaults to None.
+            in_y_data (np.array, optional):
+                Alternative input y data. Defaults to None.
+
+        Raises:
+            ValueError: If in_x_data not mean centered.
+            ValueError: If in_y_data not mean centered.
+
+        Returns:
+            (np.ndarray, np.ndarray): explained variance ratios for X and y
+        """
+        if in_x_data is not None:
+            if self._check_mean_centered(in_x_data):
+                x_data = in_x_data
+            else:
+                raise ValueError("Variance input X data is not mean centered.")
+        else:
+            x_data = self.fit_data_x
+
+        if in_y_data is not None:
+            if self._check_mean_centered(in_y_data):
+                y_data = in_y_data
+            else:
+                raise ValueError("Variance input y data is not mean centered.")
+        else:
+            y_data = self.fit_data_y
+
+        orig_n_comp = self.n_components
+        ret_x = np.zeros(orig_n_comp + 1)
+        ret_y = np.zeros(orig_n_comp + 1)
+
+        # compute explained variance ratios per component
+        # automatically pads a zero at position 0
+        for i in range(1, orig_n_comp + 1):
+            self.set_components(i)
+
+            # compute data as per model
+            sim_data_x = self.inverse_transform(self.transform(x_data))
+            sim_data_y = self.predict(x_data, self.fit_scores_x)
+
+            # compute residual variance
+            resid_x_var = np.nanvar(x_data - sim_data_x, axis=0)
+            resid_y_var = np.nanvar(y_data - sim_data_y, axis=0)
+
+            # variance of data scaled to 1
+            # average over variables
+            ret_x[i] = np.nanmean(1 - resid_x_var)
+            ret_y[i] = np.nanmean(1 - resid_y_var)
+
+        # go back to original components
+        self.set_components(orig_n_comp)
+
+        # subtract previous components
+        ret_x = ret_x[1:] - ret_x[:-1]
+        ret_y = ret_y[1:] - ret_y[:-1]
+
+        return ret_x, ret_y
+
+    # a bit hacky, avoid writing explained_variance_ratio_ once with arguments
+    # as method and once without arguments as property
+    explained_variance_ratio_ = property(get_explained_variance_ratio)

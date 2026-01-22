@@ -1,0 +1,1237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Package documentation open_nipals &mdash; open_nipals 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How can I contribute?" href="contributing.html" />
+    <link rel="prev" title="README" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            open_nipals
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Package documentation open_nipals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-open_nipals.nipalsPCA">open_nipals.nipalsPCA module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA"><code class="docutils literal notranslate"><span class="pre">NipalsPCA</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.calc_imd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.calc_limit"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.calc_limit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.calc_oomd"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.calc_oomd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.explained_variance_ratio_"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.explained_variance_ratio_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.fit"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.fit_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.fit_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.fitted_components"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.fitted_components</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.get_explained_variance_ratio"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.get_explained_variance_ratio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.inverse_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.inverse_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.set_components"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.set_components()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.set_fit_request"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.set_transform_request"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.set_transform_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA.transform"><code class="docutils literal notranslate"><span class="pre">NipalsPCA.transform()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-open_nipals.nipalsPLS">open_nipals.nipalsPLS module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS"><code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.calc_imd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.calc_oomd"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.calc_oomd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.explained_variance_ratio_"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.explained_variance_ratio_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.fit"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.fit_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.fit_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.fitted_components"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.fitted_components</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.get_explained_variance_ratio"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.get_explained_variance_ratio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.get_reg_vector"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.get_reg_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.inverse_transform"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.inverse_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.predict"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.set_components"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.set_components()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.set_fit_request"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.set_fit_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.set_predict_request"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.set_predict_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.set_score_request"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.set_score_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS.transform"><code class="docutils literal notranslate"><span class="pre">NipalsPLS.transform()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-open_nipals.utils">open_nipals.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#open_nipals.utils.ArrangeData"><code class="docutils literal notranslate"><span class="pre">ArrangeData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.utils.ArrangeData.fit"><code class="docutils literal notranslate"><span class="pre">ArrangeData.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.utils.ArrangeData.fit_transform"><code class="docutils literal notranslate"><span class="pre">ArrangeData.fit_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.utils.ArrangeData.transform"><code class="docutils literal notranslate"><span class="pre">ArrangeData.transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open_nipals.utils.ArrangeData.var_dict_from_df"><code class="docutils literal notranslate"><span class="pre">ArrangeData.var_dict_from_df()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How can I contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Contributors’ list</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">open_nipals</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Package documentation open_nipals</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/open_nipals.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="package-documentation-open-nipals">
+<h1>Package documentation open_nipals<a class="headerlink" href="#package-documentation-open-nipals" title="Link to this heading"></a></h1>
+<section id="module-open_nipals.nipalsPCA">
+<span id="open-nipals-nipalspca-module"></span><h2>open_nipals.nipalsPCA module<a class="headerlink" href="#module-open_nipals.nipalsPCA" title="Link to this heading"></a></h2>
+<p>Code for calculating the PCA Loadings and Scores using NIPALS algorithm.</p>
+<p>One of the most concise definitions can be found in this paper on page 7:
+Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
+Analytica Chimica Acta 1986, 185, 1–17.
+<a class="reference external" href="https://doi.org/10.1016/0003-2670(86)80028-9">https://doi.org/10.1016/0003-2670(86)80028-9</a>.</p>
+<p>For the transformation part also see:
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
+in PCA and PLS: Score calculations with incomplete observations.
+Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
+<p>(c) 2020-2021: Ryan Wall (lead), David Ochsenbein
+revised 2024: Niels Schlusser</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.nipalsPCA.</span></span><span class="sig-name descname"><span class="pre">NipalsPCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_centered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></p>
+<p>The custom-built class to use PCA using the NIPALS algorithm, i.e.,
+the same algorithm used in SIMCA.</p>
+<section id="attributes">
+<h3>Attributes:<a class="headerlink" href="#attributes" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n_components<span class="classifier">int</span></dt><dd><p>The number of principal components.</p>
+</dd>
+<dt>max_iter<span class="classifier">int</span></dt><dd><p>The max number of iterations for the fitting step.</p>
+</dd>
+<dt>tol_criteria<span class="classifier">float</span></dt><dd><p>The convergence tolerance criterion.</p>
+</dd>
+<dt>loadings<span class="classifier">np.ndarray</span></dt><dd><p>The loadings vectors of the PCA model.</p>
+</dd>
+<dt>fit_scores<span class="classifier">np.ndarray</span></dt><dd><p>The fitted scores of the PCA model.</p>
+</dd>
+<dt>fit_data<span class="classifier">np.ndarray</span></dt><dd><p>The data used to fit the model.</p>
+</dd>
+<dt>mean_centered<span class="classifier">bool</span></dt><dd><p>Whether or not the original data is mean-centered.</p>
+</dd>
+<dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+</dd>
+<dt>explained_variance_ratio_<span class="classifier">np.ndarray</span></dt><dd><p>The explained variance ratios per fitted component.</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h3>Methods:<a class="headerlink" href="#methods" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>transform</dt><dd><p>Transform input data to scores.</p>
+</dd>
+<dt>fit</dt><dd><p>Fit PCA model on input data.</p>
+</dd>
+<dt>fit_transform</dt><dd><p>Fit PCA model on input data, then transform said data to scores.</p>
+</dd>
+<dt>inverse_transform</dt><dd><p>Obtain approximation of input data given fitted model and scores.</p>
+</dd>
+<dt>calc_imd</dt><dd><p>Calculate within-model distance.</p>
+</dd>
+<dt>calc_oomd</dt><dd><p>Calculate out-of-model distance.</p>
+</dd>
+<dt>calc_limit</dt><dd><p>Calculate suitable distance threshold given fitted data.</p>
+</dd>
+<dt>set_components</dt><dd><p>Change the number of model components.</p>
+</dd>
+<dt>get_explained_variance_ratio</dt><dd><p>Calculate explained variances as ratio of total explained variance.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.calc_imd">
+<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'diag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_imd" title="Link to this definition"></a></dt>
+<dd><p>Calculate in-model distance (IMD) of observations.
+This is the distance from the center of the hyperplane
+to the projected observation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_scores</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The scores from
+which to calculate the distance. Defaults to None.</p></li>
+<li><p><strong>input_array</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The input data in
+original space from which to calculate the distance.
+Defaults to None.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to use. Valid options are
+{‘HotellingT2’}. Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>covariance</strong> (<em>str</em><em>, </em><em>optional</em>) – Method to compute covariance. Valid
+options are {‘diag’, ‘full’, ‘ledoit_wolf’}.
+Defaults to ‘diag’ (quick version).
+‘full’ uses the entire covariance matrix computed by numpy.
+‘ledoit_wolf’ uses the full covariance matrix computed
+by Ledoit-Wolf shrinkage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotFittedError</strong> – Model has not been fit yet.</p></li>
+<li><p><strong>ValueError</strong> – Neither scores nor input data provided.</p></li>
+<li><p><strong>ValueError</strong> – Input scores are inconsistent with n_components of
+    model.</p></li>
+<li><p><strong>NotImplementedError</strong> – Any metric that has not yet been implemented.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The calculated within-model distance for each
+observation (row).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.calc_limit">
+<span class="sig-name descname"><span class="pre">calc_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_lvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_limit" title="Link to this definition"></a></dt>
+<dd><p>This function calculates the limits for imd and oomd. Assumptions
+on the distribution shape underpin this calculation;  in practice
+limits should be judged by the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to use. Valid options are
+{‘HotellingT2’,’DModX’} Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>n</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The number of observations.
+Defaults to None, which results in the n of the fitted scores
+to be used.</p></li>
+<li><p><strong>num_lvs</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The number of latent variables
+(principal components). Defaults to None, which results in
+the m of the fitted scores to be used.</p></li>
+<li><p><strong>m</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – The number of original features.
+Defaults to None, which results in the number of features in
+the original data/fitted loadings to be used.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – The confidence value to use.
+Defaults to 0.95.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The limit threshold for the given metric and</dt><dd><p>confidence value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.calc_oomd">
+<span class="sig-name descname"><span class="pre">calc_oomd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'QRes'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.calc_oomd" title="Link to this definition"></a></dt>
+<dd><p>Calculate the out-of-model distance (OOMD) of an observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_array</strong> (<em>np.ndarray</em>) – The data for which to calculate the
+OOMD.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to use. Valid options are
+{‘Qres’,’DModX’}. Defaults to ‘QRes’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Unknown metric.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The distances for the provided observations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.explained_variance_ratio_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explained_variance_ratio_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.explained_variance_ratio_" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input data. Defaults to None.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if in_data not mean centered.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variances</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA" title="open_nipals.nipalsPCA.NipalsPCA"><span class="pre">NipalsPCA</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.fit" title="Link to this definition"></a></dt>
+<dd><p>Fits PCA model to input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – The input data to fit on.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to print out additional
+convergence information. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A reference to the object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA" title="open_nipals.nipalsPCA.NipalsPCA">NipalsPCA</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.fit_transform" title="Link to this definition"></a></dt>
+<dd><p>Fit, then transform input data.
+This function is equivalent to
+&gt;&gt;&gt;&gt; P = NipalsPCA()
+&gt;&gt;&gt;&gt; P.fit(X)
+&gt;&gt;&gt;&gt; T = P.transform(X)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – The The input data to fit on and
+to transform.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to print out additional
+convergence information. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Model has already been fit.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The corresponding scores.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.fitted_components">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fitted_components</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.fitted_components" title="Link to this definition"></a></dt>
+<dd><p>Get total # of LVs in model.
+This may differ from self.n_components which is the number of
+components used by the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of fitted components</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.get_explained_variance_ratio">
+<span class="sig-name descname"><span class="pre">get_explained_variance_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.get_explained_variance_ratio" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input data. Defaults to None.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if in_data not mean centered.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variances</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.inverse_transform">
+<span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.inverse_transform" title="Link to this definition"></a></dt>
+<dd><p>Approximate original data from scores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – An array containing the scores.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotFittedError</strong> – PCA model has not been fit yet.</p></li>
+<li><p><strong>ValueError</strong> – Shape of provided scores does not match n_components
+    in model.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The approximation of the original data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.set_components">
+<span class="sig-name descname"><span class="pre">set_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.set_components" title="Link to this definition"></a></dt>
+<dd><p>Method for setting the number of components in an
+already-constructed model. It checks to make sure that loadings
+exist for all of the set components and will fit extras if not.
+Note that in case of decreasing the number of components, previously
+fitted components are internally stored. In case you prefer a clean
+model, create a new model object and fit it with the desired number
+of components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_component</strong> (<em>int</em>) – the desired number of components.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Whether or not to print out additional</p></li>
+<li><p><strong>False.</strong> (<em>convergence information. Defaults to</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – if n_component is not an int</p></li>
+<li><p><strong>ValueError</strong> – if n_component &lt; 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA" title="open_nipals.nipalsPCA.NipalsPCA"><span class="pre">NipalsPCA</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.set_fit_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">verbose</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.set_transform_request">
+<span class="sig-name descname"><span class="pre">set_transform_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPCA.NipalsPCA" title="open_nipals.nipalsPCA.NipalsPCA"><span class="pre">NipalsPCA</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.set_transform_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">transform</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">transform</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">transform</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">method</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">transform</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPCA.NipalsPCA.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'naive'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.nipalsPCA.NipalsPCA.transform" title="Link to this definition"></a></dt>
+<dd><p>This function takes an input array and projects it based
+on a fitted model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – The nxm input array in the original
+feature space to be projected.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – The method to use for the projection.
+See reference listed in module docstring.
+Valid options are {‘naive’,’projection’,’conditional_mean’}
+Defaults to ‘naive’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotFittedError</strong> – If model has not been fit yet (no loadings).</p></li>
+<li><p><strong>ValueError</strong> – Method ‘conditional_mean’ is selected but fit_data is
+    not available.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The corresponding scores.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-open_nipals.nipalsPLS">
+<span id="open-nipals-nipalspls-module"></span><h2>open_nipals.nipalsPLS module<a class="headerlink" href="#module-open_nipals.nipalsPLS" title="Link to this heading"></a></h2>
+<p>Algorithm implemented from Chapter 6 of
+Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
+Fault detection and diagnosis in industrial systems.
+Springer Science &amp; Business Media, 2000.</p>
+<p>Alternative algorithm derivation from:
+Geladi, P.; Kowalski, B. R.
+Partial Least-Squares Regression: A Tutorial.
+Analytica Chimica Acta 1986, 185, 1–17.
+<a class="reference external" href="https://doi.org/10.1016/0003-2670(86)80028-9">https://doi.org/10.1016/0003-2670(86)80028-9</a>.</p>
+<p>For the transformation part also see:
+Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
+Missing data methods in PCA and PLS: Score calculations
+with incomplete observations.
+Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
+<p>(C) 2020-2021: Ryan Wall (lead), David Ochsenbein, YBaranwal
+revised 2024: Niels Schlusser</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.nipalsPLS.</span></span><span class="sig-name descname"><span class="pre">NipalsPLS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol_criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_centered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">RegressorMixin</span></code></p>
+<p>The custom-built class to use PLS using the NIPALS algorithm,
+i.e., the same algorithm used in SIMCA.</p>
+<section id="id1">
+<h3>Attributes:<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n_components<span class="classifier">int</span></dt><dd><p>The number of principal components.</p>
+</dd>
+<dt>max_iter<span class="classifier">int</span></dt><dd><p>The max number of iterations for the fitting step.</p>
+</dd>
+<dt>tol_criteria<span class="classifier">float</span></dt><dd><p>The convergence tolerance criterion.</p>
+</dd>
+<dt>mean_centered<span class="classifier">bool</span></dt><dd><p>Whether or not the original data is mean-centered.</p>
+</dd>
+<dt>force_include<span class="classifier">bool</span></dt><dd><p>True will force including the data
+which has all nans in y-block. Defaults to False.</p>
+</dd>
+<dt>fit_data_x<span class="classifier">np.ndarray</span></dt><dd><p>The X data used to fit the model.</p>
+</dd>
+<dt>fit_data_y<span class="classifier">np.ndarray</span></dt><dd><p>The y data used to fit the model.</p>
+</dd>
+<dt>loadings_x<span class="classifier">np.ndarray</span></dt><dd><p>The X loadings vectors of the PLS model.</p>
+</dd>
+<dt>loadings_y<span class="classifier">np.ndarray</span></dt><dd><p>The y loadings vectors of the PLS model.</p>
+</dd>
+<dt>fit_scores_x<span class="classifier">np.ndarray</span></dt><dd><p>The fitted X scores of the PLS model.</p>
+</dd>
+<dt>fit_scores_x<span class="classifier">np.ndarray</span></dt><dd><p>The fitted y scores of the PLS model.</p>
+</dd>
+<dt>regression_matrix<span class="classifier">np.ndarray</span></dt><dd><p>The regression matrix of the PLS model.</p>
+</dd>
+<dt>fitted_components<span class="classifier">int</span></dt><dd><p>The number of current LVs in the model (0 if not fitted yet.)</p>
+</dd>
+<dt>explained_variance_ratio_<span class="classifier">np.ndarray</span></dt><dd><p>The explained variance ratios per fitted component.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Methods:<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>transform</dt><dd><p>Transform input data to scores.</p>
+</dd>
+<dt>fit</dt><dd><p>Fit PLS model on input data.</p>
+</dd>
+<dt>fit_transform</dt><dd><p>Fit PLS model on input data, then transform said data to scores.</p>
+</dd>
+<dt>inverse_transform</dt><dd><p>Obtain approximation of X input data given fitted model and X scores.</p>
+</dd>
+<dt>calc_imd</dt><dd><p>Calculate within-model distance.</p>
+</dd>
+<dt>calc_oomd</dt><dd><p>Calculate out-of-model distance.</p>
+</dd>
+<dt>predict</dt><dd><p>Obtain prediction for y data given model and X data.</p>
+</dd>
+<dt>set_components</dt><dd><p>Change the number of model components.</p>
+</dd>
+<dt>get_reg_vector</dt><dd><p>Give regression vector of the model.</p>
+</dd>
+<dt>get_explained_variance_ratio</dt><dd><p>Calculate explained variances as ratio of total explained variance.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.calc_imd">
+<span class="sig-name descname"><span class="pre">calc_imd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'HotellingT2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'diag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_imd" title="Link to this definition"></a></dt>
+<dd><p>Calculate the in-model distance (IMD) of observations.
+This will take in an input array OR scores and return
+Hotelling’s T2 value for each row.
+In theory you could expand to include a Y-block in-model distance,
+but the value is limited for the typical use cases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_scores</strong> (<em>Optional</em><em>[</em><em>np.array</em><em>]</em><em>, </em><em>optional</em>) – Scores array.
+Defaults to None.</p></li>
+<li><p><strong>input_array</strong> (<em>Optional</em><em>[</em><em>np.array</em><em>]</em><em>, </em><em>optional</em>) – Data array.
+Defaults to None.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – In-model-distance to compute.
+Must be one of set {‘HotellingT2’}.
+Defaults to ‘HotellingT2’.</p></li>
+<li><p><strong>covariance</strong> (<em>str</em><em>, </em><em>optional</em>) – Method to compute covariance. Valid
+options are {‘diag’, ‘full’, ‘ledoit_wolf’}.
+Defaults to ‘diag’ (quick version).
+‘full’ uses the entire covariance matrix computed by numpy.
+‘ledoit_wolf’ uses the full covariance matrix computed
+by Ledoit-Wolf shrinkage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotFittedError</strong> – If model has not been fit.</p></li>
+<li><p><strong>ValueError</strong> – If neither scores nor data are provided.</p></li>
+<li><p><strong>ValueError</strong> – If input scores shapes does not match model.</p></li>
+<li><p><strong>NotImplementedError</strong> – If unknown metric was requested.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The within-model distance(s).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.calc_oomd">
+<span class="sig-name descname"><span class="pre">calc_oomd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'QRes'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.calc_oomd" title="Link to this definition"></a></dt>
+<dd><p>Calculate the out-of-model distance (OOMD) of observations.
+In theory can be used for Y-block, but the value in
+typical use is limited.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_array</strong> (<em>np.array</em>) – The X input data for which to
+calculate the OOMD.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – The metric to compute.
+Supported metrics are: {‘QRes’,’DModX’}.
+Defaults to ‘QRes’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If input metric is unknown.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The out-of-model distance(s).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.explained_variance_ratio_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explained_variance_ratio_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.explained_variance_ratio_" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios
+for X and y arrays per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_x_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input X data. Defaults to None.</p></li>
+<li><p><strong>in_y_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input y data. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If in_x_data not mean centered.</p></li>
+<li><p><strong>ValueError</strong> – If in_y_data not mean centered.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variance ratios for X and y</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(np.ndarray, np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS" title="open_nipals.nipalsPLS.NipalsPLS"><span class="pre">NipalsPLS</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.fit" title="Link to this definition"></a></dt>
+<dd><p>Function to fit PLS model from X/Y Data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.array</em>) – Input X data.</p></li>
+<li><p><strong>y</strong> (<em>np.array</em>) – Input Y data.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn verbosity on and off.
+Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – Model has not yet been fit</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A reference to the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS" title="open_nipals.nipalsPLS.NipalsPLS">NipalsPLS</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">array</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.fit_transform" title="Link to this definition"></a></dt>
+<dd><p>Combine fit and transform methods into one command, sklearn style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.array</em>) – The X-data.</p></li>
+<li><p><strong>y</strong> (<em>np.array</em>) – The Y-data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If attempt to use fit_transform on already fitted data.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>A tuple containing the fitted scores</dt><dd><p>for X and Y.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple[np.array, np.array]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.fitted_components">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fitted_components</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.fitted_components" title="Link to this definition"></a></dt>
+<dd><p>Get total # of LVs in model.
+This may differ from self.n_components which is the number of
+components used by the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>number of fitted components</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.get_explained_variance_ratio">
+<span class="sig-name descname"><span class="pre">get_explained_variance_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_x_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">np.array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_y_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">np.array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.get_explained_variance_ratio" title="Link to this definition"></a></dt>
+<dd><p>calculate the explained variance ratios
+for X and y arrays per fitted component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_x_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input X data. Defaults to None.</p></li>
+<li><p><strong>in_y_data</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Alternative input y data. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If in_x_data not mean centered.</p></li>
+<li><p><strong>ValueError</strong> – If in_y_data not mean centered.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>explained variance ratios for X and y</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(np.ndarray, np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.get_reg_vector">
+<span class="sig-name descname"><span class="pre">get_reg_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.get_reg_vector" title="Link to this definition"></a></dt>
+<dd><p>Give the user the regression vector for the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – If the model has not been fit.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The regression vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.inverse_transform">
+<span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.inverse_transform" title="Link to this definition"></a></dt>
+<dd><p>Given a set of scores, return the simulated data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.array</em>) – The scores to transform back.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotFittedError</strong> – If model has not been fit.</p></li>
+<li><p><strong>ValueError</strong> – If input scores shapes does not match model.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The simulated data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict y from data or scores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Input X data. Defaults to None.</p></li>
+<li><p><strong>scores_x</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Input scores. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotFittedError</strong> – If model has not been fit.</p></li>
+<li><p><strong>ValueError</strong> – If neither data nor scores are provided.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The predicted y-values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.set_components">
+<span class="sig-name descname"><span class="pre">set_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.set_components" title="Link to this definition"></a></dt>
+<dd><p>Method for setting the number of components in an
+already-constructed model. It checks to make sure that loadings
+exist for all of the set components and will fit extras if not.
+Note that in case of decreasing the number of components, previously
+fitted components are internally stored. In case you prefer a clean
+model, create a new model object and fit it with the desired number
+of components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_component</strong> (<em>int</em>) – the desired number of components.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Whether or not to print out additional
+convergence information. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – if n_component is not an int</p></li>
+<li><p><strong>ValueError</strong> – if n_component &lt; 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS" title="open_nipals.nipalsPLS.NipalsPLS"><span class="pre">NipalsPLS</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.set_fit_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">verbose</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS" title="open_nipals.nipalsPLS.NipalsPLS"><span class="pre">NipalsPLS</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.set_predict_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scores_x</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">scores_x</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.set_score_request">
+<span class="sig-name descname"><span class="pre">set_score_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#open_nipals.nipalsPLS.NipalsPLS" title="open_nipals.nipalsPLS.NipalsPLS"><span class="pre">NipalsPLS</span></a></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.set_score_request" title="Link to this definition"></a></dt>
+<dd><p>Configure whether metadata should be requested to be passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p>
+<p>Note that this method is only relevant when this estimator is used as a
+sub-estimator within a <span class="xref std std-term">meta-estimator</span> and metadata routing is enabled
+with <code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please check the <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">score</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sample_weight</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.nipalsPLS.NipalsPLS.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">array</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#open_nipals.nipalsPLS.NipalsPLS.transform" title="Link to this definition"></a></dt>
+<dd><p>Compute scores using model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.array</em>) – X-data.</p></li>
+<li><p><strong>y</strong> (<em>np.array</em><em>, </em><em>optional</em>) – Y-data. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – If model is not fit.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Either the</dt><dd><p>scores for X (when no Y-data is provided) or a tuple
+of two scores-arrays.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Union[np.array, Tuple[np.array, np.array]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-open_nipals.utils">
+<span id="open-nipals-utils-module"></span><h2>open_nipals.utils module<a class="headerlink" href="#module-open_nipals.utils" title="Link to this heading"></a></h2>
+<p>Code for pipelining a data arrangement in sklearn. Allows for standarscaler()
+followed by other methods</p>
+<ol class="loweralpha simple" start="3">
+<li><p>2020: Ryan Wall, revised 2025: Calvin Ristad, Niels Schlusser</p></li>
+</ol>
+<dl class="py class">
+<dt class="sig sig-object py" id="open_nipals.utils.ArrangeData">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">open_nipals.utils.</span></span><span class="sig-name descname"><span class="pre">ArrangeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.utils.ArrangeData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></p>
+<p>ArrangeData class
+creates a sklearn-style transformer object that orders the columns
+in dataframe correctly</p>
+<section id="id3">
+<h3>Attributes:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>var_dict<span class="classifier">dict</span></dt><dd><p>A dictionary indicating which column should be in which position.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Methods:<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>var_dict_from_df</dt><dd><p>Infer var_dict from template dataframe.</p>
+</dd>
+<dt>fit_transform</dt><dd><p>concatenation of fit and transform</p>
+</dd>
+<dt>fit</dt><dd><p>Applies var_dict_from_df in a consistent manner with sklearn
+nomenclature</p>
+</dd>
+<dt>transform</dt><dd><p>Takes a new dataframe or np.array + variable dictionary
+and arranges to be consistent with stored var_dict</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.utils.ArrangeData.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#open_nipals.utils.ArrangeData.fit" title="Link to this definition"></a></dt>
+<dd><p>The function which will fit the var_dict object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>Union</em><em>[</em><em>pd.DataFrame</em><em>, </em><em>np.ndarray</em><em>]</em>) – The input data to
+use for fitting.</p></li>
+<li><p><strong>input_var_dict</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em><em>, </em><em>optional</em>) – Required if input_data
+is an array, this dictionary contains the headers as
+{column Name: column index}.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – input_data is a numpy array and input_var_dict is missing.</p></li>
+<li><p><strong>ValueError</strong> – input_data is a numpy array and its shape does not
+    match input_var_dict.</p></li>
+<li><p><strong>ValueError</strong> – An unknown error occurred.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.utils.ArrangeData.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#open_nipals.utils.ArrangeData.fit_transform" title="Link to this definition"></a></dt>
+<dd><p>Fit a data/column model and then transform data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>Union</em><em>[</em><em>pd.DataFrame</em><em>, </em><em>np.ndarray</em><em>]</em>) – The input data
+to transform. Note that if this is a dataframe it _will_
+be used to fit var_dict. This might not be what you want.</p></li>
+<li><p><strong>input_var_dict</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em><em>, </em><em>optional</em>) – The var_dict to be used
+to fit. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>transformed input frame</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.utils.ArrangeData.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#open_nipals.utils.ArrangeData.transform" title="Link to this definition"></a></dt>
+<dd><p>Transform input data based on stored data model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>Union</em><em>[</em><em>pd.DataFrame</em><em>, </em><em>np.ndarray</em><em>]</em>) – The input_data to
+transform.</p></li>
+<li><p><strong>input_var_dict</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em><em>, </em><em>optional</em>) – Required if input_data
+is an array, this dictionary contains the headers as
+{column Name: column index}.. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – ArrangeData object has not yet been fit.</p></li>
+<li><p><strong>ValueError</strong> – input_data is a numpy array and no input_var_dict has
+    been provided.</p></li>
+<li><p><strong>ValueError</strong> – input_data is a numpy array and its shape does not
+    match input_var_dict</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The transformed (column-rearranged) data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="open_nipals.utils.ArrangeData.var_dict_from_df">
+<span class="sig-name descname"><span class="pre">var_dict_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#open_nipals.utils.ArrangeData.var_dict_from_df" title="Link to this definition"></a></dt>
+<dd><p>Infer the var_dict from a template dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_df</strong> (<em>pd.DataFrame</em>) – A dataframe that has the desired
+order of columns.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The corresponding var_dict. {column Name: column index}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="readme.html" class="btn btn-neutral float-left" title="README" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="How can I contribute?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, David R. Ochsenbein, Niels Schlusser, Ryan M. Wall.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
