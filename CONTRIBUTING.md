@@ -109,7 +109,7 @@ Testing should begin with `pytest` and, eventually, end with `tox`.
 highlight dependency conflicts. It's *much* more expensive to run.
 
 Prior to executing `tox` the first time, you will need to have all of the
-python environments specified in the [tox.ini](./tox.ini) file loaded. No
+python environments specified in the [tox.ini](tox.ini) file loaded. No
 need to build each combination, just a flat python 3.9, 3.10, 3.11, etc 
 environment will suffice; `tox` should detect that and then build from there.
 

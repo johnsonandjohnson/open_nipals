@@ -49,7 +49,7 @@ You can install the package from PyPI with `pip install open-nipals`.
 3. Navigate to git repository
 4. Run `pip install .`
 
-NOTE: if you plan on working on the package please see [CONTRIBUTING.md](./CONTRIBUTING.md) for installation and environment setup instructions
+NOTE: if you plan on working on the package please see [CONTRIBUTING.md](CONTRIBUTING.md) for installation and environment setup instructions
 
 # Example usage
 

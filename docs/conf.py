@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath("../src/open_nipals/"))
 project = "open_nipals"
 copyright = "2025, David R. Ochsenbein, Niels Schlusser, Ryan M. Wall"
 author = "David R. Ochsenbein, Niels Schlusser, Ryan M. Wall"
-release = "1.0.1"
+release = "2.0.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
