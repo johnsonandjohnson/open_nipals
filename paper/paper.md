@@ -131,7 +131,7 @@ This is available as two metrics, `DModX` and `QRes` [@Eriksson1999].
 Finally, the `calc_limit()` function calculates theoretical limits on both IMD and OOMD such that a specified fraction `alpha` of the data lies within these limits, assuming the data follows an f-distribution [@Brereton2016].
 
 Following the data preparation scheme detailed in the benchmarking section, we simulated 1000 samples in a 40-dimensional data space, and trained a 4-component PCA model on it.
-@autoref{fig:imd_oomd} shows the IMD-OOMD plot given this model and the theoretical limits calculated with it. 
+\autoref{fig:imd_oomd} shows the IMD-OOMD plot given this model and the theoretical limits calculated with it. 
 
 ![PCA-modelled data points on the IMD-OOMD plane with 0.95 confidence interval.\label{fig:imd_oomd}](./plots/HT2_DModX_example_plot.png){ width=90% }
 
@@ -159,10 +159,10 @@ The following functions and attributes of the `sklearn` API are implemented by `
 As for `NipalsPCA`, `NipalsPLS` does not implement `explained_variance_` since the eigenvalues are not accessible as a byproduct of the NIPALS PLS algorithm
 
 Beyond standard `sklearn` functionality, `NipalsPLS` implements `calc_oomd()` for the out-of-model distance with either `QRes` or `DModX` as implemented metrics, `calc_imd()` for the in-model distance, using the $\mathrm{Hotelling's\, T^2}$ metric. 
-Summary statistics of PLS models can be displayed in similar plots to @autoref{fig:imd_oomd}.
+Summary statistics of PLS models can be displayed in similar plots to \autoref{fig:imd_oomd}.
 
 `NipalsPLS` primarily differs from `NipalsPCA` by the inclusion of a `predict()` method to predict a y-matrix from an x-matrix with a previously fitted model, and the calculation of the regression vector with `get_reg_vector()`.
-The latter serves as a measure for what input features the model considers predictive of the output, see @autoref{fig:reg_vect}.
+The latter serves as a measure for what input features the model considers predictive of the output, see \autoref{fig:reg_vect}.
 
 ![Visualization of a PLS regression vector, generated from simulated test data inspired by spectroscopy.\label{fig:reg_vect}](./plots/regression_vector_plot.png){ width=90% }
 
@@ -220,23 +220,23 @@ This procedure was repeated for any combination of number of samples and feature
 
 ![Computational complexity as measured by runtime (upper row), peak memory consumption (middle row), and accuracy in reconstructing the input data measured by mean residual (lower row). Scaling of quantites evaluated with respect to `n_components` (left columns), dimensionality of the dataset (number of features, middle column), and number of samples (right column).\label{fig:comb_comp}](./plots/combined_complexity.png){ width=100% }
 
-Figure @autoref{fig:comb_comp} compares the performance of `open_nipals.NipalsPCA`, measured by runtime, memory requirements, and accuracy, for varying `n_components`, dimensionalities, and number of samples, to alternative dimensionality reduction and imputation techniques.
+Figure \autoref{fig:comb_comp} compares the performance of `open_nipals.NipalsPCA`, measured by runtime, memory requirements, and accuracy, for varying `n_components`, dimensionalities, and number of samples, to alternative dimensionality reduction and imputation techniques.
 The data was varied around a center configuration of `n_components=4`, 100 samples, and 40 features. 
 `FastICA` raised convergence warnings for `n_samples=100, n_features=40, n_components=4,8,16`, `n_samples=1000, n_features=40, n_components=4`, `n_samples=100, n_features=20, n_components=4`, `n_samples=100, n_features=100, n_components=4`.
 We found the accuracy of the fitted ICA models to be comparable to the others, therefore decided to still use these datapoints. 
 Excessive memory consumption of the experimental `MatrixImputer` made the computation of the point at `n_features=4`, 100 samples, and 1000 features numerically impossible. 
-Therefore, this datapoint was omitted in the middle plot of the middle row in @autoref{fig:comb_comp}.
+Therefore, this datapoint was omitted in the middle plot of the middle row in \autoref{fig:comb_comp}.
 
 ## Computational complexity and accuracy vs. number of latent variables
 
-The leftmost column of @autoref{fig:comb_comp} shows complexity and accuracy evaluated over a range of 2 - 16 latent variables.
+The leftmost column of \autoref{fig:comb_comp} shows complexity and accuracy evaluated over a range of 2 - 16 latent variables.
 
-The upper left plot of @autoref{fig:comb_comp} shows the runtime cost of `open_nipals.NipalsPCA` increases with `n_components` at less-than exponential scaling, with ICA being by far the slowest option for `n_components>4`, FA/EM being the slowest option at `n_components<=4`, and `sklearn.PCA` the fastest option globally.
-`sklearn.PCA` relies on SVD, therefore the numerical cost (runtime and memory) of inferring any number of latent variables is equal, which can be seen from the upper left and the middle left panel of @autoref{fig:comb_comp}. 
+The upper left plot of \autoref{fig:comb_comp} shows the runtime cost of `open_nipals.NipalsPCA` increases with `n_components` at less-than exponential scaling, with ICA being by far the slowest option for `n_components>4`, FA/EM being the slowest option at `n_components<=4`, and `sklearn.PCA` the fastest option globally.
+`sklearn.PCA` relies on SVD, therefore the numerical cost (runtime and memory) of inferring any number of latent variables is equal, which can be seen from the upper left and the middle left panel of \autoref{fig:comb_comp}. 
 The two different imputer + `sklearn.PCA` combinations require precisely the same runtime at varying `n_components`, indicating that the runtime is dominated by the SVD, not the imputation.
 Interestingly, fitting only additional components with `set_components()` has a minor effect on runtime at small `n_components`, and is even slower than fitting a new `open_nipals.NipalsPCA` model at `n_components=16`.
 
-The peak memory consumption vs. `n_components` is plotted in the left plot of the middle row of @autoref{fig:comb_comp}. 
+The peak memory consumption vs. `n_components` is plotted in the left plot of the middle row of \autoref{fig:comb_comp}. 
 The comparison of `sklearn.PCA` paired with either `MatrixImputer` or `SimpleImputer` immediately suggests that the memory consumption is dominated by the imputation method rather than the actual PCA model fitting.
 The memory consumption of `open_nipals.NipalsPCA` can be substantially reduced by adding components to an existing model with the `set_components` method, yielding the lowest memory consumption of all investigated methods at `n_components<16`.
 
@@ -246,36 +246,36 @@ As expected, the choice of imputation method starts to matter at higher `n_compo
 
 ## Computational complexity and accuracy vs. number of features
 
-The middle column of @autoref{fig:comb_comp} shows the scaling of computational complexity and accuracy with the dimensionality of the data space (`n_features` 20 - 1000).
+The middle column of \autoref{fig:comb_comp} shows the scaling of computational complexity and accuracy with the dimensionality of the data space (`n_features` 20 - 1000).
 Since a new model has to be fit every time the dimensionality of the data space changes, there is no usecase for `set_components()`, which was consequently not displayed in the plots.
 
-The upper middle panel of @autoref{fig:comb_comp} shows that `open_nipals.NipalsPCA`' model fitting has a high but competitive runtime, surpassed by FA/EM at small and ICA at 100 features, while being the slowest option at 1000 features. Its runtime in seconds vs. dimensionality curve is quite shallow (5e-2 - 2e-1), even compared to `sklearn.PCA` (5e-3 - 7e-2), which was faster than its competitors by 1-2 orders of magnitude throughout the investigated range of features.
+The upper middle panel of \autoref{fig:comb_comp} shows that `open_nipals.NipalsPCA`' model fitting has a high but competitive runtime, surpassed by FA/EM at small and ICA at 100 features, while being the slowest option at 1000 features. Its runtime in seconds vs. dimensionality curve is quite shallow (5e-2 - 2e-1), even compared to `sklearn.PCA` (5e-3 - 7e-2), which was faster than its competitors by 1-2 orders of magnitude throughout the investigated range of features.
 However, `sklearn.PCA` shows a clear exponential scaling in runtime caused by the scaling of the numerical complexity of the SVD algorithm with the number of features (bear in mind that `sklearn.PCA` performs an SVD of the covariance matrix, which is a square matrix of the size of the number of features).
 
-The memory consumption in MB vs. features is plotted in the middle row's middle plot of @autoref{fig:comb_comp}. 
+The memory consumption in MB vs. features is plotted in the middle row's middle plot of \autoref{fig:comb_comp}. 
 It shows a competitive memory usage by `open_nipals.NipalsPCA`, particularly at >= 100 features. 
 Memory usage at very small number of features (less than 100) seems to be dominated by overhead, of which `open_nipals.NipalsPCA` requires more than more orthodox algorithms like `sklearn.PCA` with univariate imputation. 
 However, as the dimensionality increases, the overhead becomes less relevant, leading to `open_nipals.NipalsPCA`'s memory consumption curve being the shallowest (2e-1 - 3.5), compared to 8e-2MB - 2MB for `sklearn.PCA` with univariate imputation. 
 The matrix imputation technique proves once more to require the most memory throughout the entire investigated range of dataspace dimensions by 1 - 2 orders of magnitude, leading to the data point at 1000 features being impossible to collect.
 
-The accuracy is evaluated against different number of features in the lower middle panel of @autoref{fig:comb_comp}.
+The accuracy is evaluated against different number of features in the lower middle panel of \autoref{fig:comb_comp}.
 It proves `open_nipals.NipalsPCA` to be the most accurate technique, although the accuracies being very similar among the different methods.
 All methods lose accuracy as the number of dimensions increases.
 
 ## Computational complexity and accuracy vs. number of samples
 
-The rightmost column of @autoref{fig:comb_comp} displays computational complexity and accuracy over a broad range of dataset size (`n_samples` 50 - 10000).
+The rightmost column of \autoref{fig:comb_comp} displays computational complexity and accuracy over a broad range of dataset size (`n_samples` 50 - 10000).
 
-The runtime requirement scaling with `n_samples` can be found in the upper right plot of @autoref{fig:comb_comp}. 
+The runtime requirement scaling with `n_samples` can be found in the upper right plot of \autoref{fig:comb_comp}. 
 It shows competitive, but rather slow fit time by `open_nipals.NipalsPCA`, comparable to its competitors FA/EM and ICA.
 Both imputation methods combined with `sklearn.PCA` are more than one order of magnitude faster and show very shallow profiles. 
 The number of samples does not directly play a role in SVD-based PCA since the bottleneck is the computation of the eigenvalues of the `n_features x n_features` covariance matrix, thus the shallow `sklearn.PCA` runtime curves are expected.
 
-As can be seen from the middle right panel of @autoref{fig:comb_comp}, the peak memory consumption of `open_nipals.NipalsPCA` follows exponential scaling with `n_samples` (@autoref{fig:comb_comp}), which is competitive with its alternatives.
+As can be seen from the middle right panel of \autoref{fig:comb_comp}, the peak memory consumption of `open_nipals.NipalsPCA` follows exponential scaling with `n_samples` (\autoref{fig:comb_comp}), which is competitive with its alternatives.
 The two `sklearn.PCA` scenarios form the edge cases, here. 
 SVD-based PCA with univariate imputation consumes a bit less memory than ICA, FA/EM, and `open_nipals.NipalsPCA` at medium to large sample sizes, while SVD-based PCA with multivariate imputation consumes about one order of magnitude more memory than its competitors, although this gap closes with increasing sample size.
 
-The numerical accuracy as a function of `n_samples` in @autoref{fig:comb_comp} remains quite constant, with `open_nipals.NipalsPCA` being slightly more accurate than all of its competitors throughout the entire range.
+The numerical accuracy as a function of `n_samples` in \autoref{fig:comb_comp} remains quite constant, with `open_nipals.NipalsPCA` being slightly more accurate than all of its competitors throughout the entire range.
 
 ## Benchmarking conclusion
 
@@ -287,7 +287,7 @@ This makes it particularly valuable and superior in settings with small- to medi
 
 `open_nipals` is available open-source under APACHE 2.0 license from this github repository [@on_github]. We appreciate your feedback and contributions.
 The latest version is deployed to the Python Package Index [@on_pypi], the documentation was deployed to `readthedocs` [@on_readthedocs].
-A jupyter [notebook](placeholder for git link) to reproduce @autoref{fig:imd_oomd}, another [notebook](placeholder for git link) to generate @autoref{fig:reg_vect}, and a [notebook](placeholder for git link) to generate @autoref{fig:comb_comp} can be found in [@on_github] under the `paper` branch.
+A jupyter [notebook](placeholder for git link) to reproduce \autoref{fig:imd_oomd}, another [notebook](placeholder for git link) to generate \autoref{fig:reg_vect}, and a [notebook](placeholder for git link) to generate \autoref{fig:comb_comp} can be found in [@on_github] under the `paper` branch.
 
 # Acknowledgements
 
