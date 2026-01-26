@@ -2,6 +2,14 @@
 
 Welcome to the `open_nipals` contributor's guide.
 
+## Installation
+If you would like to contribute to the code, please clone the github repository and install the package from it following these steps:
+
+1. Clone git repository
+2. Open a command line
+3. Navigate to git repository
+4. Run `pip install .[testing]`
+
 ## Code Contributions
 
 Code contributions should be made in a new feature branch. After a feature is completed please open a pull request and tag at least two people for review. In your request include:
@@ -10,14 +18,14 @@ Code contributions should be made in a new feature branch. After a feature is co
 * Background on why the feature is needed
 * How to test the feature (e.g. example code)
 
-This will follow the [semantic versioning scheme](https://semver.org/). If the changes are not reflected in the version number, please use `git tag`. See [this page](https://pyscaffold.org/en/stable/faq.html#best-practices-and-common-errors-with-version-numbers) for more information.
+This code follows the [semantic versioning scheme](https://semver.org/). If the changes are not reflected in the version number, please use `git tag`. See [this page](https://pyscaffold.org/en/stable/faq.html#best-practices-and-common-errors-with-version-numbers) for more information.
 
 ### Reviewing Code contributions
 
 As a reviewer please ensure the following is true:
 * Tests are functional
 * New Pull Request features are documented (i.e. docstrings and type hints)
-* the code is formatted with `ruff` and a line length of 79 characters per [PEP 8](https://peps.python.org/pep-0008/)
+* the code is formatted with `ruff` and a line length of 79 characters following [PEP 8](https://peps.python.org/pep-0008/)
 
 ## Documentation Improvements
 
@@ -28,7 +36,7 @@ This means that the docs are kept in the same repository as the project code, an
 that any documentation update is done in the same way was a code contribution.
 
 When working on documentation changes in your local machine, you can
-compile them using [tox] :
+compile them using `tox` :
 
 ```
 tox -e docs
@@ -44,28 +52,17 @@ python3 -m http.server --directory 'docs/_build/html'
 ### Create an environment
 
 Before you start coding, we recommend creating an isolated [virtual environment]
-to avoid any problems with your installed Python packages.
-This can easily be done via either [virtualenv]:
-
-```
-virtualenv <PATH TO VENV>
-source <PATH TO VENV>/bin/activate
-```
-
-or [Miniconda]:
-
-```
-conda create -n open_nipals python=3 six virtualenv pytest pytest-cov
+to avoid any problems with your installed Python packages, e.g. with:
+```bash
+conda create -n open_nipals python=3.14
 conda activate open_nipals
 ```
 
 ## Installation
 
-1. Ensure you have the [git client installed](https://git-scm.com/downloads).
+1. Ensure you have a git client installed.
 2. Clone the repository to your local computer.
-3. Install the open_nipals package from the local folder:
-
-```pip install -e .[testing]```
+3. Install the open_nipals package from the local folder `pip install -e .[testing]`
 
 ### Implement your changes
 
@@ -97,10 +94,11 @@ conda activate open_nipals
    tox
    ```
 
-   (after having installed [tox] with `pip install tox` or `pipx`).
+   (after having installed `tox` with `pip install tox` or `pipx`).
 
-   You can also use [tox] to run several other pre-configured tasks in the
+   You can also use `tox` to run several other pre-configured tasks in the
    repository. Try `tox -av` to see a list of the available checks.
+
 
 ### Testing
 
@@ -109,7 +107,7 @@ Testing should begin with `pytest` and, eventually, end with `tox`.
 highlight dependency conflicts. It's *much* more expensive to run.
 
 Prior to executing `tox` the first time, you will need to have all of the
-python environments specified in the [tox.ini](./tox.ini) file loaded. No
+python environments specified in the `tox.ini` file loaded. No
 need to build each combination, just a flat python 3.9, 3.10, 3.11, etc 
 environment will suffice; `tox` should detect that and then build from there.
 
@@ -124,6 +122,7 @@ also in the python matrix in the workflow file.
 
 If you hit errors with `tox`, first try deleting the .tox folder.
 
+
 ### Troubleshooting
 
 The following tips can be used when facing problems to build or test the
@@ -137,9 +136,9 @@ package:
    `.eggs`, as well as the `*.egg-info` folders in the `src` folder or
    potentially in the root of your project.
 
-2. Sometimes [tox] misses out when new dependencies are added, especially to
+2. Sometimes `tox` misses out when new dependencies are added, especially to
    `setup.cfg` and `docs/requirements.txt`. If you find any problems with
-   missing dependencies when running a command with [tox], try to recreate the
+   missing dependencies when running a command with `tox`, try to recreate the
    `tox` environment using the `-r` flag. For example, instead of:
 
    ```
@@ -152,7 +151,7 @@ package:
    tox -r -e docs
    ```
 
-3. Make sure to have a reliable [tox] installation that uses the correct
+3. Make sure to have a reliable `tox` installation that uses the correct
    Python version (e.g., 3.7+). When in doubt you can run:
 
    ```
@@ -161,8 +160,8 @@ package:
    which tox
    ```
 
-   If you have trouble and are seeing weird errors upon running [tox], you can
-   also try to create a dedicated [virtual environment] with a [tox] binary
+   If you have trouble and are seeing weird errors upon running `tox`, you can
+   also try to create a dedicated [virtual environment] with a `tox` binary
    freshly installed. For example:
 
    ```
@@ -172,7 +171,7 @@ package:
    .venv/bin/tox -e all
    ```
 
-4. [Pytest can drop you] in an interactive session in the case an error occurs.
+4. Pytest can drop you in an interactive session in the case an error occurs.
    In order to do that you need to pass a `--pdb` option (for example by
    running `tox -- -k <NAME OF THE FALLING TEST> --pdb`).
    You can also setup breakpoints manually instead of using the `--pdb` option.

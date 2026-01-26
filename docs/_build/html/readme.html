@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>README &mdash; open_nipals 1.0.1 documentation</title>
+  <title>HOME &mdash; open_nipals 2.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=292eb321"></script>
+      <script src="_static/documentation_options.js?v=f5cff4aa"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -43,28 +43,21 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">README</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#nipals-pca-and-pls-package">NIPALS PCA and PLS package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#nipals-pca">Nipals PCA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#nipals-pls">Nipals PLS</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pypi">PyPI</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#git-repository">Git repository</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example usage</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HOME</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#open-nipals-pca-and-pls-package"><code class="docutils literal notranslate"><span class="pre">open_nipals</span></code> PCA and PLS package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-features-and-api-overview">Key Features and API Overview</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#preprocessing">Preprocessing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#model-fitting">Model fitting</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pca">PCA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pls">PLS</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#distances">Distances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model-fitting-and-transforming">Model fitting and transforming</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pls-prediction">PLS prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#distances">Distances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explainability">Explainability</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="open_nipals.html">Package documentation open_nipals</a></li>
@@ -86,7 +79,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">README</li>
+      <li class="breadcrumb-item active">HOME</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/readme.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,68 +89,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="readme">
-<h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
-<section id="nipals-pca-and-pls-package">
-<h2>NIPALS PCA and PLS package<a class="headerlink" href="#nipals-pca-and-pls-package" title="Link to this heading"></a></h2>
-<p>This package implements the nonlinear iterative partial least squares (NIPALS) algorithm for principal component analysis (PCA) and partial least squares (PLS) regression.</p>
-<section id="nipals-pca">
-<h3>Nipals PCA<a class="headerlink" href="#nipals-pca" title="Link to this heading"></a></h3>
-<p>Implements the NIPALS algorithm for principal components analysis in python.</p>
-<p>One of the most concise definitions can be found in this paper on page 7:
-Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
-Analytica Chimica Acta 1986, 185, 1–17.
-https://doi.org/10.1016/0003-2670(86)80028-9.</p>
-<p>For the transformation part also see:
-Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
-in PCA and PLS: Score calculations with incomplete observations.
-Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
+  <section id="home">
+<h1>HOME<a class="headerlink" href="#home" title="Link to this heading"></a></h1>
+<section id="open-nipals-pca-and-pls-package">
+<h2><code class="docutils literal notranslate"><span class="pre">open_nipals</span></code> PCA and PLS package<a class="headerlink" href="#open-nipals-pca-and-pls-package" title="Link to this heading"></a></h2>
+<p>This package implements the nonlinear iterative partial least squares (NIPALS) algorithm for principal component analysis (PCA) and partial least squares (PLS) regression in a <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> compatible fashion.
+In contrast to orthodox methods for PCA and PLS, the NIPALS algorithm is an iterative method, allowing free tuning of desired numerical performance and precision.
+Moreover, it naturally integrates with Nelson’s Single Component Projection method for missing data imputation.</p>
 </section>
-<section id="nipals-pls">
-<h3>Nipals PLS<a class="headerlink" href="#nipals-pls" title="Link to this heading"></a></h3>
-<p>Implements the NIPALS algorithm for partial least squares regression in python.</p>
-<p>Algorithm implemented from Chapter 6 of:
-Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
-Fault detection and diagnosis in industrial systems.
-Springer Science &amp; Business Media, 2000.</p>
-<p>Alternative algorithm derivation from:
-Geladi, P.; Kowalski, B. R.
-Partial Least-Squares Regression: A Tutorial.
-Analytica Chimica Acta 1986, 185, 1–17.
-https://doi.org/10.1016/0003-2670(86)80028-9.</p>
-<p>For the transformation part also see:
-Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F.
-Missing data methods in PCA and PLS: Score calculations
-with incomplete observations.
-Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h2>
+<p>Install the package with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">open-nipals</span></code>.</p>
+<p>Training a <code class="docutils literal notranslate"><span class="pre">NipalsPCA</span></code> model can look as simple as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">open_nipals.nipalsPCA</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipalsPCA</span>
+
+<span class="c1"># input data frame df</span>
+
+<span class="c1"># standard-scale data</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">scaled_data</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># train PCA model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">NipalsPCA</span><span class="p">()</span>
+<span class="n">transformed_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A minimal example of fitting a <code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code> model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">open_nipals.nipalsPLS</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipalsPLS</span>
+
+<span class="c1"># input data frames df_x, df_y</span>
+
+<span class="c1"># standard-scale data</span>
+<span class="n">scaler_x</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">scaler_y</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">scaled_x_data</span> <span class="o">=</span> <span class="n">scaler_x</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_x</span><span class="p">)</span>
+<span class="n">scaled_y_data</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_y</span><span class="p">)</span>
+
+<span class="c1"># train PLS model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">NipalsPLS</span><span class="p">()</span>
+<span class="n">transformed_x_data</span><span class="p">,</span> <span class="n">transformed_y_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">scaled_x_data</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scaled_y_data</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
-</section>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
-<p>The package can be installed via the python package index (PyPI) or from the cloned git repo.
-If you would like to only use the package without needing acccess to the code, the first version is recommended.
-If you would like to modify the code and/or contribute to the package, it is recommended to install via cloning the git repository.</p>
-<section id="pypi">
-<h3>PyPI<a class="headerlink" href="#pypi" title="Link to this heading"></a></h3>
-<p>You can install the package from PyPI with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">open-nipals</span></code>.</p>
-</section>
-<section id="git-repository">
-<h3>Git repository<a class="headerlink" href="#git-repository" title="Link to this heading"></a></h3>
-<ol class="arabic simple">
-<li><p>Clone git repository</p></li>
-<li><p>Open a command line</p></li>
-<li><p>Navigate to git repository</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p></li>
-</ol>
-<p>NOTE: if you plan on working on the package please see <a class="reference internal" href="#./CONTRIBUTING.md"><span class="xref myst">CONTRIBUTING.md</span></a> for installation and environment setup instructions</p>
-</section>
-</section>
-<section id="example-usage">
-<h2>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
+<section id="key-features-and-api-overview">
+<h2>Key Features and API Overview<a class="headerlink" href="#key-features-and-api-overview" title="Link to this heading"></a></h2>
 <section id="preprocessing">
 <h3>Preprocessing<a class="headerlink" href="#preprocessing" title="Link to this heading"></a></h3>
-<p>Both the <code class="docutils literal notranslate"><span class="pre">NipalsPCA</span></code> and <code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code> classes expect a numpy array as an input with rows as samples and columns as features. Additionally, these array columns should have zero mean for best performance; typically this is done with a sklearn <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> object.</p>
-<p>Note: If the input data is a <code class="docutils literal notranslate"><span class="pre">pandas</span></code> dataframe, you can train an <code class="docutils literal notranslate"><span class="pre">ArrangeData</span></code> object which will ensure all future datasets come to the appropriate shape and column order.</p>
+<p>Both the <code class="docutils literal notranslate"><span class="pre">NipalsPCA</span></code> and <code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code> classes expect a numpy array as an input with rows as samples and columns as features.
+Additionally, these array columns should have zero mean for best performance; typically this is done with a sklearn <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> object.
+Note that it is <em>highly</em> encouraged to mean-center the input data before training an <code class="docutils literal notranslate"><span class="pre">open_nipals</span></code> model on it.</p>
+<p>Note: If the input data is a <code class="docutils literal notranslate"><span class="pre">pandas</span></code> dataframe, you can fit and instantiate an <code class="docutils literal notranslate"><span class="pre">ArrangeData</span></code> object which will ensure all future datasets come to the appropriate shape and column order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">open_nipals.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrangeData</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
@@ -176,34 +159,31 @@ If you would like to modify the code and/or contribute to the package, it is rec
 </pre></div>
 </div>
 </section>
-<section id="model-fitting">
-<h3>Model fitting<a class="headerlink" href="#model-fitting" title="Link to this heading"></a></h3>
-<p>The number of components can be specified as an argument to the constructor, with the default <code class="docutils literal notranslate"><span class="pre">n_components=2</span></code>. After fitting, components can be added by the <code class="docutils literal notranslate"><span class="pre">set_components()</span></code> method without having to fit the entire model again from scratch.</p>
-<section id="pca">
-<h4>PCA<a class="headerlink" href="#pca" title="Link to this heading"></a></h4>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">open_nipals.nipalsPCA</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipalsPCA</span>
-
-<span class="c1"># data is the numpy data matrix generated in the preprocessing</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">NipalsPCA</span><span class="p">()</span>
-<span class="n">transformed_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<section id="model-fitting-and-transforming">
+<h3>Model fitting and transforming<a class="headerlink" href="#model-fitting-and-transforming" title="Link to this heading"></a></h3>
+<p>The number of components can be specified as an argument to the constructor, with the default <code class="docutils literal notranslate"><span class="pre">n_components=2</span></code>.
+After fitting, components can be added or removed by the <code class="docutils literal notranslate"><span class="pre">set_components()</span></code> method without having to fit the entire model again from scratch.
+Components that were once fitted but not needed any more are saved for possible later use.</p>
+<p>Functions of the <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> API implemented by <code class="docutils literal notranslate"><span class="pre">open_nipals</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fit()</span></code> for model fitting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transform()</span></code> for transforming data given a fitted model</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit_transform()</span></code> as a combination of <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="docutils literal notranslate"><span class="pre">transform()</span></code></p></li>
+<li><p>a pseudo-inverse transformation <code class="docutils literal notranslate"><span class="pre">inverse_transform()</span></code>, making the model predict how the data would look like</p></li>
+</ul>
+</section>
+<section id="pls-prediction">
+<h3>PLS prediction<a class="headerlink" href="#pls-prediction" title="Link to this heading"></a></h3>
+<p>One particular feature of PLS models is that they can predict dependent variables. To this end, run <code class="docutils literal notranslate"><span class="pre">model.predict()</span></code>, where either a matrix of X data <code class="docutils literal notranslate"><span class="pre">X</span></code>,
+or a matrix of X scores <code class="docutils literal notranslate"><span class="pre">scores_x</span></code> need to be given as arguments, e.g.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_y_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">data_x</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pls">
-<h4>PLS<a class="headerlink" href="#pls" title="Link to this heading"></a></h4>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">open_nipals.nipalsPLS</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipalsPLS</span>
-
-<span class="c1"># note the X/Y data blocks would need to have</span>
-<span class="c1"># separate arrangeData and StandardScaler objects</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">NipalsPLS</span><span class="p">()</span>
-<span class="n">transformed_x_data</span><span class="p">,</span> <span class="n">transformed_y_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">data_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">data_y</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
 </section>
 <section id="distances">
 <h3>Distances<a class="headerlink" href="#distances" title="Link to this heading"></a></h3>
-<p>In-model distances (IMD) and out-of-model distances (OOMD) can be calculated for both PCA and PLS models</p>
+<p>In-model distances (IMD) and out-of-model distances (OOMD) are metrics of model accuracy.
+They can be calculated for PCA and PLS models with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Must be scaled data</span>
 <span class="n">hotelling_t2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">calc_imd</span><span class="p">(</span><span class="n">input_array</span> <span class="o">=</span> <span class="n">data</span><span class="p">)</span>
 
@@ -212,14 +192,49 @@ If you would like to modify the code and/or contribute to the package, it is rec
 </pre></div>
 </div>
 </section>
-<section id="pls-prediction">
-<h3>PLS prediction<a class="headerlink" href="#pls-prediction" title="Link to this heading"></a></h3>
-<p>One particular feature of PLS models is that they can predict dependent variables. To this end, run <code class="docutils literal notranslate"><span class="pre">model.predict()</span></code>, where either a matrix of X data <code class="docutils literal notranslate"><span class="pre">input_x</span></code>,
-or a matrix of X scores <code class="docutils literal notranslate"><span class="pre">scores_x</span></code> need to be given as arguments, e.g.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predicted_y_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">data_x</span><span class="p">)</span>
-</pre></div>
-</div>
+<section id="explainability">
+<h3>Explainability<a class="headerlink" href="#explainability" title="Link to this heading"></a></h3>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>, the attribute <code class="docutils literal notranslate"><span class="pre">explained_variance_ratio_</span></code> measures the ratio of variance that each component of the model explains.
+<code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code> has two of those arrays, one for the X and one for the y data.
+Note that the NIPALS algorithm avoids calculating eigenvalues, therefore they are not accessible as the <code class="docutils literal notranslate"><span class="pre">explained_variance_</span></code> attribute.</p>
+<p>Additionally, the regression vector can be calculated for a <code class="docutils literal notranslate"><span class="pre">NipalsPLS</span></code> model with <code class="docutils literal notranslate"><span class="pre">get_reg_vector()</span></code>.
+The regression vector is a measure of how relevant each X feature is for the prediction of the y data.</p>
 </section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>PLS algorithm implemented from Chapter 6 of:</p>
+<blockquote>
+<div><p>Chiang, Leo H., Evan L. Russell, and Richard D. Braatz.
+Fault detection and diagnosis in industrial systems.
+Springer Science &amp; Business Media, 2000.</p>
+</div></blockquote>
+<p>One of the most concise definitions can be found in this paper on page 7:</p>
+<blockquote>
+<div><p>Geladi, P.; Kowalski, B. R. Partial Least-Squares Regression: A Tutorial.
+Analytica Chimica Acta 1986, 185, 1–17.
+https://doi.org/10.1016/0003-2670(86)80028-9.</p>
+</div></blockquote>
+<p>For the transformation part also see:</p>
+<blockquote>
+<div><p>Nelson, P. R. C.; Taylor, P. A.; MacGregor, J. F. Missing data methods
+in PCA and PLS: Score calculations with incomplete observations.
+Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.</p>
+</div></blockquote>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>If you would like to contribute to <code class="docutils literal notranslate"><span class="pre">open_nipals</span></code>, please check out our <a class="reference external" href="https://github.com/johnsonandjohnson/open_nipals">github repo</a>.
+For contribution guidelines please refer to the <code class="docutils literal notranslate"><span class="pre">CONTRIBUTING.md</span></code> in the repo, or the <a class="reference external" href="https://open-nipals.readthedocs.io/en/stable/contributing.html">contributor’s guide</a> in the online documentation.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">open_nipals</span></code> is distributed under the BSD 3-clause license.</p>
+</section>
+<section id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Link to this heading"></a></h2>
+<p>This documentation refers to <a class="reference external" href="https://github.com/johnsonandjohnson/open_nipals/tree/v2.0.1"><code class="docutils literal notranslate"><span class="pre">open_nipals</span> <span class="pre">v2.0.1</span></code></a>.
+An archived version of the code can be found under this DOI <a class="reference external" href="https://10.5281/zenodo.18375840">10.5281/zenodo.18375840</a>.</p>
 </section>
 </section>
 
