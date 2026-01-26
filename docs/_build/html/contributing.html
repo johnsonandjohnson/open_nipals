@@ -43,10 +43,11 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">HOME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="open_nipals.html">Package documentation open_nipals</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">How can I contribute?</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#code-contributions">Code Contributions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#reviewing-code-contributions">Reviewing Code contributions</a></li>
 </ul>
@@ -55,7 +56,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#create-an-environment">Create an environment</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Installation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#implement-your-changes">Implement your changes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
@@ -97,6 +98,16 @@
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
 <p>Welcome to the <code class="docutils literal notranslate"><span class="pre">open_nipals</span></code> contributor’s guide.</p>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h3>
+<p>If you would like to contribute to the code, please clone the github repository and install the package from it following these steps:</p>
+<ol class="arabic simple">
+<li><p>Clone git repository</p></li>
+<li><p>Open a command line</p></li>
+<li><p>Navigate to git repository</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.[testing]</span></code></p></li>
+</ol>
+</section>
 <section id="code-contributions">
 <h3>Code Contributions<a class="headerlink" href="#code-contributions" title="Link to this heading"></a></h3>
 <p>Code contributions should be made in a new feature branch. After a feature is completed please open a pull request and tag at least two people for review. In your request include:</p>
@@ -105,14 +116,14 @@
 <li><p>Background on why the feature is needed</p></li>
 <li><p>How to test the feature (e.g. example code)</p></li>
 </ul>
-<p>This will follow the <a class="reference external" href="https://semver.org/">semantic versioning scheme</a>. If the changes are not reflected in the version number, please use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span></code>. See <a class="reference external" href="https://pyscaffold.org/en/stable/faq.html#best-practices-and-common-errors-with-version-numbers">this page</a> for more information.</p>
+<p>This code follows the <a class="reference external" href="https://semver.org/">semantic versioning scheme</a>. If the changes are not reflected in the version number, please use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span></code>. See <a class="reference external" href="https://pyscaffold.org/en/stable/faq.html#best-practices-and-common-errors-with-version-numbers">this page</a> for more information.</p>
 <section id="reviewing-code-contributions">
 <h4>Reviewing Code contributions<a class="headerlink" href="#reviewing-code-contributions" title="Link to this heading"></a></h4>
 <p>As a reviewer please ensure the following is true:</p>
 <ul class="simple">
 <li><p>Tests are functional</p></li>
 <li><p>New Pull Request features are documented (i.e. docstrings and type hints)</p></li>
-<li><p>the code is formatted with <code class="docutils literal notranslate"><span class="pre">ruff</span></code> and a line length of 79 characters per <a class="reference external" href="https://peps.python.org/pep-0008/">PEP 8</a></p></li>
+<li><p>the code is formatted with <code class="docutils literal notranslate"><span class="pre">ruff</span></code> and a line length of 79 characters following <a class="reference external" href="https://peps.python.org/pep-0008/">PEP 8</a></p></li>
 </ul>
 </section>
 </section>
@@ -123,7 +134,7 @@
 This means that the docs are kept in the same repository as the project code, and
 that any documentation update is done in the same way was a code contribution.</p>
 <p>When working on documentation changes in your local machine, you can
-compile them using [tox] :</p>
+compile them using <code class="docutils literal notranslate"><span class="pre">tox</span></code> :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">docs</span>
 </pre></div>
 </div>
@@ -135,27 +146,20 @@ compile them using [tox] :</p>
 <section id="create-an-environment">
 <h4>Create an environment<a class="headerlink" href="#create-an-environment" title="Link to this heading"></a></h4>
 <p>Before you start coding, we recommend creating an isolated [virtual environment]
-to avoid any problems with your installed Python packages.
-This can easily be done via either [virtualenv]:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtualenv</span> <span class="o">&lt;</span><span class="n">PATH</span> <span class="n">TO</span> <span class="n">VENV</span><span class="o">&gt;</span>
-<span class="n">source</span> <span class="o">&lt;</span><span class="n">PATH</span> <span class="n">TO</span> <span class="n">VENV</span><span class="o">&gt;/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
-</pre></div>
-</div>
-<p>or [Miniconda]:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">open_nipals</span> <span class="n">python</span><span class="o">=</span><span class="mi">3</span> <span class="n">six</span> <span class="n">virtualenv</span> <span class="n">pytest</span> <span class="n">pytest</span><span class="o">-</span><span class="n">cov</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">open_nipals</span>
+to avoid any problems with your installed Python packages, e.g. with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>open_nipals<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.14
+conda<span class="w"> </span>activate<span class="w"> </span>open_nipals
 </pre></div>
 </div>
 </section>
 </section>
-<section id="installation">
-<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>Installation<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <ol class="arabic simple">
-<li><p>Ensure you have the <a class="reference external" href="https://git-scm.com/downloads">git client installed</a>.</p></li>
+<li><p>Ensure you have a git client installed.</p></li>
 <li><p>Clone the repository to your local computer.</p></li>
-<li><p>Install the open_nipals package from the local folder:</p></li>
+<li><p>Install the open_nipals package from the local folder <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[testing]</span></code></p></li>
 </ol>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[testing]</span></code></p>
 <section id="implement-your-changes">
 <h4>Implement your changes<a class="headerlink" href="#implement-your-changes" title="Link to this heading"></a></h4>
 <ol class="arabic">
@@ -179,8 +183,8 @@ functions, modules and classes, especially if they are part of public APIs.</p><
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tox</span>
 </pre></div>
 </div>
-<p>(after having installed [tox] with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tox</span></code> or <code class="docutils literal notranslate"><span class="pre">pipx</span></code>).</p>
-<p>You can also use [tox] to run several other pre-configured tasks in the
+<p>(after having installed <code class="docutils literal notranslate"><span class="pre">tox</span></code> with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tox</span></code> or <code class="docutils literal notranslate"><span class="pre">pipx</span></code>).</p>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">tox</span></code> to run several other pre-configured tasks in the
 repository. Try <code class="docutils literal notranslate"><span class="pre">tox</span> <span class="pre">-av</span></code> to see a list of the available checks.</p>
 </li>
 </ol>
@@ -191,7 +195,7 @@ repository. Try <code class="docutils literal notranslate"><span class="pre">tox
 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> will illuminate any issues with the code itself while <code class="docutils literal notranslate"><span class="pre">tox</span></code> will
 highlight dependency conflicts. It’s <em>much</em> more expensive to run.</p>
 <p>Prior to executing <code class="docutils literal notranslate"><span class="pre">tox</span></code> the first time, you will need to have all of the
-python environments specified in the <a class="reference internal" href="#tox.ini"><span class="xref myst">tox.ini</span></a> file loaded. No
+python environments specified in the <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> file loaded. No
 need to build each combination, just a flat python 3.9, 3.10, 3.11, etc
 environment will suffice; <code class="docutils literal notranslate"><span class="pre">tox</span></code> should detect that and then build from there.</p>
 <p>All PRs attempting to merge into the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch of the public repository
@@ -216,9 +220,9 @@ make sure to push all the tags.
 You can also try to remove all the egg files or the complete egg folder, i.e.,
 <code class="docutils literal notranslate"><span class="pre">.eggs</span></code>, as well as the <code class="docutils literal notranslate"><span class="pre">*.egg-info</span></code> folders in the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder or
 potentially in the root of your project.</p></li>
-<li><p>Sometimes [tox] misses out when new dependencies are added, especially to
+<li><p>Sometimes <code class="docutils literal notranslate"><span class="pre">tox</span></code> misses out when new dependencies are added, especially to
 <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> and <code class="docutils literal notranslate"><span class="pre">docs/requirements.txt</span></code>. If you find any problems with
-missing dependencies when running a command with [tox], try to recreate the
+missing dependencies when running a command with <code class="docutils literal notranslate"><span class="pre">tox</span></code>, try to recreate the
 <code class="docutils literal notranslate"><span class="pre">tox</span></code> environment using the <code class="docutils literal notranslate"><span class="pre">-r</span></code> flag. For example, instead of:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">docs</span>
 </pre></div>
@@ -228,15 +232,15 @@ missing dependencies when running a command with [tox], try to recreate the
 </pre></div>
 </div>
 </li>
-<li><p>Make sure to have a reliable [tox] installation that uses the correct
+<li><p>Make sure to have a reliable <code class="docutils literal notranslate"><span class="pre">tox</span></code> installation that uses the correct
 Python version (e.g., 3.7+). When in doubt you can run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tox</span> <span class="o">--</span><span class="n">version</span>
 <span class="c1"># OR</span>
 <span class="n">which</span> <span class="n">tox</span>
 </pre></div>
 </div>
-<p>If you have trouble and are seeing weird errors upon running [tox], you can
-also try to create a dedicated [virtual environment] with a [tox] binary
+<p>If you have trouble and are seeing weird errors upon running <code class="docutils literal notranslate"><span class="pre">tox</span></code>, you can
+also try to create a dedicated [virtual environment] with a <code class="docutils literal notranslate"><span class="pre">tox</span></code> binary
 freshly installed. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtualenv</span> <span class="o">.</span><span class="n">venv</span>
 <span class="n">source</span> <span class="o">.</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
@@ -245,7 +249,7 @@ freshly installed. For example:</p>
 </pre></div>
 </div>
 </li>
-<li><p>[Pytest can drop you] in an interactive session in the case an error occurs.
+<li><p>Pytest can drop you in an interactive session in the case an error occurs.
 In order to do that you need to pass a <code class="docutils literal notranslate"><span class="pre">--pdb</span></code> option (for example by
 running <code class="docutils literal notranslate"><span class="pre">tox</span> <span class="pre">--</span> <span class="pre">-k</span> <span class="pre">&lt;NAME</span> <span class="pre">OF</span> <span class="pre">THE</span> <span class="pre">FALLING</span> <span class="pre">TEST&gt;</span> <span class="pre">--pdb</span></code>).
 You can also setup breakpoints manually instead of using the <code class="docutils literal notranslate"><span class="pre">--pdb</span></code> option.</p></li>
