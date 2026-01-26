@@ -288,6 +288,7 @@ This makes it particularly valuable and superior in settings with small- to medi
 `open_nipals` is available open-source under the BSD 3-clause license from this github repository [@on_github]. We appreciate your feedback and contributions.
 The latest version is deployed to the Python Package Index [@on_pypi], the documentation was deployed to `readthedocs` [@on_readthedocs].
 A jupyter [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/imd_oomd_plot.ipynb) to reproduce \autoref{fig:imd_oomd}, another [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/regression_vector_visualization.ipynb) to generate \autoref{fig:reg_vect}, and a [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/numerical_complexity.ipynb) to run the benchmark and generate \autoref{fig:comb_comp} can be found in [@on_github] under the `paper` branch.
+A permanent DOI to the version of the code referred to by this paper can be found in [@on_zenodo].
 
 # Acknowledgements
 
