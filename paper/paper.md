@@ -293,7 +293,7 @@ However, the prediction accurracy of `open_nipals.NipalsPLS` clearly surpasses b
 
 ## Benchmarking conclusion
 
-Compared to other standard dimensionality reduction methods, `open_nipals.NipalsPCA` convinces with high accuracy, competitive memory consumption and runtime cost at low to medium `n_components`. `open_nipals.NipalsPLS` impresses with high prediction accurarcy.
+Compared to other standard dimensionality reduction methods, `open_nipals.NipalsPCA` convinces with high accuracy, competitive memory consumption and runtime cost at low to medium `n_components`. `open_nipals.NipalsPLS` impresses with high prediction accuracy.
 The algorithmic benchmark is amended by the possibility of freely trading numerical accuracy for numerical cost, and minimizing memory consumption through using `set_components()` to add new principal components to a pre-existing model.
 This makes it particularly valuable and superior in settings with small- to medium-sized and -dimensional datasets, with low number of latent variables.
 
