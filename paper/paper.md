@@ -214,7 +214,9 @@ A realistic synthetic dataset was created:
 5. Standardize the resulting data matrix with an `sklearn.StandardScaler`.
 6. Randomly mask 10% of the matrix entries with `np.nan`.
 
-This procedure was repeated for any combination of number of samples and features plotted in the sections below.
+This procedure was repeated for any combination of number of samples and features plotted in the sections below. 
+Five replicate data sets of each configuration of samples and features were generated. 
+The resulting performance measures were eventually averaged over these 5 runs to make the results less susceptible to random effects.
 
 ## Parameter scaling of numerical cost and accuracy
 
@@ -229,19 +231,20 @@ Therefore, this datapoint was omitted in the middle plot of the middle row in \a
 
 ## Computational complexity and accuracy vs. number of latent variables
 
-The leftmost column of \autoref{fig:comb_comp_pca} shows complexity and accuracy evaluated over a range of 2 - 16 latent variables.
+The left column of \autoref{fig:comb_comp_pca} shows complexity and accuracy evaluated over a range of 2 - 16 latent variables.
 
-The upper left plot of \autoref{fig:comb_comp_pca} shows the runtime cost of `open_nipals.NipalsPCA` increases with `n_components`, with ICA being by far the slowest option for `n_components>1`, and `sklearn.PCA` the fastest option at `n_components>2`.
-`sklearn.PCA` relies on an SVD of the centralized data matrix, therefore the numerical cost (runtime and memory) of inferring any number of latent variables is equal up to small fluctuations below 0.1s, which can be seen from the upper left and the middle left panel of \autoref{fig:comb_comp_pca}. 
+The upper left plot of \autoref{fig:comb_comp_pca} shows the runtime cost of `open_nipals.NipalsPCA` increases with `n_components`, with ICA being by far the slowest option for `n_components>2`, and `sklearn.PCA` the fastest option at `n_components>2`.
+`sklearn.PCA` relies on an SVD of the centralized data matrix, therefore the numerical cost (runtime and memory) of inferring any number of latent variables is equal up to small fluctuations, which can be seen from the two upper left panels of \autoref{fig:comb_comp_pca}. 
 The two different imputer + `sklearn.PCA` combinations require precisely the same runtime at varying `n_components`, indicating that the runtime is dominated by the SVD, not the imputation.
-Interestingly, fitting only additional components with `set_components()` has a minor effect on runtime.
+Interestingly, fitting only additional components with `set_components()` has almost no effect on runtime.
 
 The peak memory consumption vs. `n_components` is plotted in the left plot of the middle row of \autoref{fig:comb_comp_pca}. 
 The comparison of `sklearn.PCA` paired with either `MatrixImputer` or `SimpleImputer` immediately suggests that the memory consumption is dominated by the imputation method rather than the actual PCA model fitting.
-The memory consumption of `open_nipals.NipalsPCA` can be substantially reduced by adding components to an existing model with the `set_components` method, yielding the lowest memory consumption of all investigated methods at `n_components<16`.
+The memory consumption of `open_nipals.NipalsPCA` can be substantially reduced by adding components to an existing model with the `set_components` method.
 
-This comes with an accuracy of `open_nipals.NipalsPCA` similar to its competitors, only mildly surpassed by the `MatrixImputation` + `sklearn.PCA` scenario. 
-As expected, the choice of imputation method starts to matter at higher `n_components`, i.e. more predictive models.
+This comes with an accuracy of `open_nipals.NipalsPCA` similar to its alternatives, only mildly surpassed by the `MatrixImputation` + `sklearn.PCA` scenario. 
+As expected, the choice of imputation method starts to increasingly matter at higher `n_components`, i.e. more predictive models.
+Interestingly, comparing the mean squared reconstruction error for all data (third left panel of \autoref{fig:comb_comp_pca}) and only masked entries (bottom left panel of \autoref{fig:comb_comp_pca}), one immediately realizes that for `n_components>8` only `open_nipals.NipalsPCA` and matrix imputer + `sklearn.PCA` benefit from additional components fitted, while all others show similar or even worse reconstruction error at `n_components=16`.
 
 
 ## Computational complexity and accuracy vs. number of features
@@ -251,7 +254,7 @@ Since a new model has to be fit every time the dimensionality of the data space 
 
 The upper middle panel of \autoref{fig:comb_comp_pca} shows that `open_nipals.NipalsPCA`' model fitting has a similar runtime to FA/EM, surpassed ICA by about one order of magnitude. Its runtime in seconds vs. dimensionality curve is quite shallow (5e-2 - 3e-1), even compared to `sklearn.PCA` (5e-3 - 7e-2), which was faster than its competitors by 1-2 orders of magnitude throughout the investigated range of features.
 
-The memory consumption in MB vs. features is plotted in the middle row's middle plot of \autoref{fig:comb_comp_pca}. 
+The memory consumption in MB vs. features is plotted in the middle row's second plot of \autoref{fig:comb_comp_pca}. 
 It shows a memory usage by `open_nipals.NipalsPCA` similar to its competitors, performing well particularly at >= 100 features. 
 Memory usage at very small number of features (less than 100) seems to be dominated by overhead, of which `open_nipals.NipalsPCA` requires more than more orthodox algorithms like `sklearn.PCA` with univariate imputation. 
 However, as the dimensionality increases, the overhead becomes less relevant, leading to a shallow `open_nipals.NipalsPCA` memory consumption curve (2e-1 - 3.5), compared to 8e-2MB - 2MB for `sklearn.PCA` with univariate imputation. 
@@ -259,14 +262,14 @@ The matrix imputation technique proves once more to require the most memory thro
 
 The accuracy is evaluated against different number of features in the two lower middle panel of \autoref{fig:comb_comp_pca}.
 They prove `open_nipals.NipalsPCA` to be the similarly accurate as other techniques, with the slight exception of the matrix-imputed `sklearn.PCA` being very precise, especially for the masked values, at high computational cost.
-All methods lose accuracy as the number of dimensions increases.
+All methods lose overall reconstruction accuracy as the number of dimensions increases, while the missing data reconstruction error has a minimum at 100 features for all methods except matrix imputation + `sklearn.PCA`.
 
 ## Computational complexity and accuracy vs. number of samples
 
-The rightmost column of \autoref{fig:comb_comp_pca} displays computational complexity and accuracy over a broad range of dataset size (`n_samples` 50 - 10000).
+The right column of \autoref{fig:comb_comp_pca} displays computational complexity and accuracy over a broad range of dataset size (`n_samples` = 50 - 10000).
 
 The runtime requirement scaling with `n_samples` can be found in the upper right plot of \autoref{fig:comb_comp_pca}. 
-It shows similar fit time by `open_nipals.NipalsPCA`, comparable to its competitors FA/EM and ICA.
+It shows similar fit time by `open_nipals.NipalsPCA`, comparable to FA/EM and faster than ICA at all sample sizes but the largest.
 Both imputation methods combined with `sklearn.PCA` are more than one order of magnitude faster. 
 
 As can be seen from the panel in the second row of the right column of \autoref{fig:comb_comp_pca}, the peak memory consumption of `open_nipals.NipalsPCA` follows a similar scaling with `n_samples` (\autoref{fig:comb_comp_pca}) to its alternatives ICA and FA/EM.
@@ -274,16 +277,18 @@ The two `sklearn.PCA` scenarios form the edge cases, here.
 SVD-based PCA with univariate imputation consumes a bit less memory than ICA, FA/EM, and `open_nipals.NipalsPCA` at medium to large sample sizes, while SVD-based PCA with multivariate imputation consumes about one order of magnitude more memory than its competitors, although this gap closes with increasing sample size.
 
 The numerical accuracy as a function of `n_samples` in \autoref{fig:comb_comp_pca} (third row and bottom row) remains quite constant for both cases, with `open_nipals.NipalsPCA` being slightly more accurate than all of its competitors except matrix-imputed `sklearn.PCA`.
+The combination of matrix imputation + `sklearn.PCA` is again the most accurate option, followed by `open_nipals.PCA` with slightly better accuracy than the other options.
 
 ## PLS
 
 ![Computational complexity of `open_nipals.NipalsPLS` and alternatives. Figure shows runtime (upper row), peak memory consumption (second row), and mean squared prediction error (bottom row). Scaling of quantites evaluated with respect to `n_components` (left columns), dimensionality of the dataset (number of features, middle column), and number of samples (right column).\label{fig:comb_comp_pls}](./plots/combined_complexity_pls.png){ width=100% }
 
 We compare `open_nipals.NipalsPLS` against two alternatives: `sklearn.PLSRegression` combined with either a univariate or a matrix imputer.
-Synthetic data was prepared with a very similar procedure to the one elaborated above for PCA. A 1-dimensional y-array was created by drawing a random vector of weights and multiplying that with the (full) data vector, adding Gaussian noise with the same amplitude as for the x data.
+Synthetic data was prepared with a very similar procedure to the one elaborated above for PCA, also creating 5 replicates per data set to be averaged. 
+A 1-dimensional y-array was created by drawing a random vector of weights and multiplying that with the (full) data vector, adding Gaussian noise with the same amplitude as for the x data.
 As the reconstruction error was already displayed \autoref{fig:comb_comp_pca}, we focus on the prediction error measured by the mean squared error of the predicted y-variable, displayed in the bottom row of \autoref{fig:comb_comp_pls}.
 
-The results in \autoref{fig:comb_comp_pls} generally paint a similar picture to the PCA case: `open_nipals` performs similarly to its alternatives in walltime and memory consumption. 
+The results in \autoref{fig:comb_comp_pls} generally paint a similar picture to the PCA case: `open_nipals` performs similarly to its alternatives in walltime and memory consumption, although being closer to the cheaper option, respectively. 
 However, the prediction accurracy of `open_nipals.NipalsPLS` clearly surpasses both its alternatives, as shown in the bottom row of \autoref{fig:comb_comp_pls}.
 
 ## Benchmarking conclusion
