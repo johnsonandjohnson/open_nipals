@@ -6,7 +6,7 @@ tags:
   - machine learning
   - dimensional reduction
   - principal component analysis
-  - partial least square regression
+  - partial least squares regression
 authors:
   - name: Niels Schlusser
     orcid: 0000-0002-3534-2153
@@ -82,7 +82,7 @@ We decided to combine PCA and PLS functionality into one package, such that they
 It is *strongly* encouraged to mean-center the input data for both PCA and PLS, and scale their variance to unity, e.g. with `sklearn`'s `StandardScaler`. 
 However, the informed user should still have the chance to also apply `open_nipals` to non-standardized data. 
 Therefore, we did not make standardization a part of `open_nipals`, unlike `sklearn.PCA`, which automatically mean-centers input data when not already done.
-Moreover, the `ArrangeData` class of `open_nipals` ensures correct ordering of the input columns, as well as proper formatting.
+Moreover, the `ArrangeData` class of `open_nipals` ensures correct ordering of the input columns.
 A code example for preprocessing could therefore look like:
 ```python
 from open_nipals.utils import ArrangeData
@@ -182,7 +182,7 @@ This will print milestone markers during the fitting procedure.
 
 In order to assess `open_nipals`' performance, we compared it to other common dimensionality reduction techniques with missing value imputation. 
 
-Since the PCA and PLS implementations of `open_nipals` are very similar, and there are more alternative implementations of PCA than of PLS, we decided to focus on PCA for most the benchmarking discussion. The benchmark of the `open_nipals.NipalsPLS` module is briefly presented at the end of the this section.
+Since the PCA and PLS implementations of `open_nipals` are very similar, and there are more alternative implementations of PCA than of PLS, we decided to focus on PCA for most of the benchmarking discussion. The benchmark of the `open_nipals.NipalsPLS` module is briefly presented at the end of the this section.
 
 Our benchmark measures the respective runtime, peak memory consumption, and data reconstruction accuracy of the execution of the PCA model's `fit()` routine.
 Runtime and peak memory allocation are measured by the Python-native `time` and `tracemalloc` packages. 
@@ -193,7 +193,7 @@ The tested dimensionality reduction and imputation techniques are:
 1. `open_nipals.NipalsPCA` with its native Nelson's Single Component Projection.
 2. Adding components to an existing `open_nipals.NipalsPCA` model, leveraging the `set_components()` method. This is only evaluated for adding components given a fixed dataset.
 3. `sklearn.PCA` with `sklearn.SimpleImputer` for univariate imputation of sparse input matrices.
-4. `sklearn.PCA` with `sklearn.MatrixImputer` for multivariate imputation of sparse input matrices.
+4. `sklearn.PCA` with `sklearn.MatrixImputer` for multivariate imputation of sparse input matrices.([^1]: The import module is `from sklearn.impute import IterativeImputer`. This is an experimental module, therefore `from sklearn.experimental import enable_iterative_imputer` is required, too. We refer to it as `sklearn.MatrixImputer` in the following, since we find this name slightly more instructive.)
 5. `sklearn.FactorAnalysis` Expectation Maximization (FA/EM) procedure, combined with `sklearn.SimpleImputer`.
 6. `sklearn.FastICA` for Independent Component Analysis (ICA), combined with a `sklearn.SimpleImputer`.
 
@@ -202,6 +202,7 @@ As mentioned before, one of the upsides of `open_nipals.NipalsPCA` compared to t
 We found these settings place `open_nipals.NipalsPCA` in the middle of the pack with regards to numerical cost, justifying the setting *a posteriori*.
 Wherever necessary, we passed a globally initialized `numpy` random number generator into the model constructors or `fit` methods. 
 Bear in mind that the NIPALS algorithm is a deterministic algorithm and therefore does not require any random state initialization.
+
 
 ## Dataset creation
 
@@ -226,7 +227,7 @@ The resulting performance measures were eventually averaged over these 5 runs to
 The data was varied around a center configuration of `n_components=4`, 100 samples, and 40 features. 
 `FastICA` raised convergence warnings for `n_samples=100, n_features=40, n_components=4,8,16`, `n_samples=1000, n_features=40, n_components=4`, `n_samples=100, n_features=20, n_components=4`, `n_samples=100, n_features=100, n_components=4`.
 We found the accuracy of the fitted ICA models to be comparable to the others, therefore decided to still use these datapoints. 
-Excessive memory consumption of the experimental `MatrixImputer` made the computation of the point at `n_features=4`, 100 samples, and 1000 features numerically impossible. 
+Excessive memory consumption of the experimental `MatrixImputer` made the computation of the point at `n_components=4`, 100 samples, and 1000 features numerically impossible. 
 Therefore, this datapoint was omitted in the middle plot of the middle row in \autoref{fig:comb_comp_pca}.
 
 ## Computational complexity and accuracy vs. number of latent variables
@@ -242,8 +243,8 @@ The peak memory consumption vs. `n_components` is plotted in the left plot of th
 The comparison of `sklearn.PCA` paired with either `MatrixImputer` or `SimpleImputer` immediately suggests that the memory consumption is dominated by the imputation method rather than the actual PCA model fitting.
 The memory consumption of `open_nipals.NipalsPCA` can be substantially reduced by adding components to an existing model with the `set_components` method.
 
-This comes with an accuracy of `open_nipals.NipalsPCA` similar to its alternatives, only mildly surpassed by the `MatrixImputation` + `sklearn.PCA` scenario. 
-As expected, the choice of imputation method starts to increasingly matter at higher `n_components`, i.e. more predictive models.
+This comes with an accuracy of `open_nipals.NipalsPCA` similar to its alternatives, only mildly surpassed by the `MatrixImputer` + `sklearn.PCA` scenario. 
+As expected, the choice of imputation method starts to increasingly matter at higher `n_components`.
 Interestingly, comparing the mean squared reconstruction error for all data (third left panel of \autoref{fig:comb_comp_pca}) and only masked entries (bottom left panel of \autoref{fig:comb_comp_pca}), one immediately realizes that for `n_components>8` only `open_nipals.NipalsPCA` and matrix imputer + `sklearn.PCA` benefit from additional components fitted, while all others show similar or even worse reconstruction error at `n_components=16`.
 
 
@@ -252,16 +253,16 @@ Interestingly, comparing the mean squared reconstruction error for all data (thi
 The middle column of \autoref{fig:comb_comp_pca} shows the scaling of computational complexity and accuracy with the dimensionality of the data space (`n_features` 20 - 1000).
 Since a new model has to be fit every time the dimensionality of the data space changes, there is no usecase for `set_components()`, which was consequently not displayed in the plots.
 
-The upper middle panel of \autoref{fig:comb_comp_pca} shows that `open_nipals.NipalsPCA`' model fitting has a similar runtime to FA/EM, surpassed ICA by about one order of magnitude. Its runtime in seconds vs. dimensionality curve is quite shallow (5e-2 - 3e-1), even compared to `sklearn.PCA` (5e-3 - 7e-2), which was faster than its competitors by 1-2 orders of magnitude throughout the investigated range of features.
+The upper middle panel of \autoref{fig:comb_comp_pca} shows that `open_nipals.NipalsPCA`' model fitting has a similar runtime to FA/EM, surpassing ICA by about one order of magnitude. Its runtime in seconds vs. dimensionality curve is quite shallow (5e-2 - 3e-1), even compared to `sklearn.PCA` (5e-3 - 7e-2), which was faster than its competitors by 1-2 orders of magnitude throughout the investigated range of features.
 
 The memory consumption in MB vs. features is plotted in the middle row's second plot of \autoref{fig:comb_comp_pca}. 
-It shows a memory usage by `open_nipals.NipalsPCA` similar to its competitors, performing well particularly at >= 100 features. 
-Memory usage at very small number of features (less than 100) seems to be dominated by overhead, of which `open_nipals.NipalsPCA` requires more than more orthodox algorithms like `sklearn.PCA` with univariate imputation. 
-However, as the dimensionality increases, the overhead becomes less relevant, leading to a shallow `open_nipals.NipalsPCA` memory consumption curve (2e-1 - 3.5), compared to 8e-2MB - 2MB for `sklearn.PCA` with univariate imputation. 
+It shows a memory usage by `open_nipals.NipalsPCA` similar to its competitors, performing well particularly at 100 or more features. 
+Memory usage at very small number of features (less than 100) seems to be dominated by overhead, of which `open_nipals.NipalsPCA` requires more than traditional algorithms like `sklearn.PCA` with univariate imputation. 
+However, as the dimensionality increases, the overhead becomes less relevant, leading to a shallow `open_nipals.NipalsPCA` memory consumption curve (2e-1 - 3.5 MB), compared to 8e-2 - 2 MB for `sklearn.PCA` with univariate imputation. 
 The matrix imputation technique proves once more to require the most memory throughout the entire investigated range of dataspace dimensions by 1 - 2 orders of magnitude, leading to the data point at 1000 features being impossible to collect.
 
-The accuracy is evaluated against different number of features in the two lower middle panel of \autoref{fig:comb_comp_pca}.
-They prove `open_nipals.NipalsPCA` to be the similarly accurate as other techniques, with the slight exception of the matrix-imputed `sklearn.PCA` being very precise, especially for the masked values, at high computational cost.
+The accuracy is evaluated against different number of features in the two lower middle panels of \autoref{fig:comb_comp_pca}.
+They prove `open_nipals.NipalsPCA` to be similarly accurate as other techniques, with the slight exception of the matrix-imputed `sklearn.PCA` being very precise, especially for the masked values, at high computational cost.
 All methods lose overall reconstruction accuracy as the number of dimensions increases, while the missing data reconstruction error has a minimum at 100 features for all methods except matrix imputation + `sklearn.PCA`.
 
 ## Computational complexity and accuracy vs. number of samples
@@ -269,15 +270,15 @@ All methods lose overall reconstruction accuracy as the number of dimensions inc
 The right column of \autoref{fig:comb_comp_pca} displays computational complexity and accuracy over a broad range of dataset size (`n_samples` = 50 - 10000).
 
 The runtime requirement scaling with `n_samples` can be found in the upper right plot of \autoref{fig:comb_comp_pca}. 
-It shows similar fit time by `open_nipals.NipalsPCA`, comparable to FA/EM and faster than ICA at all sample sizes but the largest.
+It shows similar fit time as `open_nipals.NipalsPCA`, comparable to FA/EM and faster than ICA at all sample sizes except at the largest.
 Both imputation methods combined with `sklearn.PCA` are more than one order of magnitude faster. 
 
-As can be seen from the panel in the second row of the right column of \autoref{fig:comb_comp_pca}, the peak memory consumption of `open_nipals.NipalsPCA` follows a similar scaling with `n_samples` (\autoref{fig:comb_comp_pca}) to its alternatives ICA and FA/EM.
+As can be seen from the panel in the second row of the right column of \autoref{fig:comb_comp_pca}, the peak memory consumption of `open_nipals.NipalsPCA` follows a similar scaling with `n_samples` to its alternatives ICA and FA/EM.
 The two `sklearn.PCA` scenarios form the edge cases, here. 
 SVD-based PCA with univariate imputation consumes a bit less memory than ICA, FA/EM, and `open_nipals.NipalsPCA` at medium to large sample sizes, while SVD-based PCA with multivariate imputation consumes about one order of magnitude more memory than its competitors, although this gap closes with increasing sample size.
 
 The numerical accuracy as a function of `n_samples` in \autoref{fig:comb_comp_pca} (third row and bottom row) remains quite constant for both cases, with `open_nipals.NipalsPCA` being slightly more accurate than all of its competitors except matrix-imputed `sklearn.PCA`.
-The combination of matrix imputation + `sklearn.PCA` is again the most accurate option, followed by `open_nipals.PCA` with slightly better accuracy than the other options.
+The combination of matrix imputation + `sklearn.PCA` is again the most accurate option, followed by `open_nipals.NipalsPCA` with slightly better accuracy than the other options.
 
 ## PLS
 
@@ -286,29 +287,30 @@ The combination of matrix imputation + `sklearn.PCA` is again the most accurate 
 We compare `open_nipals.NipalsPLS` against two alternatives: `sklearn.PLSRegression` combined with either a univariate or a matrix imputer.
 Synthetic data was prepared with a very similar procedure to the one elaborated above for PCA, also creating 5 replicates per data set to be averaged. 
 A 1-dimensional y-array was created by drawing a random vector of weights and multiplying that with the (full) data vector, adding Gaussian noise with the same amplitude as for the x data.
-As the reconstruction error was already displayed \autoref{fig:comb_comp_pca}, we focus on the prediction error measured by the mean squared error of the predicted y-variable, displayed in the bottom row of \autoref{fig:comb_comp_pls}.
+As the reconstruction error was already displayed in \autoref{fig:comb_comp_pca}, we focus on the prediction error measured by the mean squared error of the predicted y-variable, displayed in the bottom row of \autoref{fig:comb_comp_pls}.
 
-The results in \autoref{fig:comb_comp_pls} generally paint a similar picture to the PCA case: `open_nipals` performs similarly to its alternatives in walltime and memory consumption, although being closer to the cheaper option, respectively. 
-However, the prediction accurracy of `open_nipals.NipalsPLS` clearly surpasses both its alternatives, as shown in the bottom row of \autoref{fig:comb_comp_pls}.
+The results in \autoref{fig:comb_comp_pls} generally paint a similar picture to the PCA case: `open_nipals` performs similarly to its alternatives in wall-clock time and memory consumption, although being closer to the cheaper option, respectively. 
+However, the prediction accuracy of `open_nipals.NipalsPLS` clearly surpasses both its alternatives, as shown in the bottom row of \autoref{fig:comb_comp_pls}.
 
 ## Benchmarking conclusion
 
-Compared to other standard dimensionality reduction methods, `open_nipals.NipalsPCA` convinces with high accuracy, competitive memory consumption and runtime cost at low to medium `n_components`. `open_nipals.NipalsPLS` impresses with high prediction accuracy.
-The algorithmic benchmark is amended by the possibility of freely trading numerical accuracy for numerical cost, and minimizing memory consumption through using `set_components()` to add new principal components to a pre-existing model.
-This makes it particularly valuable and superior in settings with small- to medium-sized and -dimensional datasets, with low number of latent variables.
+`open_nipals` fills a practical gap for Python users in chemometrics and batch-process analytics by providing sklearn-style NIPALS PCA and PLS estimators with integrated missing-data handling and domain-relevant diagnostics. 
+Benchmarks suggest that the implementation is competitive in runtime and memory use and can provide strong accuracy in low-to-moderate latent-dimensional settings, particularly when missing data are present.
+The algorithmic benchmark is complemented by the possibility of trading numerical accuracy for numerical cost, and lowering memory consumption through using `set_components()` to add new latent variables to a pre-existing model.
+
 
 # Availability
 
-`open_nipals` is available open-source under the BSD 3-clause license from this github repository [@on_github]. We appreciate your feedback and contributions.
-The latest version is deployed to the Python Package Index [@on_pypi], the documentation was deployed to `readthedocs` [@on_readthedocs].
-A jupyter [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/imd_oomd_plot.ipynb) to reproduce \autoref{fig:imd_oomd}, another [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/regression_vector_visualization.ipynb) to generate \autoref{fig:reg_vect}, and a [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/numerical_complexity.ipynb) to run the benchmark and generate \autoref{fig:comb_comp_pca} can be found in [@on_github] under the `paper` branch.
+`open_nipals` is available open-source under the BSD 3-clause license from this GitHub repository [@on_github]. We appreciate your feedback and contributions.
+The latest version is deployed to the Python Package Index [@on_pypi], the documentation is deployed to `readthedocs` [@on_readthedocs].
+A Jupyter [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/imd_oomd_plot.ipynb) to reproduce \autoref{fig:imd_oomd}, another [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/regression_vector_visualization.ipynb) to generate \autoref{fig:reg_vect}, and a [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/numerical_complexity.ipynb) to run the benchmark and generate \autoref{fig:comb_comp_pca} can be found in [@on_github] under the `paper` branch.
 A permanent DOI to the version of the code referred to by this paper can be found in [@on_zenodo].
 
 # Acknowledgements
 
 We acknowledge support by Johnson & Johnson Innovative Medicine. 
 In particular, we would like to express our gratitude to Samuel Tung and Tyler Roussos 
-of the Open Source Working Group (OSWG) within J&J, who helped driving the publication process of `open_nipals`.
+of the Open Source Working Group (OSWG) within J&J, who helped drive the publication process of `open_nipals`.
 Moreover, we acknowledge Calvin Ristad's contributions to v2.0 of the `open_nipals` code.
 
 # References
