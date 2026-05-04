@@ -132,6 +132,10 @@ For the transformation part also see:
 > in PCA and PLS: Score calculations with incomplete observations.
 > Chemometrics and Intelligent Laboratory Systems 1996, 35(1), 45-65.
 
+# Documentation
+
+An online version of the documentation is hosted at [ReadTheDocs](https://open-nipals.readthedocs.io/en/latest/).
+
 
 # Contributing
 
@@ -144,4 +148,4 @@ For contribution guidelines please refer to the `CONTRIBUTING.md` in the repo, o
 
 # Citation
 This documentation refers to [`open_nipals v2.0.1`](https://github.com/johnsonandjohnson/open_nipals/tree/v2.0.1). 
-An archived version of the code can be found under this DOI [10.5281/zenodo.18375840](https://10.5281/zenodo.18375840).
+An archived version of the code can be found under this DOI [10.5281/zenodo.18375840](https://doi.org/10.5281/zenodo.18375840).
