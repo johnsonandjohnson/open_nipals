@@ -49,7 +49,7 @@ class NipalsPCA(BaseEstimator, TransformerMixin):
         Whether or not the original data is mean-centered.
     fitted_components : int
         The number of current LVs in the model (0 if not fitted yet.)
-    explained_variance_ratio\_ : np.ndarray
+    explained_variance_ratio_ : np.ndarray
         The explained variance ratios per fitted component.
 
     Methods:
