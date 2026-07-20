@@ -39,7 +39,7 @@ The NIPALS algorithm represents an alternative to the common Singular Value Deco
 # Statement of Need
 
 Python has emerged as a popular and comparatively simple programming environment for the development of machine learning and data science applications.
-Packages like `numpy` for vector operations [@Harris2020], `pandas` for the handling of tabular data [@pandas2020], and `scikit-learn` (abbreviated `sklearn` in the following) for orthodox machine learning techniques like Random Forests, Support Vector Machines (SVM), and Principal Component Analyses (PCA) [@Pedregosa2011] promote Python's success in extracting patterns from big and complex data sets.
+Packages like `NumPy` for vector operations [@Harris2020], `pandas` for the handling of tabular data [@pandas2020], and `scikit-learn` (abbreviated `sklearn` in the following) for common machine learning techniques like random forests, support vector machines (SVM), and principal component analyses [@Pedregosa2011] promote Python's success in extracting patterns from big and complex data sets.
 However, `sklearn` relies on Singular Value Decomposition (SVD) for its PCA and PLS classes, with negative effects on performance for applications like batch manufacturing and chemometrics, where missing data is common [@Nelson1996].
 PCA and PLS models require unit-scaled and mean-centered input data, a feature that is nicely implemented in `sklearn`'s `StandardScaler` class.  
 To this end, we felt the need to complement `sklearn` with an implementation of the NIPALS algorithm for PCA and PLS. 
@@ -77,7 +77,7 @@ In principle, its functionality can be split into three parts:
 
 We decided to combine PCA and PLS functionality into one package, such that they can share common utility functions, e.g. -- but not limited to -- the `ArrangeData` class and matrix multiplication with missing values.
 
-## Data Preprocessing, and Utility Functions
+## Data Preprocessing and Utility Functions
 
 It is *strongly* encouraged to mean-center the input data for both PCA and PLS, and scale their variance to unity, e.g. with `sklearn`'s `StandardScaler`. 
 However, the informed user should still have the chance to also apply `open_nipals` to non-standardized data. 
@@ -102,7 +102,7 @@ data = scaler.fit_transform(arrdat.fit_transform(df))
 
 ## PCA
 
-Principal Component Analyses with `open_nipals` utilize a `NipalsPCA` transformer object, that can be fitted to and transform input data (and both at once), e.g. with:
+Principal Component Analysis in `open_nipals` uses a `NipalsPCA` transformer object that can be fitted to input data and used to transform it (and both at once), e.g. with:
 ```python
 from open_nipals.nipalsPCA import NipalsPCA
 
@@ -124,7 +124,7 @@ The following functions and attributes of the `sklearn` API are implemented by `
   
 Please note that the NIPALS algorithm does not compute eigenvalues of the covariance matrix; therefore computing them specifically for `explained_variance_` seemed unnatural. Thus, this attribute was not implemented.
 
-The distance of a given data point from the average of the training data within the PCA model (in-model distance, IMD) can be calculated with `calc_imd()`, where $\mathrm{Hotelling's\, T^2}$ [@Hotelling1931] is implemented and could be extended to other IMD metrics (e.g. Mahalanobis distance). 
+The distance of a given data point from the average of the training data within the PCA model (in-model distance, IMD) can be calculated with `calc_imd()`, where Hotelling's $\mathrm{T^2}$ [@Hotelling1931] is implemented and could be extended to other IMD metrics (e.g. Mahalanobis distance). 
 Conversely, the out-of-model distance (OOMD, calculated by `calc_oomd()`) gives a measure of the distance to the model hyperplane. 
 This is available as two metrics, `DModX` and `QRes` [@Eriksson1999]. 
 
@@ -158,7 +158,7 @@ The following functions and attributes of the `sklearn` API are implemented by `
 
 As for `NipalsPCA`, `NipalsPLS` does not implement `explained_variance_` since the eigenvalues are not accessible as a byproduct of the NIPALS PLS algorithm.
 
-Beyond standard `sklearn` functionality, `NipalsPLS` implements `calc_oomd()` for the out-of-model distance with either `QRes` or `DModX` as implemented metrics, `calc_imd()` for the in-model distance, using the $\mathrm{Hotelling's\, T^2}$ metric. 
+Beyond standard `sklearn` functionality, `NipalsPLS` implements `calc_oomd()` for the out-of-model distance with either `QRes` or `DModX` as implemented metrics, `calc_imd()` for the in-model distance, using the Hotelling's $\mathrm{T^2}$ metric. 
 Summary statistics of PLS models can be displayed in similar plots to \autoref{fig:imd_oomd}.
 
 `NipalsPLS` primarily differs from `NipalsPCA` by the inclusion of a `predict()` method to predict a y-matrix from an x-matrix with a previously fitted model, and the calculation of the regression vector with `get_reg_vector()`.
@@ -168,9 +168,9 @@ The latter serves as a measure for what input features the model considers predi
 
 ## Debugging
 
-If the maximum iteration counter is hit during the fitting procedure of new components of an `open_nipals` PCA or PLS model, a `max_iter Reached on LV {ind_LV}` warning is raised.
+If the maximum iteration counter is hit during the fitting procedure of new components of an `open_nipals` PCA or PLS model, a `max_iter reached on LV {ind_LV}` warning is raised.
 This indicates that the desired numerical tolerance for this component could not be achieved during the fit procedure.
-Try to increase `max_iter`, or decrease `tol_criteria` if less numerical precision is still acceptable in your use case.
+Try to increase `max_iter`, or increase `tol_criteria` if less numerical precision is still acceptable in your use case.
 
 Default values for both `NipalsPCA` and `NipalsPLS` are `max_iter = 10000` and `tol_criteria = 1e-6`. 
 These defaults manifest a slightly higher emphasis on numerical accuracy than performance.
@@ -194,14 +194,16 @@ The tested dimensionality reduction and imputation techniques are:
 1. `open_nipals.NipalsPCA` with its native Nelson's Single Component Projection.
 2. Adding components to an existing `open_nipals.NipalsPCA` model, leveraging the `set_components()` method. This is only evaluated for adding components given a fixed dataset.
 3. `sklearn.PCA` with `sklearn.SimpleImputer` for univariate imputation of sparse input matrices.
-4. `sklearn.PCA` with `sklearn.MatrixImputer` for multivariate imputation of sparse input matrices.([^1]: The import module is `from sklearn.impute import IterativeImputer`. This is an experimental module; therefore `from sklearn.experimental import enable_iterative_imputer` is required, too. We refer to it as `sklearn.MatrixImputer` in the following, since we find this name slightly more instructive.)
+4. `sklearn.PCA` with `sklearn.MatrixImputer` for multivariate imputation of sparse input matrices.[^1]
 5. `sklearn.FactorAnalysis` Expectation Maximization (FA/EM) procedure, combined with `sklearn.SimpleImputer`.
 6. `sklearn.FastICA` for Independent Component Analysis (ICA), combined with a `sklearn.SimpleImputer`.
+
+[^1]: The import module is `from sklearn.impute import IterativeImputer`. This is an experimental module; therefore `from sklearn.experimental import enable_iterative_imputer` is required, too. We refer to it as `sklearn.MatrixImputer` in the following, since we find this name slightly more instructive.
 
 Fit tolerances were set to `1e-4` for all methods, a maximum number of iterations was set to 1000 where applicable.
 As mentioned before, one of the upsides of `open_nipals.NipalsPCA` compared to the SVD-based `sklearn.PCA` implementation is that numerical cost and accuracy can be traded off by setting tolerance criteria. 
 We found these settings place `open_nipals.NipalsPCA` in the middle of the pack with regard to numerical cost, justifying the setting *a posteriori*.
-Wherever necessary, we passed a globally initialized `numpy` random number generator into the model constructors or `fit` methods. 
+Wherever necessary, we passed a globally initialized `NumPy` random number generator into the model constructors or `fit` methods. 
 Bear in mind that the NIPALS algorithm is a deterministic algorithm and therefore does not require any random state initialization.
 
 
@@ -304,7 +306,7 @@ The algorithmic benchmark is complemented by the possibility of trading numerica
 # Availability
 
 `open_nipals` is available open-source under the BSD 3-clause license from this GitHub repository [@on_github]. We appreciate your feedback and contributions.
-The latest version is deployed to the Python Package Index [@on_pypi], the documentation is deployed to `readthedocs` [@on_readthedocs].
+The latest version is deployed to the Python Package Index [@on_pypi], the documentation is deployed to `Read The Docs` [@on_readthedocs].
 A Jupyter [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/imd_oomd_plot.ipynb) to reproduce \autoref{fig:imd_oomd}, another [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/regression_vector_visualization.ipynb) to generate \autoref{fig:reg_vect}, and a [notebook](https://github.com/johnsonandjohnson/open_nipals/blob/paper/paper/notebooks/numerical_complexity.ipynb) to run the benchmark and generate \autoref{fig:comb_comp_pca} can be found in [@on_github] under the `paper` branch.
 A permanent DOI to the version of the code referred to by this paper can be found in [@on_zenodo].
 
