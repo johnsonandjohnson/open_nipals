@@ -1,0 +1,40 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Schlusser
+  given-names: Niels
+  orcid: "https://orcid.org/0000-0002-3534-2153"
+- family-names: Wall
+  given-names: Ryan M.
+  orcid: "https://orcid.org/0000-0003-2051-5899"
+- family-names: Ochsenbein
+  given-names: David R.
+  orcid: "https://orcid.org/0000-0001-8066-9561"
+doi: 10.5281/zenodo.20560917
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Schlusser
+    given-names: Niels
+    orcid: "https://orcid.org/0000-0002-3534-2153"
+  - family-names: Wall
+    given-names: Ryan M.
+    orcid: "https://orcid.org/0000-0003-2051-5899"
+  - family-names: Ochsenbein
+    given-names: David R.
+    orcid: "https://orcid.org/0000-0001-8066-9561"
+  date-published: 2026-07-22
+  doi: 10.21105/joss.08598
+  issn: 2475-9066
+  issue: 123
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 8598
+  title: "open_nipals: An sklearn-compatible Python package for NIPALS
+    dimensionality reduction"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.08598"
+  volume: 11
+title: "open_nipals: An sklearn-compatible Python package for NIPALS
+  dimensionality reduction"
