@@ -462,27 +462,84 @@ def test_oomd(get_data, request):
 
 
 def _run_set_component_test(test_data):
-    """Helper function to run set_component tests"""
+    """Helper function to run set_component tests
+
+    A model fitted directly with num_lvs + 2 components and one fitted with
+    num_lvs + 1, shrunk to 1 and grown to num_lvs + 2 must agree with each
+    other, and with the external ground truth for the first num_lvs
+    components.
+    """
     model = test_data["model"][0]
     scaler_x = test_data["model"][1]
     scaler_y = test_data["model"][2]
-    X = test_data["X"]
-    Y = test_data["Y"]
+    data_x = test_data["X"]
+    data_y = test_data["Y"]
     name = test_data["name"]
-    T = test_data["T"]
-    P = test_data["P"]
+    true_scores = test_data["T"]
+    true_loadings = test_data["P"]
     imd = test_data["imd"]
     oomd = test_data["oomd"]
 
-    transformed_data_x = scaler_x.transform(X)
-    transformed_data_y = scaler_y.transform(Y)
-
-    model_low = NipalsPLS(n_components=1)
-    model_low.fit(transformed_data_x, transformed_data_y)
-
-    # Update to new amount of components
+    transformed_data_x = scaler_x.transform(data_x)
+    transformed_data_y = scaler_y.transform(data_y)
     num_lvs = model.n_components
-    model_low.set_components(num_lvs)
+
+    model_direct = NipalsPLS(n_components=num_lvs + 2)
+    model_direct.fit(transformed_data_x, transformed_data_y)
+
+    model_regrown = NipalsPLS(n_components=num_lvs + 1)
+    model_regrown.fit(transformed_data_x, transformed_data_y)
+    model_regrown.set_components(1)
+    model_regrown.set_components(num_lvs + 2)
+
+    # The two models agree on every component; scores to the accuracy of
+    # test_score_method_equivalence
+    test_val = rmse(model_direct.fit_scores_x, model_regrown.fit_scores_x)
+    lin_val = nan_conc_coeff(
+        model_direct.fit_scores_x, model_regrown.fit_scores_x
+    )
+    assert test_val < 1e-9, f"Regrown scores rmse = {test_val}"
+    assert lin_val > 1 - 1e-6, f"Regrown scores linConc = {lin_val}"
+
+    for attribute in (
+        "loadings_x",
+        "weights_x",
+        "loadings_y",
+        "regression_matrix",
+    ):
+        max_diff = np.max(
+            np.abs(
+                getattr(model_direct, attribute)
+                - getattr(model_regrown, attribute)
+            )
+        )
+        assert max_diff < 1e-9, f"Regrown {attribute} diff = {max_diff}"
+
+    for label, direct_val, regrown_val in (
+        (
+            "predictions",
+            model_direct.predict(transformed_data_x),
+            model_regrown.predict(transformed_data_x),
+        ),
+        (
+            "IMD",
+            model_direct.calc_imd(input_array=transformed_data_x),
+            model_regrown.calc_imd(input_array=transformed_data_x),
+        ),
+        (
+            "OOMD",
+            model_direct.calc_oomd(transformed_data_x),
+            model_regrown.calc_oomd(transformed_data_x),
+        ),
+    ):
+        assert np.all(np.isfinite(direct_val)), f"Direct {label} not finite"
+        np.testing.assert_allclose(
+            regrown_val,
+            direct_val,
+            rtol=0,
+            atol=1e-9,
+            err_msg=f"Regrown {label}",
+        )
 
     # tolerances per dataset
     if name == "Yes NaN, PLST RandomGen":
@@ -504,77 +561,53 @@ def _run_set_component_test(test_data):
         err_lim_imd = 5e-6
         err_lim_oomd = 5e-3
 
-    # compare X scores
-    test_val = rmse(model.fit_scores_x, model_low.fit_scores_x)
-    lin_val = nan_conc_coeff(model.fit_scores_x, model_low.fit_scores_x)
-
-    # overall rmse is low, correlation is very high
-    assert test_val < err_lim_scores, f"Inc comps scores rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"Inc comps scores linConc = {lin_val}"
-
-    # compare X loadings
-    test_val = rmse(model.loadings_x, model_low.loadings_x)
-    lin_val = nan_conc_coeff(model.loadings_x, model_low.loadings_x)
-
-    assert test_val < err_lim_loadings, f"Inc comps load rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"Inc comps load linConc = {lin_val}"
-
-    # compare Y predictions
+    # Back at num_lvs components both agree with the ground truth
     py_y_vals = model.predict(scores_x=model.fit_scores_x)
-    py_y_vals_low = model_low.predict(scores_x=model_low.fit_scores_x)
-    test_val = rmse(py_y_vals, py_y_vals_low)
-    lin_val = nan_conc_coeff(py_y_vals, py_y_vals_low)
+    imd_metric, known_imd = imd
+    oomd_metric, known_oomd = oomd
 
-    assert test_val < err_lim_predict, f"Inc comps preds rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"Inc comps preds linConc = {lin_val}"
+    for label, test_model in (
+        ("direct", model_direct),
+        ("regrown", model_regrown),
+    ):
+        test_model.set_components(num_lvs)
+        scores = test_model.fit_scores_x[:, :num_lvs]
 
-    # Add an extra component, drop back down
-    model_low.set_components(num_lvs + 1)
-    model_low.set_components(num_lvs)
+        # compare X scores
+        test_val = rmse(true_scores, scores)
+        lin_val = nan_conc_coeff(true_scores, scores)
+        assert test_val < err_lim_scores, f"{label} scores rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} scores linConc = {lin_val}"
 
-    # compare X scores
-    test_val = rmse(T, model_low.fit_scores_x[:, :num_lvs])
-    lin_val = nan_conc_coeff(T, model_low.fit_scores_x[:, :num_lvs])
+        # compare X loadings
+        test_val = rmse(true_loadings, test_model.loadings_x[:, :num_lvs])
+        lin_val = nan_conc_coeff(
+            true_loadings, test_model.loadings_x[:, :num_lvs]
+        )
+        assert test_val < err_lim_loadings, f"{label} load rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} load linConc = {lin_val}"
 
-    assert test_val < err_lim_scores, f"Dec comps scores rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"Dec comps scores linConc = {lin_val}"
+        # compare Y predictions
+        test_y_vals = test_model.predict(scores_x=scores)
+        test_val = rmse(py_y_vals, test_y_vals)
+        lin_val = nan_conc_coeff(py_y_vals, test_y_vals)
+        assert test_val < err_lim_predict, f"{label} preds rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} preds linConc = {lin_val}"
 
-    # compare X loadings
-    test_val = rmse(P, model_low.loadings_x[:, :num_lvs])
-    lin_val = nan_conc_coeff(P, model_low.loadings_x[:, :num_lvs])
+        # compare distances
+        test_imd = test_model.calc_imd(input_scores=scores, metric=imd_metric)
+        test_val = rmse(test_imd, known_imd)
+        lin_val = nan_conc_coeff(test_imd, known_imd)
+        assert test_val < err_lim_imd, f"{label} IMD rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} IMD linConc = {lin_val}"
 
-    assert test_val < err_lim_loadings, f"Dec comps load rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"Dec comps load linConc = {lin_val}"
-
-    # compare Y predictions
-    py_y_vals = model.predict(scores_x=model.fit_scores_x)
-    py_y_vals_low = model_low.predict(
-        scores_x=model_low.fit_scores_x[:, :num_lvs]
-    )
-    test_val = rmse(py_y_vals, py_y_vals_low)
-    lin_val = nan_conc_coeff(py_y_vals, py_y_vals_low)
-
-    assert test_val < err_lim_predict, f"Dec comps preds rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"Dec comps preds linConc = {lin_val}"
-
-    # Now show that calc_imd/calc_oomd function the same
-    metric, known_imd = imd
-    test_imd = model_low.calc_imd(
-        input_scores=model_low.fit_scores_x[:, :num_lvs], metric=metric
-    )
-    test_val = rmse(test_imd, known_imd)
-    lin_val = nan_conc_coeff(test_imd, known_imd)
-
-    assert test_val < err_lim_imd, f"IMD rmse = {test_val}"
-    assert lin_val > 1 - 1e-5, f"IMD linConc = {lin_val}"
-
-    metric, known_oomd = oomd
-    test_oomd = model_low.calc_oomd(transformed_data_x, metric=metric)
-    test_val = rmse(known_oomd, test_oomd)
-    lin_val = nan_conc_coeff(test_oomd, known_oomd)
-
-    assert test_val < err_lim_oomd, f"OOMD rmse = {test_val}"
-    assert lin_val > 1 - 1e-2, f"OOMD linConc = {lin_val}"
+        test_oomd = test_model.calc_oomd(
+            transformed_data_x, metric=oomd_metric
+        )
+        test_val = rmse(known_oomd, test_oomd)
+        lin_val = nan_conc_coeff(test_oomd, known_oomd)
+        assert test_val < err_lim_oomd, f"{label} OOMD rmse = {test_val}"
+        assert lin_val > 1 - 1e-2, f"{label} OOMD linConc = {lin_val}"
 
 
 @pytest.mark.parametrize(
@@ -636,3 +669,80 @@ def test_explained_variance_ratio(get_data, request):
 
     assert np.all(diffs_x < 0), "Explained X variance ratio must be decreasing"
     assert np.all(diffs_y < 0), "Explained y variance ratio must be decreasing"
+
+
+def test_all_nan_y_row_is_dropped(spec_dat, data_y):
+    """A row without any Y data is dropped instead of crashing the fit"""
+    _, data_x = init_scaler(spec_dat)
+    _, data_y = init_scaler(data_y)
+    data_y[5, :] = np.nan
+
+    with pytest.warns(UserWarning) as record:
+        model = NipalsPLS(n_components=2).fit(data_x, data_y)
+
+    messages = [str(warning.message) for warning in record]
+    assert any("dropped" in message for message in messages)
+    assert model.fit_scores_x.shape == (data_x.shape[0] - 1, 2)
+    assert np.all(np.isfinite(model.predict(data_x)))
+
+
+@pytest.mark.parametrize("fit_data", ["spec_dat", "nan_dat"])
+def test_reg_vector_matches_predict(spec_dat, data_y, fit_data, request):
+    """X @ get_reg_vector() must reproduce predict(X) for complete X, also
+    after a fit with missing data (P.T @ W is then not unit triangular)"""
+    # constant spectral channels become all-NaN after scaling; X @ B needs
+    # complete data, so use the varying channels only
+    varying = np.nanstd(spec_dat, axis=0) > 0
+    scaler_x, data_x = init_scaler(
+        request.getfixturevalue(fit_data)[:, varying]
+    )
+    _, data_y = init_scaler(data_y)
+    model = NipalsPLS(n_components=3).fit(data_x, data_y)
+
+    complete_x = scaler_x.transform(spec_dat[:, varying])
+    assert np.allclose(
+        complete_x @ model.get_reg_vector(),
+        model.predict(complete_x),
+        atol=1e-9,
+    ), "Regression vector does not reproduce the predictions"
+
+
+def test_regrown_model_with_missing_multi_target_y(spec_dat, data_y):
+    """Growing deflates Y like fitting also when Y has missing values"""
+    varying = np.nanstd(spec_dat, axis=0) > 0
+    _, data_x = init_scaler(spec_dat[:, varying])
+    # second target from the spectra, some Y values missing
+    targets = np.column_stack([data_y[:, 0], spec_dat[:, varying][:, 10]])
+    targets[::7, 0] = np.nan
+    second_missing = np.zeros(len(targets), dtype=bool)
+    second_missing[3::11] = True
+    second_missing[::7] = False  # keep every row partly observed
+    targets[second_missing, 1] = np.nan
+    _, targets = init_scaler(targets)
+
+    direct = NipalsPLS(n_components=4).fit(data_x, targets)
+    regrown = NipalsPLS(n_components=3).fit(data_x, targets)
+    regrown.set_components(1)
+    regrown.set_components(4)
+
+    max_load_diff = np.max(np.abs(direct.loadings_x - regrown.loadings_x))
+    max_pred_diff = np.max(
+        np.abs(direct.predict(data_x) - regrown.predict(data_x))
+    )
+    assert max_load_diff < 1e-9, f"Regrown load diff = {max_load_diff}"
+    assert max_pred_diff < 1e-9, f"Regrown prediction diff = {max_pred_diff}"
+
+
+def test_all_missing_y_raises(spec_dat, data_y):
+    """Nothing left to fit when every Y row is missing"""
+    _, data_x = init_scaler(spec_dat)
+    data_y = np.full(data_y.shape, np.nan)
+
+    model = NipalsPLS(n_components=2)
+    # also records NumPy's all-NaN RuntimeWarning from the centring check
+    with pytest.warns(Warning) as record:
+        with pytest.raises(ValueError, match="every row of Y is missing"):
+            model.fit(data_x, data_y)
+
+    assert any("dropped" in str(warning.message) for warning in record)
+    assert not model.__sklearn_is_fitted__()

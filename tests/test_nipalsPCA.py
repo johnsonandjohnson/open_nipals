@@ -278,52 +278,90 @@ def test_oomd(get_data, request):
 
 
 def _run_set_component_test(test_data):
-    """Helper function to run set_component tests"""
+    """Helper function to run set_component tests
+
+    A model fitted directly with num_lvs + 2 components and one fitted with
+    num_lvs + 1, shrunk to 1 and grown to num_lvs + 2 must agree with each
+    other, and with the external ground truth for the first num_lvs
+    components.
+    """
     model = test_data["model"][0]
     scaler_x = test_data["model"][1]
     input_data = test_data["X"]
     transformed_data = scaler_x.transform(input_data)
-
-    model_low = NipalsPCA(n_components=1)
-    model_low.fit(transformed_data)
-
-    # Update to new amount of components
     num_lvs = model.n_components
-    model_low.set_components(num_lvs)
 
-    # Demonstrate loadings/scores are the same
-    max_score_diff = np.max(np.abs(model.fit_scores - model_low.fit_scores))
-    max_load_diff = np.max(np.abs(model.loadings - model_low.loadings))
+    model_direct = NipalsPCA(n_components=num_lvs + 2)
+    model_direct.fit(transformed_data)
 
-    assert max_score_diff < 1e-9, f"Inc comps score diff = {max_score_diff}"
-    assert max_load_diff < 1e-9, f"Inc comps load diff = {max_load_diff}"
+    model_regrown = NipalsPCA(n_components=num_lvs + 1)
+    model_regrown.fit(transformed_data)
+    model_regrown.set_components(1)
+    model_regrown.set_components(num_lvs + 2)
 
-    # Add an extra component, drop back down
-    model_low.set_components(num_lvs + 1)
-    model_low.set_components(num_lvs)
+    # The two models agree on every component; scores to the accuracy of
+    # test_score_method_equivalence
+    test_val = rmse(model_direct.fit_scores, model_regrown.fit_scores)
+    lin_val = nan_conc_coeff(model_direct.fit_scores, model_regrown.fit_scores)
+    assert test_val < 1e-9, f"Regrown scores rmse = {test_val}"
+    assert lin_val > 1 - 1e-6, f"Regrown scores linConc = {lin_val}"
 
-    # Same loadings/scores test to ensure they didn't change
-    max_score_diff = np.max(
-        np.abs(model.fit_scores - model_low.fit_scores[:, :num_lvs])
-    )
     max_load_diff = np.max(
-        np.abs(model.loadings - model_low.loadings[:, :num_lvs])
+        np.abs(model_direct.loadings - model_regrown.loadings)
     )
+    assert max_load_diff < 1e-9, f"Regrown load diff = {max_load_diff}"
 
-    assert max_score_diff < 1e-9, f"Decr comps score diff = {max_score_diff}"
-    assert max_load_diff < 1e-9, f"Decr comps load diff = {max_load_diff}"
+    max_imd_diff = np.max(
+        np.abs(
+            model_direct.calc_imd(input_array=transformed_data)
+            - model_regrown.calc_imd(input_array=transformed_data)
+        )
+    )
+    max_oomd_diff = np.max(
+        np.abs(
+            model_direct.calc_oomd(transformed_data)
+            - model_regrown.calc_oomd(transformed_data)
+        )
+    )
+    assert max_imd_diff < 1e-9, f"Regrown IMD diff = {max_imd_diff}"
+    assert max_oomd_diff < 1e-9, f"Regrown OOMD diff = {max_oomd_diff}"
 
-    # Now show that calc_imd/calc_oomd function the same
-    known_imd = model.calc_imd(input_array=model.fit_data)
-    test_imd = model_low.calc_imd(input_array=model_low.fit_data)
-    max_imd_diff = np.max(np.abs(known_imd - test_imd))
+    # Back at num_lvs components both agree with the ground truth
+    true_scores = test_data["T"]
+    true_loadings = test_data["P"]
+    imd_metric, known_imd = test_data["imd"]
+    oomd_metric, known_oomd = test_data["oomd"]
 
-    known_oomd = model.calc_oomd(model.fit_data)
-    test_oomd = model_low.calc_oomd(model_low.fit_data)
-    max_oomd_diff = np.max(np.abs(known_oomd - test_oomd))
+    for label, test_model in (
+        ("direct", model_direct),
+        ("regrown", model_regrown),
+    ):
+        test_model.set_components(num_lvs)
+        scores = test_model.fit_scores[:, :num_lvs]
 
-    assert max_imd_diff < 1e-9, f"Max IMD diff = {max_imd_diff}"
-    assert max_oomd_diff < 1e-9, f"Max OOMD diff = {max_oomd_diff}"
+        test_val = rmse(true_scores, scores)
+        lin_val = nan_conc_coeff(true_scores, scores)
+        assert test_val < 1e-2, f"{label} scores rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} scores linConc = {lin_val}"
+
+        test_val = rmse(true_loadings, test_model.loadings[:, :num_lvs])
+        lin_val = nan_conc_coeff(
+            true_loadings, test_model.loadings[:, :num_lvs]
+        )
+        assert test_val < 1e-3, f"{label} loadings rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} loadings linConc = {lin_val}"
+
+        test_imd = test_model.calc_imd(input_scores=scores, metric=imd_metric)
+        test_val = rmse(test_imd, known_imd)
+        lin_val = nan_conc_coeff(test_imd, known_imd)
+        assert test_val < 1e-4, f"{label} IMD rmse = {test_val}"
+        assert lin_val > 1 - 1e-5, f"{label} IMD linConc = {lin_val}"
+
+        test_oomd = test_model.calc_oomd(transformed_data, metric=oomd_metric)
+        test_val = rmse(test_oomd, known_oomd)
+        lin_val = nan_conc_coeff(test_oomd, known_oomd)
+        assert test_val < 1e-2, f"{label} OOMD rmse = {test_val}"
+        assert lin_val > 1 - 1e-2, f"{label} OOMD linConc = {lin_val}"
 
 
 @pytest.mark.parametrize(
@@ -369,3 +407,34 @@ def test_explained_variance_ratio(get_data, request):
     # check if strictly decreasing
     diffs = np.diff(ex_var_ratio)
     assert np.all(diffs <= 0), "Explained variance ratio must be decreasing"
+
+
+def test_conditional_mean_keeps_input(pca_input_nan):
+    """Transforming must not fill in the NaNs of the caller's array"""
+    # a few columns keep the full model (one component per column) small
+    _, data = init_scaler(pca_input_nan[:, :6])
+    assert np.isnan(data).any()
+    model = NipalsPCA(n_components=2).fit(data)
+
+    data_before = data.copy()
+    model.transform(data, method="conditional_mean")
+
+    assert np.array_equal(data, data_before, equal_nan=True), (
+        "transform(method='conditional_mean') modified its input"
+    )
+
+
+@pytest.mark.parametrize("with_nan", [False, True])
+def test_zero_first_column(pca_input, with_nan):
+    """A column of zeros must not poison the NIPALS starting guess"""
+    _, data = init_scaler(pca_input)
+    data[:, 0] = 0
+    if with_nan:
+        # zeros plus a missing value: np.any would count NaN as nonzero
+        data[0, 0] = np.nan
+
+    with pytest.warns(UserWarning, match="no observed nonzero values"):
+        model = NipalsPCA(n_components=2).fit(data)
+
+    assert np.all(np.isfinite(model.loadings)), "Loadings contain NaN"
+    assert np.all(np.isfinite(model.fit_scores)), "Scores contain NaN"

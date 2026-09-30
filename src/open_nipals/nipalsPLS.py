@@ -189,11 +189,17 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             verbose (bool): Whether or not to print out additional
                 convergence information. Defaults to False.
         """
+        # filter and store the data used to fit
+        self.fit_data_x, self.fit_data_y = self._filter_nan_rows(
+            self.fit_data_x, self.fit_data_y
+        )
+        if self.fit_data_x.shape[0] == 0:
+            raise ValueError(
+                "No rows left to fit: every row of Y is missing. "
+                "See force_include."
+            )
         X = self.fit_data_x.copy()
         y = self.fit_data_y.copy()
-
-        # filter and store the data used to fit
-        self.fit_data_x, self.fit_data_y = self._filter_nan_rows(X, y)
 
         # Pull out shapes
         n_rows_x, n_cols_x = self.fit_data_x.shape
@@ -221,11 +227,13 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             # Range of LVs to add
             num_lvs = range(fitted_components, fitted_components + n_add)
 
-            # There are loadings, so must deflate
-            sim_data_x = self.inverse_transform(self.transform(X))
-            sim_data_y = self.predict(X, self.fit_scores_x)
-            X = X - sim_data_x
-            y = y - sim_data_y
+            # There are loadings, so must deflate exactly as the fit loop
+            # below does (t p' for X, t q' for Y), so that a grown model
+            # equals a direct fit. predict() would use t b q', and b is
+            # not 1 when Y has missing values.
+            t_fit = self.fit_scores_x[:, :fitted_components]
+            X = X - t_fit @ self.loadings_x[:, :fitted_components].T
+            y = y - t_fit @ self.loadings_y[:, :fitted_components].T
 
             p = np.concatenate(
                 [self.loadings_x, np.zeros((n_cols_x, n_add))], axis=1
@@ -375,6 +383,9 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             self.n_components = n_component
         else:
             n_to_add = n_component - max_fit_lvs
+            # Deflation in _add_components uses the active components, so
+            # activate all fitted ones or the new ones repeat old directions
+            self.n_components = max_fit_lvs
             self._add_components(n_to_add, verbose=verbose)
             self.set_components(n_component)
 
@@ -488,20 +499,31 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
         # Extract variables for simplicity
         num_lvs = self.n_components
+
+        nan_mask = np.isnan(input_array)
+        nan_flag = np.any(nan_mask)
+
+        # For Y-scores (no weights provided), use loadings which are unit
+        # normalized, so use_denom=True (divides by 1).
+        # For X-scores (weights provided), behavior depends on NaN presence:
+        # - Non-NaN data: use_denom=False, matching the fitting loop
+        # - NaN data: use_denom=True, matching the fitting loop
         if weights is None:
-            # if no weights are provided, use loadings
             weights = loadings.copy()
+            use_denom = True  # Y-loadings are unit normalized
+        else:
+            # X-weights: match the fitting behavior
+            use_denom = nan_flag  # True for NaN, False for non-NaN
 
         scores = np.zeros((n, num_lvs))
 
-        nan_mask = np.isnan(input_array)
         resids = input_array.copy()
         # Looping over every loading
         # uses approach described in section 3.1 of McGregor paper
         # (Single component projection algorithm for missing data in PCA/PLS)
         for ind_lv in range(num_lvs):
             scores[:, [ind_lv]] = _nan_mult(
-                resids, weights[:, [ind_lv]], nan_mask
+                resids, weights[:, [ind_lv]], nan_mask, use_denom=use_denom
             )
             # deflate input data
             resids = resids - scores[:, [ind_lv]] @ loadings[:, [ind_lv]].T
@@ -527,7 +549,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             try:
                 maxmean = np.nanmax(np.abs(np.nanmean(data, axis=0)))
             except RuntimeWarning:
-                maxmean = np.NaN
+                maxmean = np.nan
 
             # Return boolean
             return maxmean < 1e-10
@@ -784,7 +806,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
 
             K = self.fit_data_x.shape[1]
             factor = np.sqrt(n / ((n - num_lvs - A0) * (K - num_lvs)))
-            out_oomd = factor.reshape(-1, 1) * np.sqrt(out_oomd)
+            out_oomd = factor * np.sqrt(out_oomd)
 
         else:
             raise NotImplementedError("Input metric not recognized. See doc.")
@@ -833,11 +855,24 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
     def get_reg_vector(self) -> np.array:
         """Give the user the regression vector for the model.
 
+        The regression vector B satisfies y_pred = X @ B for complete X,
+        matching predict(X).
+
+        transform() computes the scores by sequential deflation,
+        t_i = (X - sum_{j<i} t_j p_j.T) @ w_i, which in matrix form is
+        T = X @ W @ (I + triu(P.T @ W, 1))^-1. Hence
+        B = W @ (I + triu(P.T @ W, 1))^-1 @ diag(b) @ Q.T
+        with W = weights, P = X loadings, Q = Y loadings and b the inner
+        regression coefficients. For models fitted on complete data
+        P.T @ W is unit upper triangular and this is the textbook
+        W @ (P.T @ W)^-1 @ diag(b) @ Q.T; for models fitted with missing
+        data it is not, and only the deflation form matches predict().
+
         Raises:
             NotFittedError: If the model has not been fit.
 
         Returns:
-            np.array: The regression vector.
+            np.array: The regression vector (n_features_x, n_targets_y).
         """
 
         # Check whether the model is available or not
@@ -845,9 +880,16 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             raise NotFittedError("Model has not yet been fit")
 
         num_lvs = self.n_components
-        reg_vects = self.weights_x[:, :num_lvs] @ (
-            self.regression_matrix[:num_lvs, :num_lvs]
-            @ self.loadings_y[:, :num_lvs].T
+        weights = self.weights_x[:, :num_lvs]
+        loadings_x = self.loadings_x[:, :num_lvs]
+        loadings_y = self.loadings_y[:, :num_lvs]
+        inner_reg = self.regression_matrix[:num_lvs, :num_lvs]
+
+        # Correction for the sequential deflation in transform()
+        deflation = np.eye(num_lvs) + np.triu(loadings_x.T @ weights, 1)
+
+        reg_vects = (
+            weights @ np.linalg.inv(deflation) @ inner_reg @ loadings_y.T
         )
 
         return reg_vects
