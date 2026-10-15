@@ -636,3 +636,19 @@ def test_explained_variance_ratio(get_data, request):
 
     assert np.all(diffs_x < 0), "Explained X variance ratio must be decreasing"
     assert np.all(diffs_y < 0), "Explained y variance ratio must be decreasing"
+
+
+def test_predict_with_missing_y():
+    """Test that predict() on the training data returns the y fitted by the
+    model (X scores @ y loadings) when y has missing values"""
+    rng = np.random.default_rng(27)
+    data_x = rng.normal(size=(30, 3))
+    data_y = data_x[:, :2] + 0.3 * rng.normal(size=(30, 2))
+    data_y[:10, 1] = np.nan  # 2nd target missing in 10 rows
+    data_x -= data_x.mean(axis=0)
+    data_y -= np.nanmean(data_y, axis=0)
+
+    model = NipalsPLS(n_components=2).fit(data_x, data_y)
+    fitted_y = model.fit_scores_x @ model.loadings_y.T
+
+    np.testing.assert_allclose(model.predict(data_x), fitted_y, atol=1e-9)

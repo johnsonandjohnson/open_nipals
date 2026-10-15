@@ -818,11 +818,7 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         elif scores_x is not None:
             # if scores are present, calculate the result
             num_lvs = self.n_components
-            pred_y = (
-                scores_x[:, :num_lvs]
-                @ self.regression_matrix[:num_lvs, :num_lvs]
-                @ self.loadings_y[:, :num_lvs].T
-            )
+            pred_y = scores_x[:, :num_lvs] @ self.loadings_y[:, :num_lvs].T
         else:
             # if no scores, but X, calculate scores and re-call func
             scores_x = self.transform(X)
@@ -845,9 +841,8 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
             raise NotFittedError("Model has not yet been fit")
 
         num_lvs = self.n_components
-        reg_vects = self.weights_x[:, :num_lvs] @ (
-            self.regression_matrix[:num_lvs, :num_lvs]
-            @ self.loadings_y[:, :num_lvs].T
+        reg_vects = (
+            self.weights_x[:, :num_lvs] @ self.loadings_y[:, :num_lvs].T
         )
 
         return reg_vects
