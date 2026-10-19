@@ -641,6 +641,9 @@ def test_explained_variance_ratio(get_data, request):
 def test_predict_with_missing_y():
     """Test that predict() on the training data returns the y fitted by the
     model (X scores @ y loadings) when y has missing values"""
+    # Random dataset with multiple targets and some partially missing, so that
+    # inner regression coefficients (regression_matrix) are not 1, which the
+    # existing test data (single y column) cannot illustrate
     rng = np.random.default_rng(27)
     data_x = rng.normal(size=(30, 3))
     data_y = data_x[:, :2] + 0.3 * rng.normal(size=(30, 2))
