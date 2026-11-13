@@ -864,9 +864,12 @@ class NipalsPLS(BaseEstimator, TransformerMixin, RegressorMixin):
         B = W @ (I + triu(P.T @ W, 1))^-1 @ diag(b) @ Q.T
         with W = weights, P = X loadings, Q = Y loadings and b the inner
         regression coefficients. For models fitted on complete data
-        P.T @ W is unit upper triangular and this is the textbook
-        W @ (P.T @ W)^-1 @ diag(b) @ Q.T; for models fitted with missing
-        data it is not, and only the deflation form matches predict().
+        P.T @ W is unit upper triangular, and this formula is the usual
+        W @ (P.T @ W)^-1 @ diag(b) @ Q.T, see Wold, Sjöström and Eriksson,
+        "PLS-regression: a basic tool of chemometrics", Chemometrics and
+        Intelligent Laboratory Systems 58 (2001) 109-130. For models
+        fitted with missing data P.T @ W does not have that form, and only
+        the deflation form agrees with predict().
 
         Raises:
             NotFittedError: If the model has not been fit.
